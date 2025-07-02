@@ -8,51 +8,85 @@ import RadarChart from '../../components/RadarChart';
 import { useAuth } from '../../context/AuthContext';
 import { saveUserStats } from '../../utils/saveUserStats';
 import { loadUserStats } from '../../utils/loadUserStats';
+import { loadUserHistory } from '../../utils/loadUserHistory';
+
+const VALID_TEST_KEYS: FlexibilityTest[] = [
+  'toeTouch',
+  'sitAndReach',
+  'shoulderFlexion',
+  'trunkRotation',
+  'hamstringLift',
+  'bridge',
+  'ankleMobility',
+];
 
 const FlexibilityPage: React.FC = () => {
   const { user } = useAuth();
   const [formData, setFormData] = useState<FlexibilityFormData | null>(null);
   const [result, setResult] = useState<Record<FlexibilityTest, Rank> | null>(null);
-  const [average, setAverage] = useState<{
-    averageScore: number;
-    globalRank: Rank;
-  } | null>(null);
+  const [average, setAverage] = useState<{ averageScore: number; globalRank: Rank } | null>(null);
   const [loading, setLoading] = useState(true);
+
+  const [history, setHistory] = useState<
+    (FlexibilityFormData & { averageScore: number; globalRank: Rank; timestamp: number; id: string })[]
+  >([]);
+  const [historyIndex, setHistoryIndex] = useState<number | null>(null);
+  const [currentSnapshot, setCurrentSnapshot] = useState<{
+    result: Record<FlexibilityTest, Rank>;
+    average: { averageScore: number; globalRank: Rank };
+  } | null>(null);
 
   useEffect(() => {
     if (!user) return;
+
     const fetchData = async () => {
       const saved = await loadUserStats<FlexibilityFormData & { averageScore: number; globalRank: Rank }>(
         user,
         'flexibility'
       );
+
+      const allHistory = await loadUserHistory<FlexibilityFormData & {
+        averageScore: number;
+        globalRank: Rank;
+        id: string;
+      }>(user, 'flexibility');
+
+      setHistory(allHistory);
+      setHistoryIndex(null);
+
       if (saved) {
         const { averageScore, globalRank, ...inputs } = saved;
-        setFormData(inputs);
 
-        const ranks: Record<FlexibilityTest, Rank> = Object.entries(inputs).reduce((acc, [key, val]) => {
-          acc[key as FlexibilityTest] = calculateFlexibilityRank(key as FlexibilityTest, Number(val));
+        const ranks: Record<FlexibilityTest, Rank> = VALID_TEST_KEYS.reduce((acc, key) => {
+          acc[key] = calculateFlexibilityRank(key, Number(inputs[key]));
           return acc;
         }, {} as Record<FlexibilityTest, Rank>);
 
+        setFormData(inputs);
         setResult(ranks);
         setAverage({ averageScore, globalRank });
+        setCurrentSnapshot({ result: ranks, average: { averageScore, globalRank } });
       }
+
       setLoading(false);
     };
+
     fetchData();
   }, [user]);
 
   const handleSubmit = async (data: FlexibilityFormData) => {
-    const ranks: Record<FlexibilityTest, Rank> = Object.entries(data).reduce((acc, [key, val]) => {
-      acc[key as FlexibilityTest] = calculateFlexibilityRank(key as FlexibilityTest, Number(val));
+    const ranks: Record<FlexibilityTest, Rank> = VALID_TEST_KEYS.reduce((acc, key) => {
+      acc[key] = calculateFlexibilityRank(key, Number(data[key]));
       return acc;
     }, {} as Record<FlexibilityTest, Rank>);
 
     const averageResult = calculateAverageFlexibilityRank(Object.values(ranks));
+
     setFormData(data);
     setResult(ranks);
     setAverage(averageResult);
+    setHistoryIndex(null);
+    setCurrentSnapshot({ result: ranks, average: averageResult });
 
     if (user) {
       await saveUserStats(user, 'flexibility', {
@@ -60,6 +94,55 @@ const FlexibilityPage: React.FC = () => {
         averageScore: averageResult.averageScore,
         globalRank: averageResult.globalRank,
       });
+
+      const updatedHistory = await loadUserHistory<FlexibilityFormData & {
+        averageScore: number;
+        globalRank: Rank;
+        id: string;
+      }>(user, 'flexibility');
+
+      setHistory(updatedHistory);
+      setHistoryIndex(null);
+    }
+  };
+
+  const updateFromSnapshot = (index: number) => {
+    const snapshot = history[index];
+    if (!snapshot) return;
+
+    const { averageScore, globalRank, ...inputs } = snapshot;
+
+    try {
+      const ranks: Record<FlexibilityTest, Rank> = VALID_TEST_KEYS.reduce((acc, key) => {
+        acc[key] = calculateFlexibilityRank(key, Number(inputs[key]));
+        return acc;
+      }, {} as Record<FlexibilityTest, Rank>);
+
+      setResult(ranks);
+      setAverage({ averageScore, globalRank });
+      setHistoryIndex(index);
+    } catch (err) {
+      console.error('[❌ Error processing snapshot]', err);
+    }
+  };
+
+  const goToPreviousSnapshot = () => {
+    if (historyIndex === null && history.length > 0) {
+      updateFromSnapshot(history.length - 1);
+    } else if (historyIndex !== null && historyIndex > 0) {
+      updateFromSnapshot(historyIndex - 1);
+    }
+  };
+
+  const goToNextSnapshot = () => {
+    if (historyIndex !== null) {
+      if (historyIndex < history.length - 1) {
+        updateFromSnapshot(historyIndex + 1);
+      } else {
+        setResult(currentSnapshot?.result ?? null);
+        setAverage(currentSnapshot?.average ?? null);
+        setHistoryIndex(null);
+      }
     }
   };
 
@@ -73,6 +156,30 @@ const FlexibilityPage: React.FC = () => {
       {result && (
         <div className="mt-10 bg-gray-100 p-6 rounded-lg shadow-md">
           <h2 className="text-xl font-semibold mb-4">Your Flexibility Ranks</h2>
+
+          {history.length > 0 && (
+            <div className="flex justify-center items-center gap-4 mb-4">
+              <button
+                onClick={goToPreviousSnapshot}
+                disabled={history.length === 0 || (historyIndex !== null && historyIndex === 0)}
+                className="bg-gray-300 px-3 py-1 rounded disabled:opacity-50"
+              >
+                ← Previous
+              </button>
+              <span className="text-sm text-gray-600">
+                {historyIndex === null
+                  ? 'Viewing: Current Stats'
+                  : `Viewing: Snapshot ${historyIndex + 1} of ${history.length}`}
+              </span>
+              <button
+                onClick={goToNextSnapshot}
+                disabled={history.length === 0}
+                className="bg-gray-300 px-3 py-1 rounded disabled:opacity-50"
+              >
+                Next →
+              </button>
+            </div>
+          )}
 
           <RadarChart data={result} />
 
