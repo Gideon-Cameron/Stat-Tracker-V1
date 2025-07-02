@@ -11,13 +11,13 @@ import { loadUserStats } from '../../utils/loadUserStats';
 import { loadUserHistory } from '../../utils/loadUserHistory';
 
 const VALID_TEST_KEYS: FlexibilityTest[] = [
+  'frontSplitLeft',
+  'frontSplitRight',
+  'middleSplit',
   'toeTouch',
-  'sitAndReach',
-  'shoulderFlexion',
-  'trunkRotation',
-  'hamstringLift',
-  'bridge',
-  'ankleMobility',
+  'wallReach',
+  'pancakeFold',
+  'bridgeDepth',
 ];
 
 const FlexibilityPage: React.FC = () => {
