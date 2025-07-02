@@ -26,21 +26,25 @@ const StrengthStatPage: React.FC = () => {
     if (!user) return;
 
     const fetchData = async () => {
+      console.log('[🚀 useEffect] Fetching user stats and history…');
+
       const saved = await loadUserStats<StrengthFormData & { averageScore: number; globalRank: Rank }>(
         user,
         'strength'
       );
-
       const allHistory = await loadUserHistory<StrengthFormData & {
         averageScore: number;
         globalRank: Rank;
         id: string;
       }>(user, 'strength');
 
+      console.log('[📜 Fetched History]', allHistory);
       setHistory(allHistory);
       setHistoryIndex(null);
 
       if (saved) {
+        console.log('[💾 Fetched Saved Stats]', saved);
+
         const { averageScore, globalRank, ...inputs } = saved;
         const ranks: Record<StrengthTest, Rank> = {
           benchPress: calculateStrengthRank('benchPress', Number(inputs.benchPress)),
@@ -64,6 +68,8 @@ const StrengthStatPage: React.FC = () => {
   }, [user]);
 
   const handleSubmit = async (data: StrengthFormData) => {
+    console.log('[📝 Submitting New Stats]', data);
+
     const ranks: Record<StrengthTest, Rank> = {
       benchPress: calculateStrengthRank('benchPress', Number(data.benchPress)),
       squat: calculateStrengthRank('squat', Number(data.squat)),
@@ -76,6 +82,9 @@ const StrengthStatPage: React.FC = () => {
     };
 
     const averageResult = calculateAverageStrengthRank(Object.values(ranks));
+    console.log('[📊 Calculated Ranks]', ranks);
+    console.log('[📈 Average Result]', averageResult);
+
     setFormData(data);
     setResult(ranks);
     setAverage(averageResult);
@@ -94,6 +103,7 @@ const StrengthStatPage: React.FC = () => {
         id: string;
       }>(user, 'strength');
 
+      console.log('[📜 Reloaded History After Save]', updatedHistory);
       setHistory(updatedHistory);
       setHistoryIndex(null);
     }
@@ -102,6 +112,8 @@ const StrengthStatPage: React.FC = () => {
   const updateFromSnapshot = (index: number) => {
     const snapshot = history[index];
     if (!snapshot) return;
+
+    console.log(`[🔍 Viewing Snapshot ${index}]`, snapshot);
 
     const { averageScore, globalRank, ...inputs } = snapshot;
 
@@ -123,12 +135,16 @@ const StrengthStatPage: React.FC = () => {
   };
 
   const goToPreviousSnapshot = () => {
-    if (historyIndex !== null && historyIndex > 0) {
+    console.log('[⬅️ Previous Snapshot Clicked]', { historyIndex });
+    if (historyIndex === null && history.length > 0) {
+      updateFromSnapshot(history.length - 1);
+    } else if (historyIndex !== null && historyIndex > 0) {
       updateFromSnapshot(historyIndex - 1);
     }
   };
 
   const goToNextSnapshot = () => {
+    console.log('[➡️ Next Snapshot Clicked]', { historyIndex });
     if (historyIndex !== null && historyIndex < history.length - 1) {
       updateFromSnapshot(historyIndex + 1);
     }
@@ -149,7 +165,7 @@ const StrengthStatPage: React.FC = () => {
             <div className="flex justify-center items-center gap-4 mb-4">
               <button
                 onClick={goToPreviousSnapshot}
-                disabled={historyIndex === 0 || historyIndex === null}
+                disabled={history.length === 0 || (historyIndex !== null && historyIndex === 0)}
                 className="bg-gray-300 px-3 py-1 rounded disabled:opacity-50"
               >
                 ← Previous
