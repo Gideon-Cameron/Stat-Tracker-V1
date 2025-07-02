@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import SpeedInput, { SpeedFormData } from '../../components/statInputs/SpeedInput';
 import { calculateSpeedRank } from '../../utils/calculateSpeedRank';
-import { calculateAverageSpeedRank } from '../../utils/calculateAverageSpeed';
+import { calculateAverageSpeedRank } from '../../utils/calculateAverageSpeedRank';
 import { SpeedTest } from '../../data/speedRankThresholds';
 import { Rank } from '../../types/Rank';
 import RadarChart from '../../components/RadarChart';
