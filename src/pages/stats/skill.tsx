@@ -3,11 +3,21 @@ import SkillInput, { SkillFormData } from '../../components/statInputs/SkillInpu
 import { SkillTest } from '../../data/skillRankThresholds';
 import { Rank } from '../../types/Rank';
 import { calculateSkillRank } from '../../utils/calculateSkillRank';
-import { calculateAverageStrengthRank } from '../../utils/calculateAverageStrength';
+import { calculateAverageSkillRank } from '../../utils/calculateAverageSkill';
 import RadarChart from '../../components/RadarChart';
 import { useAuth } from '../../context/AuthContext';
 import { loadUserStats } from '../../utils/loadUserStats';
 import { saveUserStats } from '../../utils/saveUserStats';
+import { loadUserHistory } from '../../utils/loadUserHistory';
+
+const VALID_TEST_KEYS: SkillTest[] = [
+  'pushSkill',
+  'pullSkill',
+  'handstandSkill',
+  'coreSkill',
+  'legSkill',
+  'leverSkill',
+];
 
 const SkillStatPage: React.FC = () => {
   const { user } = useAuth();
@@ -16,23 +26,39 @@ const SkillStatPage: React.FC = () => {
   const [average, setAverage] = useState<{ averageScore: number; globalRank: Rank } | null>(null);
   const [loading, setLoading] = useState(true);
 
+  const [history, setHistory] = useState<
+    (SkillFormData & { averageScore: number; globalRank: Rank; timestamp: number; id: string })[]
+  >([]);
+  const [historyIndex, setHistoryIndex] = useState<number | null>(null);
+  const [currentSnapshot, setCurrentSnapshot] = useState<{
+    result: Record<SkillTest, Rank>;
+    average: { averageScore: number; globalRank: Rank };
+  } | null>(null);
+
   useEffect(() => {
     const fetchData = async () => {
       if (user) {
         const saved = await loadUserStats<SkillFormData & { averageScore: number; globalRank: Rank }>(user, 'skill');
+        const allHistory = await loadUserHistory<SkillFormData & {
+          averageScore: number;
+          globalRank: Rank;
+          id: string;
+        }>(user, 'skill');
+
+        setHistory(allHistory);
+        setHistoryIndex(null);
+
         if (saved) {
           const { averageScore, globalRank, ...inputs } = saved;
+          const ranks: Record<SkillTest, Rank> = VALID_TEST_KEYS.reduce((acc, key) => {
+            acc[key] = calculateSkillRank(key, inputs[key]);
+            return acc;
+          }, {} as Record<SkillTest, Rank>);
+
           setFormData(inputs);
-          const ranks: Record<SkillTest, Rank> = {
-            pushSkill: calculateSkillRank('pushSkill', inputs.pushSkill),
-            pullSkill: calculateSkillRank('pullSkill', inputs.pullSkill),
-            handstandSkill: calculateSkillRank('handstandSkill', inputs.handstandSkill),
-            coreSkill: calculateSkillRank('coreSkill', inputs.coreSkill),
-            legSkill: calculateSkillRank('legSkill', inputs.legSkill),
-            leverSkill: calculateSkillRank('leverSkill', inputs.leverSkill),
-          };
           setResult(ranks);
           setAverage({ averageScore, globalRank });
+          setCurrentSnapshot({ result: ranks, average: { averageScore, globalRank } });
         }
       }
       setLoading(false);
@@ -42,19 +68,17 @@ const SkillStatPage: React.FC = () => {
   }, [user]);
 
   const handleSubmit = async (data: SkillFormData) => {
-    const ranks: Record<SkillTest, Rank> = {
-      pushSkill: calculateSkillRank('pushSkill', data.pushSkill),
-      pullSkill: calculateSkillRank('pullSkill', data.pullSkill),
-      handstandSkill: calculateSkillRank('handstandSkill', data.handstandSkill),
-      coreSkill: calculateSkillRank('coreSkill', data.coreSkill),
-      legSkill: calculateSkillRank('legSkill', data.legSkill),
-      leverSkill: calculateSkillRank('leverSkill', data.leverSkill),
-    };
+    const ranks: Record<SkillTest, Rank> = VALID_TEST_KEYS.reduce((acc, key) => {
+      acc[key] = calculateSkillRank(key, data[key]);
+      return acc;
+    }, {} as Record<SkillTest, Rank>);
 
-    const averageResult = calculateAverageStrengthRank(Object.values(ranks));
+    const averageResult = calculateAverageSkillRank(Object.values(ranks));
     setFormData(data);
     setResult(ranks);
     setAverage(averageResult);
+    setHistoryIndex(null);
+    setCurrentSnapshot({ result: ranks, average: averageResult });
 
     if (user) {
       await saveUserStats(user, 'skill', {
@@ -62,6 +86,50 @@ const SkillStatPage: React.FC = () => {
         averageScore: averageResult.averageScore,
         globalRank: averageResult.globalRank,
       });
+
+      const updatedHistory = await loadUserHistory<SkillFormData & {
+        averageScore: number;
+        globalRank: Rank;
+        id: string;
+      }>(user, 'skill');
+
+      setHistory(updatedHistory);
+      setHistoryIndex(null);
+    }
+  };
+
+  const updateFromSnapshot = (index: number) => {
+    const snapshot = history[index];
+    if (!snapshot) return;
+
+    const { averageScore, globalRank, ...inputs } = snapshot;
+    const ranks: Record<SkillTest, Rank> = VALID_TEST_KEYS.reduce((acc, key) => {
+      acc[key] = calculateSkillRank(key, inputs[key]);
+      return acc;
+    }, {} as Record<SkillTest, Rank>);
+
+    setResult(ranks);
+    setAverage({ averageScore, globalRank });
+    setHistoryIndex(index);
+  };
+
+  const goToPreviousSnapshot = () => {
+    if (historyIndex === null && history.length > 0) {
+      updateFromSnapshot(history.length - 1);
+    } else if (historyIndex !== null && historyIndex > 0) {
+      updateFromSnapshot(historyIndex - 1);
+    }
+  };
+
+  const goToNextSnapshot = () => {
+    if (historyIndex !== null) {
+      if (historyIndex < history.length - 1) {
+        updateFromSnapshot(historyIndex + 1);
+      } else {
+        setResult(currentSnapshot?.result ?? null);
+        setAverage(currentSnapshot?.average ?? null);
+        setHistoryIndex(null);
+      }
     }
   };
 
@@ -77,6 +145,30 @@ const SkillStatPage: React.FC = () => {
       {result && (
         <div className="mt-10 bg-gray-100 p-6 rounded-lg shadow-md">
           <h2 className="text-xl font-semibold mb-4">Your Skill Ranks</h2>
+
+          {history.length > 0 && (
+            <div className="flex justify-center items-center gap-4 mb-4">
+              <button
+                onClick={goToPreviousSnapshot}
+                disabled={history.length === 0 || (historyIndex !== null && historyIndex === 0)}
+                className="bg-gray-300 px-3 py-1 rounded disabled:opacity-50"
+              >
+                ← Previous
+              </button>
+              <span className="text-sm text-gray-600">
+                {historyIndex === null
+                  ? 'Viewing: Current Stats'
+                  : `Viewing: Snapshot ${historyIndex + 1} of ${history.length}`}
+              </span>
+              <button
+                onClick={goToNextSnapshot}
+                disabled={history.length === 0}
+                className="bg-gray-300 px-3 py-1 rounded disabled:opacity-50"
+              >
+                Next →
+              </button>
+            </div>
+          )}
 
           <RadarChart data={result} />
 
