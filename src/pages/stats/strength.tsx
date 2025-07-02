@@ -145,8 +145,14 @@ const StrengthStatPage: React.FC = () => {
 
   const goToNextSnapshot = () => {
     console.log('[➡️ Next Snapshot Clicked]', { historyIndex });
-    if (historyIndex !== null && historyIndex < history.length - 1) {
-      updateFromSnapshot(historyIndex + 1);
+
+    if (historyIndex !== null) {
+      if (historyIndex < history.length - 1) {
+        updateFromSnapshot(historyIndex + 1);
+      } else {
+        console.log('[🔄 Returning to Current Stats]');
+        setHistoryIndex(null);
+      }
     }
   };
 
@@ -177,7 +183,7 @@ const StrengthStatPage: React.FC = () => {
               </span>
               <button
                 onClick={goToNextSnapshot}
-                disabled={historyIndex === null || historyIndex >= history.length - 1}
+                disabled={history.length === 0}
                 className="bg-gray-300 px-3 py-1 rounded disabled:opacity-50"
               >
                 Next →
