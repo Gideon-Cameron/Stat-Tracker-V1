@@ -6,7 +6,6 @@ import {
   query,
   orderBy,
   addDoc,
-  limit,
 } from 'firebase/firestore';
 import { db } from '../lib/firebase';
 import { User } from 'firebase/auth';
@@ -16,6 +15,18 @@ interface SnapshotData {
   globalRank: string;
   timestamp?: number;
   [key: string]: unknown;
+}
+
+/**
+ * Normalize an object: stringifies all values (except timestamp) for safe comparison
+ */
+function normalize(obj: Record<string, any>) {
+  const {...rest } = obj;
+  const normalized: Record<string, string> = {};
+  for (const [key, value] of Object.entries(rest)) {
+    normalized[key] = String(value);
+  }
+  return normalized;
 }
 
 /**
@@ -34,22 +45,42 @@ export async function saveUserStats<T extends Record<string, unknown>>(
   // 1. Save the stat to the user doc
   const ref = doc(db, 'users', user.uid);
   await setDoc(ref, { [category]: data }, { merge: true });
+  console.log(`[📝 Stats Saved] ${category}`);
 
-  // 2. Load latest snapshot from history
+  // 2. Load all history snapshots
   const historyRef = collection(db, 'users', user.uid, 'stats', category, 'history');
-  const q = query(historyRef, orderBy('timestamp', 'desc'), limit(1));
-  const snapshot = await getDocs(q);
+  const fullSnapshot = await getDocs(query(historyRef, orderBy('timestamp', 'desc')));
+  console.log(`[📜 Snapshot History] Count: ${fullSnapshot.size}`);
 
-  const latest = snapshot.docs[0]?.data() as SnapshotData | undefined;
+  // ✅ If no snapshots exist, save one immediately
+  if (fullSnapshot.empty) {
+    await addDoc(historyRef, {
+      ...data,
+      timestamp: now,
+    });
+    console.log(`[✅ First Snapshot Auto-Saved] ${category} at ${new Date(now).toISOString()}`);
+    return;
+  }
+
+  // 3. Compare with most recent snapshot
+  const latest = fullSnapshot.docs[0]?.data() as SnapshotData | undefined;
   const latestTimestamp = latest?.timestamp ?? 0;
   const timeSinceLast = now - latestTimestamp;
-
   const isTooSoon = timeSinceLast < oneWeek;
+
   const isSameContent =
-    latest &&
-    JSON.stringify({ ...latest, timestamp: undefined }) === JSON.stringify({ ...data });
+    latest && JSON.stringify(normalize(latest)) === JSON.stringify(normalize(data));
 
   const shouldSaveSnapshot = !latest || (!isTooSoon && !isSameContent);
+
+  console.log('[🧠 Snapshot Check]', {
+    normalizedCurrent: normalize(data),
+    normalizedLatest: latest ? normalize(latest) : null,
+    isTooSoon,
+    isSameContent,
+    shouldSaveSnapshot,
+    timeSinceLast: `${Math.floor(timeSinceLast / (1000 * 60 * 60 * 24))} days`,
+  });
 
   if (shouldSaveSnapshot) {
     await addDoc(historyRef, {

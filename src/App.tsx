@@ -30,7 +30,7 @@ const App: React.FC = () => {
               <Link to="/stats/flexibility" className="hover:underline">Flexibility</Link>
               {user ? (
                 <>
-                  <span className="text-sm hidden sm:inline">Hello, {user.email}</span>
+                  {/* <span className="text-sm hidden sm:inline">Hello, {user.email}</span> */}
                   <button onClick={logout} className="text-sm underline ml-2 hover:text-red-300">Logout</button>
                 </>
               ) : (

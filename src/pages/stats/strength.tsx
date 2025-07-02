@@ -8,27 +8,40 @@ import RadarChart from '../../components/RadarChart';
 import { useAuth } from '../../context/AuthContext';
 import { saveUserStats } from '../../utils/saveUserStats';
 import { loadUserStats } from '../../utils/loadUserStats';
+import { loadUserHistory } from '../../utils/loadUserHistory';
 
 const StrengthStatPage: React.FC = () => {
   const { user } = useAuth();
   const [formData, setFormData] = useState<StrengthFormData | null>(null);
   const [result, setResult] = useState<Record<StrengthTest, Rank> | null>(null);
-  const [average, setAverage] = useState<{
-    averageScore: number;
-    globalRank: Rank;
-  } | null>(null);
+  const [average, setAverage] = useState<{ averageScore: number; globalRank: Rank } | null>(null);
   const [loading, setLoading] = useState(true);
+
+  const [history, setHistory] = useState<
+    (StrengthFormData & { averageScore: number; globalRank: Rank; timestamp: number; id: string })[]
+  >([]);
+  const [historyIndex, setHistoryIndex] = useState<number | null>(null);
 
   useEffect(() => {
     if (!user) return;
+
     const fetchData = async () => {
       const saved = await loadUserStats<StrengthFormData & { averageScore: number; globalRank: Rank }>(
         user,
         'strength'
       );
+
+      const allHistory = await loadUserHistory<StrengthFormData & {
+        averageScore: number;
+        globalRank: Rank;
+        id: string;
+      }>(user, 'strength');
+
+      setHistory(allHistory);
+      setHistoryIndex(null);
+
       if (saved) {
         const { averageScore, globalRank, ...inputs } = saved;
-        setFormData(inputs);
         const ranks: Record<StrengthTest, Rank> = {
           benchPress: calculateStrengthRank('benchPress', Number(inputs.benchPress)),
           squat: calculateStrengthRank('squat', Number(inputs.squat)),
@@ -39,11 +52,14 @@ const StrengthStatPage: React.FC = () => {
           barHang: calculateStrengthRank('barHang', Number(inputs.barHang)),
           plankHold: calculateStrengthRank('plankHold', Number(inputs.plankHold)),
         };
+        setFormData(inputs);
         setResult(ranks);
         setAverage({ averageScore, globalRank });
       }
+
       setLoading(false);
     };
+
     fetchData();
   }, [user]);
 
@@ -63,6 +79,7 @@ const StrengthStatPage: React.FC = () => {
     setFormData(data);
     setResult(ranks);
     setAverage(averageResult);
+    setHistoryIndex(null);
 
     if (user) {
       await saveUserStats(user, 'strength', {
@@ -70,6 +87,50 @@ const StrengthStatPage: React.FC = () => {
         averageScore: averageResult.averageScore,
         globalRank: averageResult.globalRank,
       });
+
+      const updatedHistory = await loadUserHistory<StrengthFormData & {
+        averageScore: number;
+        globalRank: Rank;
+        id: string;
+      }>(user, 'strength');
+
+      setHistory(updatedHistory);
+      setHistoryIndex(null);
+    }
+  };
+
+  const updateFromSnapshot = (index: number) => {
+    const snapshot = history[index];
+    if (!snapshot) return;
+
+    const { averageScore, globalRank, ...inputs } = snapshot;
+
+    const ranks: Record<StrengthTest, Rank> = {
+      benchPress: calculateStrengthRank('benchPress', Number(inputs.benchPress)),
+      squat: calculateStrengthRank('squat', Number(inputs.squat)),
+      deadlift: calculateStrengthRank('deadlift', Number(inputs.deadlift)),
+      overheadPress: calculateStrengthRank('overheadPress', Number(inputs.overheadPress)),
+      pullUps: calculateStrengthRank('pullUps', Number(inputs.pullUps)),
+      pushUps: calculateStrengthRank('pushUps', Number(inputs.pushUps)),
+      barHang: calculateStrengthRank('barHang', Number(inputs.barHang)),
+      plankHold: calculateStrengthRank('plankHold', Number(inputs.plankHold)),
+    };
+
+    setFormData(inputs);
+    setResult(ranks);
+    setAverage({ averageScore, globalRank });
+    setHistoryIndex(index);
+  };
+
+  const goToPreviousSnapshot = () => {
+    if (historyIndex !== null && historyIndex > 0) {
+      updateFromSnapshot(historyIndex - 1);
+    }
+  };
+
+  const goToNextSnapshot = () => {
+    if (historyIndex !== null && historyIndex < history.length - 1) {
+      updateFromSnapshot(historyIndex + 1);
     }
   };
 
@@ -83,6 +144,30 @@ const StrengthStatPage: React.FC = () => {
       {result && (
         <div className="mt-10 bg-gray-100 p-6 rounded-lg shadow-md">
           <h2 className="text-xl font-semibold mb-4">Your Strength Ranks</h2>
+
+          {history.length > 0 && (
+            <div className="flex justify-center items-center gap-4 mb-4">
+              <button
+                onClick={goToPreviousSnapshot}
+                disabled={historyIndex === 0 || historyIndex === null}
+                className="bg-gray-300 px-3 py-1 rounded disabled:opacity-50"
+              >
+                ← Previous
+              </button>
+              <span className="text-sm text-gray-600">
+                {historyIndex === null
+                  ? 'Viewing: Current Stats'
+                  : `Viewing: Snapshot ${historyIndex + 1} of ${history.length}`}
+              </span>
+              <button
+                onClick={goToNextSnapshot}
+                disabled={historyIndex === null || historyIndex >= history.length - 1}
+                className="bg-gray-300 px-3 py-1 rounded disabled:opacity-50"
+              >
+                Next →
+              </button>
+            </div>
+          )}
 
           <RadarChart data={result} />
 
