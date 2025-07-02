@@ -22,6 +22,12 @@ const StrengthStatPage: React.FC = () => {
   >([]);
   const [historyIndex, setHistoryIndex] = useState<number | null>(null);
 
+  const [latestData, setLatestData] = useState<{
+    formData: StrengthFormData;
+    result: Record<StrengthTest, Rank>;
+    average: { averageScore: number; globalRank: Rank };
+  } | null>(null);
+
   useEffect(() => {
     if (!user) return;
 
@@ -59,6 +65,7 @@ const StrengthStatPage: React.FC = () => {
         setFormData(inputs);
         setResult(ranks);
         setAverage({ averageScore, globalRank });
+        setLatestData({ formData: inputs, result: ranks, average: { averageScore, globalRank } });
       }
 
       setLoading(false);
@@ -88,6 +95,7 @@ const StrengthStatPage: React.FC = () => {
     setFormData(data);
     setResult(ranks);
     setAverage(averageResult);
+    setLatestData({ formData: data, result: ranks, average: averageResult });
     setHistoryIndex(null);
 
     if (user) {
@@ -105,7 +113,6 @@ const StrengthStatPage: React.FC = () => {
 
       console.log('[📜 Reloaded History After Save]', updatedHistory);
       setHistory(updatedHistory);
-      setHistoryIndex(null);
     }
   };
 
@@ -145,12 +152,16 @@ const StrengthStatPage: React.FC = () => {
 
   const goToNextSnapshot = () => {
     console.log('[➡️ Next Snapshot Clicked]', { historyIndex });
-
     if (historyIndex !== null) {
       if (historyIndex < history.length - 1) {
         updateFromSnapshot(historyIndex + 1);
       } else {
         console.log('[🔄 Returning to Current Stats]');
+        if (latestData) {
+          setFormData(latestData.formData);
+          setResult(latestData.result);
+          setAverage(latestData.average);
+        }
         setHistoryIndex(null);
       }
     }
