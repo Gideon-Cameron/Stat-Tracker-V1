@@ -10,6 +10,17 @@ import { saveUserStats } from '../../utils/saveUserStats';
 import { loadUserStats } from '../../utils/loadUserStats';
 import { loadUserHistory } from '../../utils/loadUserHistory';
 
+const STRENGTH_TESTS: StrengthTest[] = [
+  'benchPress',
+  'squat',
+  'deadlift',
+  'overheadPress',
+  'pullUps',
+  'pushUps',
+  'barHang',
+  'plankHold',
+];
+
 const StrengthStatPage: React.FC = () => {
   const { user } = useAuth();
   const [formData, setFormData] = useState<StrengthFormData | null>(null);
@@ -32,8 +43,6 @@ const StrengthStatPage: React.FC = () => {
     if (!user) return;
 
     const fetchData = async () => {
-      console.log('[🚀 useEffect] Fetching user stats and history…');
-
       const saved = await loadUserStats<StrengthFormData & { averageScore: number; globalRank: Rank }>(
         user,
         'strength'
@@ -42,26 +51,20 @@ const StrengthStatPage: React.FC = () => {
         averageScore: number;
         globalRank: Rank;
         id: string;
+        timestamp: number;
       }>(user, 'strength');
 
-      console.log('[📜 Fetched History]', allHistory);
       setHistory(allHistory);
       setHistoryIndex(null);
 
       if (saved) {
-        console.log('[💾 Fetched Saved Stats]', saved);
-
         const { averageScore, globalRank, ...inputs } = saved;
-        const ranks: Record<StrengthTest, Rank> = {
-          benchPress: calculateStrengthRank('benchPress', Number(inputs.benchPress)),
-          squat: calculateStrengthRank('squat', Number(inputs.squat)),
-          deadlift: calculateStrengthRank('deadlift', Number(inputs.deadlift)),
-          overheadPress: calculateStrengthRank('overheadPress', Number(inputs.overheadPress)),
-          pullUps: calculateStrengthRank('pullUps', Number(inputs.pullUps)),
-          pushUps: calculateStrengthRank('pushUps', Number(inputs.pushUps)),
-          barHang: calculateStrengthRank('barHang', Number(inputs.barHang)),
-          plankHold: calculateStrengthRank('plankHold', Number(inputs.plankHold)),
-        };
+
+        const ranks = STRENGTH_TESTS.reduce((acc, key) => {
+          acc[key] = calculateStrengthRank(key, Number(inputs[key]));
+          return acc;
+        }, {} as Record<StrengthTest, Rank>);
+
         setFormData(inputs);
         setResult(ranks);
         setAverage({ averageScore, globalRank });
@@ -75,22 +78,12 @@ const StrengthStatPage: React.FC = () => {
   }, [user]);
 
   const handleSubmit = async (data: StrengthFormData) => {
-    console.log('[📝 Submitting New Stats]', data);
-
-    const ranks: Record<StrengthTest, Rank> = {
-      benchPress: calculateStrengthRank('benchPress', Number(data.benchPress)),
-      squat: calculateStrengthRank('squat', Number(data.squat)),
-      deadlift: calculateStrengthRank('deadlift', Number(data.deadlift)),
-      overheadPress: calculateStrengthRank('overheadPress', Number(data.overheadPress)),
-      pullUps: calculateStrengthRank('pullUps', Number(data.pullUps)),
-      pushUps: calculateStrengthRank('pushUps', Number(data.pushUps)),
-      barHang: calculateStrengthRank('barHang', Number(data.barHang)),
-      plankHold: calculateStrengthRank('plankHold', Number(data.plankHold)),
-    };
+    const ranks = STRENGTH_TESTS.reduce((acc, key) => {
+      acc[key] = calculateStrengthRank(key, Number(data[key]));
+      return acc;
+    }, {} as Record<StrengthTest, Rank>);
 
     const averageResult = calculateAverageStrengthRank(Object.values(ranks));
-    console.log('[📊 Calculated Ranks]', ranks);
-    console.log('[📈 Average Result]', averageResult);
 
     setFormData(data);
     setResult(ranks);
@@ -109,9 +102,9 @@ const StrengthStatPage: React.FC = () => {
         averageScore: number;
         globalRank: Rank;
         id: string;
+        timestamp: number;
       }>(user, 'strength');
 
-      console.log('[📜 Reloaded History After Save]', updatedHistory);
       setHistory(updatedHistory);
     }
   };
@@ -120,20 +113,12 @@ const StrengthStatPage: React.FC = () => {
     const snapshot = history[index];
     if (!snapshot) return;
 
-    console.log(`[🔍 Viewing Snapshot ${index}]`, snapshot);
-
     const { averageScore, globalRank, ...inputs } = snapshot;
 
-    const ranks: Record<StrengthTest, Rank> = {
-      benchPress: calculateStrengthRank('benchPress', Number(inputs.benchPress)),
-      squat: calculateStrengthRank('squat', Number(inputs.squat)),
-      deadlift: calculateStrengthRank('deadlift', Number(inputs.deadlift)),
-      overheadPress: calculateStrengthRank('overheadPress', Number(inputs.overheadPress)),
-      pullUps: calculateStrengthRank('pullUps', Number(inputs.pullUps)),
-      pushUps: calculateStrengthRank('pushUps', Number(inputs.pushUps)),
-      barHang: calculateStrengthRank('barHang', Number(inputs.barHang)),
-      plankHold: calculateStrengthRank('plankHold', Number(inputs.plankHold)),
-    };
+    const ranks = STRENGTH_TESTS.reduce((acc, key) => {
+      acc[key] = calculateStrengthRank(key, Number(inputs[key]));
+      return acc;
+    }, {} as Record<StrengthTest, Rank>);
 
     setFormData(inputs);
     setResult(ranks);
@@ -142,7 +127,6 @@ const StrengthStatPage: React.FC = () => {
   };
 
   const goToPreviousSnapshot = () => {
-    console.log('[⬅️ Previous Snapshot Clicked]', { historyIndex });
     if (historyIndex === null && history.length > 0) {
       updateFromSnapshot(history.length - 1);
     } else if (historyIndex !== null && historyIndex > 0) {
@@ -151,12 +135,10 @@ const StrengthStatPage: React.FC = () => {
   };
 
   const goToNextSnapshot = () => {
-    console.log('[➡️ Next Snapshot Clicked]', { historyIndex });
     if (historyIndex !== null) {
       if (historyIndex < history.length - 1) {
         updateFromSnapshot(historyIndex + 1);
       } else {
-        console.log('[🔄 Returning to Current Stats]');
         if (latestData) {
           setFormData(latestData.formData);
           setResult(latestData.result);
@@ -205,12 +187,27 @@ const StrengthStatPage: React.FC = () => {
           <RadarChart data={result} />
 
           <ul className="grid grid-cols-1 sm:grid-cols-2 gap-x-4 gap-y-3 mt-6">
-            {Object.entries(result).map(([test, rank]) => (
-              <li key={test} className="flex justify-between items-center border-b py-2">
-                <span className="capitalize whitespace-nowrap">{test.replace(/([A-Z])/g, ' $1')}</span>
-                <span className="font-bold text-blue-700 whitespace-nowrap ml-4">{rank}</span>
-              </li>
-            ))}
+            {Object.entries(result).map(([test, rank]) => {
+              const currentValue = formData?.[test as keyof StrengthFormData] ?? '';
+              const prevSnapshot =
+                historyIndex !== null && historyIndex > 0 ? history[historyIndex - 1] : null;
+              const previousValue = prevSnapshot?.[test as keyof StrengthFormData] ?? '';
+              const difference = Number(currentValue) - Number(previousValue);
+
+              return (
+                <li key={test} className="flex justify-between items-center border-b py-2">
+                  <span className="capitalize whitespace-nowrap">{test.replace(/([A-Z])/g, ' $1')}</span>
+                  <span className="font-bold text-blue-700 whitespace-nowrap ml-4 flex items-center gap-1">
+                    {rank}
+                    {prevSnapshot && difference !== 0 && (
+                      <span className={`text-sm ${difference > 0 ? 'text-green-600' : 'text-red-600'}`}>
+                        {difference > 0 ? `↑ (+${difference})` : `↓ (${difference})`}
+                      </span>
+                    )}
+                  </span>
+                </li>
+              );
+            })}
           </ul>
 
           {average && (
