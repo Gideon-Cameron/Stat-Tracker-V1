@@ -34,6 +34,7 @@ const FlexibilityPage: React.FC = () => {
   const [currentSnapshot, setCurrentSnapshot] = useState<{
     result: Record<FlexibilityTest, Rank>;
     average: { averageScore: number; globalRank: Rank };
+    formData?: FlexibilityFormData;
   } | null>(null);
 
   useEffect(() => {
@@ -49,6 +50,7 @@ const FlexibilityPage: React.FC = () => {
         averageScore: number;
         globalRank: Rank;
         id: string;
+        timestamp: number;
       }>(user, 'flexibility');
 
       setHistory(allHistory);
@@ -65,7 +67,7 @@ const FlexibilityPage: React.FC = () => {
         setFormData(inputs);
         setResult(ranks);
         setAverage({ averageScore, globalRank });
-        setCurrentSnapshot({ result: ranks, average: { averageScore, globalRank } });
+        setCurrentSnapshot({ result: ranks, average: { averageScore, globalRank }, formData: inputs });
       }
 
       setLoading(false);
@@ -86,7 +88,7 @@ const FlexibilityPage: React.FC = () => {
     setResult(ranks);
     setAverage(averageResult);
     setHistoryIndex(null);
-    setCurrentSnapshot({ result: ranks, average: averageResult });
+    setCurrentSnapshot({ result: ranks, average: averageResult, formData: data });
 
     if (user) {
       await saveUserStats(user, 'flexibility', {
@@ -118,6 +120,7 @@ const FlexibilityPage: React.FC = () => {
         return acc;
       }, {} as Record<FlexibilityTest, Rank>);
 
+      setFormData(inputs);
       setResult(ranks);
       setAverage({ averageScore, globalRank });
       setHistoryIndex(index);
@@ -141,6 +144,7 @@ const FlexibilityPage: React.FC = () => {
       } else {
         setResult(currentSnapshot?.result ?? null);
         setAverage(currentSnapshot?.average ?? null);
+        setFormData(currentSnapshot?.formData ?? null);
         setHistoryIndex(null);
       }
     }
@@ -184,12 +188,27 @@ const FlexibilityPage: React.FC = () => {
           <RadarChart data={result} />
 
           <ul className="grid grid-cols-1 sm:grid-cols-2 gap-x-4 gap-y-3 mt-6">
-            {Object.entries(result).map(([test, rank]) => (
-              <li key={test} className="flex justify-between items-center border-b py-2">
-                <span className="capitalize whitespace-nowrap">{test.replace(/([A-Z])/g, ' $1')}</span>
-                <span className="font-bold text-blue-700 whitespace-nowrap ml-4">{rank}</span>
-              </li>
-            ))}
+            {Object.entries(result).map(([test, rank]) => {
+              const currentValue = formData?.[test as keyof FlexibilityFormData] ?? '';
+              const prevSnapshot =
+                historyIndex !== null && historyIndex > 0 ? history[historyIndex - 1] : null;
+              const previousValue = prevSnapshot?.[test as keyof FlexibilityFormData] ?? '';
+              const difference = Number(currentValue) - Number(previousValue);
+
+              return (
+                <li key={test} className="flex justify-between items-center border-b py-2">
+                  <span className="capitalize whitespace-nowrap">{test.replace(/([A-Z])/g, ' $1')}</span>
+                  <span className="font-bold text-blue-700 whitespace-nowrap ml-4 flex items-center gap-1">
+                    {rank}
+                    {prevSnapshot && difference !== 0 && (
+                      <span className={`text-sm ${difference > 0 ? 'text-green-600' : 'text-red-600'}`}>
+                        {difference > 0 ? `↑ (+${difference})` : `↓ (${difference})`}
+                      </span>
+                    )}
+                  </span>
+                </li>
+              );
+            })}
           </ul>
 
           {average && (

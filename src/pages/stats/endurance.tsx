@@ -210,10 +210,10 @@ const EnduranceStatPage: React.FC = () => {
 
           <ul className="grid grid-cols-1 sm:grid-cols-2 gap-x-4 gap-y-3 mt-6">
             {Object.entries(result).map(([test, rank]) => {
-              const currentValue = formData?.[test as keyof EnduranceFormData] || '';
-              const prevSnapshot = historyIndex !== null && historyIndex > 0 ? history[historyIndex - 1] : null;
-              const previousValue = prevSnapshot?.[test as keyof EnduranceFormData] || '';
-              const difference = Number(currentValue) - Number(previousValue);
+              // const currentValue = formData?.[test as keyof EnduranceFormData] || '';
+              // const prevSnapshot = historyIndex !== null && historyIndex > 0 ? history[historyIndex - 1] : null;
+              // const previousValue = prevSnapshot?.[test as keyof EnduranceFormData] || '';
+              // const difference = Number(currentValue) - Number(previousValue);
 
               return (
                 <li key={test} className="flex justify-between items-center border-b py-2">
@@ -222,11 +222,11 @@ const EnduranceStatPage: React.FC = () => {
                   </span>
                   <span className="font-bold whitespace-nowrap ml-4 text-blue-700 flex items-center gap-1">
                     {rank}
-                    {prevSnapshot && difference !== 0 && (
+                    {/* {prevSnapshot && difference !== 0 && (
                       <span className={`text-sm ${difference > 0 ? 'text-green-600' : 'text-red-600'}`}>
                         {difference > 0 ? `↑ (+${difference})` : `↓ (${difference})`}
                       </span>
-                    )}
+                    )} */}
                   </span>
                 </li>
               );
