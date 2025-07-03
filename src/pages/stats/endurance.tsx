@@ -35,14 +35,14 @@ const EnduranceStatPage: React.FC = () => {
         averageScore: number;
         globalRank: Rank;
         id: string;
+        timestamp: number;
       }>(user, 'endurance');
 
       setHistory(allHistory);
-      setHistoryIndex(null); // 👈 Always start in current mode
+      setHistoryIndex(null);
 
       if (saved) {
         const { averageScore, globalRank, ...inputs } = saved;
-
         const ranks: Record<EnduranceTest, Rank> = {
           run1_5Mile: calculateEnduranceRank('run1_5Mile', Number(inputs.run1_5Mile)),
           plankHold: calculateEnduranceRank('plankHold', Number(inputs.plankHold)),
@@ -77,7 +77,7 @@ const EnduranceStatPage: React.FC = () => {
     setFormData(data);
     setResult(ranks);
     setAverage(averageResult);
-    setHistoryIndex(null); // 👈 Reset to current stats
+    setHistoryIndex(null);
 
     if (user) {
       await saveUserStats(user, 'endurance', {
@@ -90,6 +90,7 @@ const EnduranceStatPage: React.FC = () => {
         averageScore: number;
         globalRank: Rank;
         id: string;
+        timestamp: number;
       }>(user, 'endurance');
 
       setHistory(updatedHistory);
@@ -121,13 +122,41 @@ const EnduranceStatPage: React.FC = () => {
     if (historyIndex !== null && historyIndex > 0) {
       updateFromSnapshot(historyIndex - 1);
     } else if (historyIndex === null && history.length > 0) {
-      updateFromSnapshot(history.length - 1); // Start from most recent snapshot
+      updateFromSnapshot(history.length - 1);
     }
   };
 
   const goToNextSnapshot = () => {
-    if (historyIndex !== null && historyIndex < history.length - 1) {
-      updateFromSnapshot(historyIndex + 1);
+    if (historyIndex !== null) {
+      if (historyIndex < history.length - 1) {
+        updateFromSnapshot(historyIndex + 1);
+      } else {
+        // Return to current stats
+        const restoreCurrent = async () => {
+          if (!user) return;
+          const saved = await loadUserStats<EnduranceFormData & { averageScore: number; globalRank: Rank }>(
+            user,
+            'endurance'
+          );
+          if (saved) {
+            const { averageScore, globalRank, ...inputs } = saved;
+            const ranks: Record<EnduranceTest, Rank> = {
+              run1_5Mile: calculateEnduranceRank('run1_5Mile', Number(inputs.run1_5Mile)),
+              plankHold: calculateEnduranceRank('plankHold', Number(inputs.plankHold)),
+              pushUps: calculateEnduranceRank('pushUps', Number(inputs.pushUps)),
+              jumpRope: calculateEnduranceRank('jumpRope', Number(inputs.jumpRope)),
+              wallSit: calculateEnduranceRank('wallSit', Number(inputs.wallSit)),
+              runMaxDistance: calculateEnduranceRank('runMaxDistance', Number(inputs.runMaxDistance)),
+            };
+
+            setFormData(inputs);
+            setResult(ranks);
+            setAverage({ averageScore, globalRank });
+            setHistoryIndex(null);
+          }
+        };
+        restoreCurrent();
+      }
     }
   };
 
@@ -158,7 +187,7 @@ const EnduranceStatPage: React.FC = () => {
               </span>
               <button
                 onClick={goToNextSnapshot}
-                disabled={historyIndex === null || historyIndex >= history.length - 1}
+                disabled={historyIndex === null && !formData}
                 className="bg-gray-300 px-3 py-1 rounded disabled:opacity-50"
               >
                 Next →
