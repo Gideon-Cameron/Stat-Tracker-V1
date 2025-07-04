@@ -8,7 +8,7 @@ import FlexibilityStatPage from './pages/stats/flexibility';
 import StatsIndex from './pages/stats/index';
 import LoginPage from './pages/Login';
 import { useAuth } from './context/AuthContext';
-import Home from './pages/home'; // ✅ NEW HOME IMPORT
+import Home from './pages/home'; 
 
 const App: React.FC = () => {
   const { user, logout } = useAuth();
@@ -31,7 +31,7 @@ const App: React.FC = () => {
               {user ? (
                 <>
                   {/* <span className="text-sm hidden sm:inline">Hello, {user.email}</span> */}
-                  <button onClick={logout} className="text-sm underline ml-2 hover:text-red-300">Logout</button>
+                  <button onClick={logout} className="text-sm ml-2 hover:text-red-300">Logout</button>
                 </>
               ) : (
                 <Link to="/login" className="hover:underline">Login</Link>
