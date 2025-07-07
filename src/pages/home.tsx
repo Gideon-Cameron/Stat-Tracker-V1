@@ -1,16 +1,20 @@
 import React, { useEffect, useState } from 'react';
 import { loadGlobalRanks } from '../utils/loadGlobalRanks';
+import { loadGlobalSnapshots } from '../utils/loadGlobalSnapshots';
+import { saveGlobalSnapshot } from '../utils/saveGlobalSnapshot';
 import { StatCategory } from '../types/StatCategory';
 import { useAuth } from '../context/AuthContext';
 import { Rank } from '../types/Rank';
 import RadarChart from '../components/RadarChart';
-import { calculateAverageRank } from '../utils/calculateAverageGeneric'; // ✅ NEW
+import { calculateAverageRank } from '../utils/calculateAverageGeneric'; 
+import { GlobalSnapshot } from '../types/GlobalSnapshot';
 
 const Home: React.FC = () => {
   const { user } = useAuth();
   const [loading, setLoading] = useState(true);
   const [rankMap, setRankMap] = useState<Record<StatCategory, Rank> | null>(null);
-  const [combinedRank, setCombinedRank] = useState<Rank | null>(null); // ✅ NEW
+  const [combinedRank, setCombinedRank] = useState<Rank | null>(null); 
+  const [snapshots, setSnapshots] = useState<GlobalSnapshot[]>([]);
 
   useEffect(() => {
     if (!user) return;
@@ -27,10 +31,23 @@ const Home: React.FC = () => {
       console.log('[Home] rankMap:', map);
       setRankMap(map);
 
-      // ✅ Calculate combined rank
       const allRanks = Object.values(map);
-      const { globalRank } = calculateAverageRank(allRanks);
+      const { globalRank, averageScore } = calculateAverageRank(allRanks);
       setCombinedRank(globalRank);
+
+      // 💾 Save snapshot if valid
+      if (user && Object.keys(map).length > 0) {
+        await saveGlobalSnapshot(user, {
+          rankMap: map,
+          averageScore,
+          globalRank,
+          timestamp: Date.now(),
+        });
+      }
+
+      // 📥 Load snapshot history
+      const snapshotHistory = await loadGlobalSnapshots(user);
+      setSnapshots(snapshotHistory);
 
       setLoading(false);
     };
@@ -65,6 +82,13 @@ const Home: React.FC = () => {
               <p className="text-lg font-medium">
                 <span className="text-blue-800 font-bold">Overall Global Rank:</span> {combinedRank}
               </p>
+            </div>
+          )}
+
+          {snapshots.length > 0 && (
+            <div className="mt-8 text-sm text-center text-gray-500">
+              <p>Snapshots saved: {snapshots.length}</p>
+              <p>Last saved: {new Date(snapshots[0].timestamp).toLocaleDateString()}</p>
             </div>
           )}
         </div>
