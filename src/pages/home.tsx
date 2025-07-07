@@ -35,8 +35,8 @@ const Home: React.FC = () => {
       const { globalRank, averageScore } = calculateAverageRank(allRanks);
       setCombinedRank(globalRank);
 
-      // 💾 Save snapshot if valid
-      if (user && Object.keys(map).length > 0) {
+      // 💾 Save snapshot (new model: no raw data, just rank + average)
+      if (Object.keys(map).length > 0) {
         await saveGlobalSnapshot(user, {
           rankMap: map,
           averageScore,
