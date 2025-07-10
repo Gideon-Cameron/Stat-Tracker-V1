@@ -24,3 +24,10 @@ export type SubRank =
   | 'SS'
   | 'SS+'
   | 'Mythic';
+
+
+  export interface SubRankResult {
+    rank: Rank;
+    modifier: '-' | '' | '+';
+    percentToNext: number; // between 0 and 100
+  }
