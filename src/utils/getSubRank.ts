@@ -3,7 +3,7 @@ import { strengthRankThresholds, StrengthTest } from '../data/strengthRankThresh
 
 export type SubRank = `${Rank}` | `${Rank}-` | `${Rank}+`;
 
-interface SubRankResult {
+export interface SubRankResult {
   mainRank: Rank;
   subRank: SubRank;
   progressToNext: number; // 0 to 1, showing how close to next rank

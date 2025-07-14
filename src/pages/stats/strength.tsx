@@ -3,13 +3,12 @@ import StrengthInput, { StrengthFormData } from '../../components/statInputs/Str
 import { calculateStrengthRank } from '../../utils/calculateStrengthRank';
 import { calculateAverageStrengthRank } from '../../utils/calculateAverageStrength';
 import { StrengthTest } from '../../data/strengthRankThresholds';
-import { Rank, SubRankResult } from '../../types/Rank';
+import { Rank } from '../../types/Rank';
 import RadarChart from '../../components/RadarChart';
 import { useAuth } from '../../context/AuthContext';
 import { saveUserStats } from '../../utils/saveUserStats';
 import { loadUserStats } from '../../utils/loadUserStats';
 import { loadUserHistory } from '../../utils/loadUserHistory';
-import { getSubRank } from '../../utils/getSubRank';
 
 const STRENGTH_TESTS: StrengthTest[] = [
   'benchPress',
@@ -188,28 +187,28 @@ const StrengthStatPage: React.FC = () => {
           <RadarChart data={result} />
 
           <ul className="grid grid-cols-1 sm:grid-cols-2 gap-x-4 gap-y-3 mt-6">
-  {Object.entries(result).map(([test, rank]) => {
-    const value = formData?.[test as keyof StrengthFormData] ?? null;
+            {Object.entries(result).map(([test, rank]) => {
+              // const currentValue = formData?.[test as keyof StrengthFormData] ?? '';
+              // const prevSnapshot =
+                // historyIndex !== null && historyIndex > 0 ? history[historyIndex - 1] : null;
+              // const previousValue = prevSnapshot?.[test as keyof StrengthFormData] ?? '';
+              // const difference = Number(currentValue) - Number(previousValue);
 
-    const sub: SubRankResult = value !== null
-      ? getSubRank(test as StrengthTest, Number(value))
-      : { rank, modifier: '', percentToNext: 0 };
-
-    const displayLabel = `${sub.rank}${sub.modifier}`;
-
-    return (
-      <li key={test} className="flex justify-between items-center border-b py-2">
-        <span className="capitalize whitespace-nowrap">{test.replace(/([A-Z])/g, ' $1')}</span>
-        <span className="font-bold text-blue-700 whitespace-nowrap ml-4 flex items-center gap-2">
-          {displayLabel}
-          {/* ⭕️ SubRankCircle will show visual progress toward next sub-rank */}
-          {/* <SubRankCircle percent={sub.percentToNext} /> */}
-        </span>
-      </li>
-    );
-  })}
-</ul>
-
+              return (
+                <li key={test} className="flex justify-between items-center border-b py-2">
+                  <span className="capitalize whitespace-nowrap">{test.replace(/([A-Z])/g, ' $1')}</span>
+                  <span className="font-bold text-blue-700 whitespace-nowrap ml-4 flex items-center gap-1">
+                    {rank}
+                    {/* {prevSnapshot && difference !== 0 && (
+                      <span className={`text-sm ${difference > 0 ? 'text-green-600' : 'text-red-600'}`}>
+                        {difference > 0 ? `↑ (+${difference})` : `↓ (${difference})`}
+                      </span>
+                    )} */}
+                  </span>
+                </li>
+              );
+            })}
+          </ul>
 
           {average && (
             <div className="mt-6 text-center">
