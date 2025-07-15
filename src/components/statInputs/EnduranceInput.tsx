@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 
 export type EnduranceFormData = {
-  run1_5Mile: string;
+  burpees: string;
   plankHold: string;
   pushUps: string;
   jumpRope: string;
@@ -16,7 +16,7 @@ type Props = {
 
 const EnduranceInput: React.FC<Props> = ({ onSubmit, initialData }) => {
   const [formData, setFormData] = useState<EnduranceFormData>({
-    run1_5Mile: '',
+    burpees: '',
     plankHold: '',
     pushUps: '',
     jumpRope: '',
@@ -44,7 +44,7 @@ const EnduranceInput: React.FC<Props> = ({ onSubmit, initialData }) => {
   };
 
   const fields = [
-    { label: '1.5-Mile Run (seconds)', name: 'run1_5Mile' },
+    { label: 'Max Burpees (unbroken set)', name: 'burpees' },
     { label: 'Plank Hold (seconds)', name: 'plankHold' },
     { label: 'Push-Ups (1 min)', name: 'pushUps' },
     { label: 'Jump Rope (unbroken reps)', name: 'jumpRope' },

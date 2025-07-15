@@ -1,28 +1,27 @@
 import { Rank } from '../types/Rank';
 
 export type EnduranceTest =
-  | 'run1_5Mile'       // time (min)
-  | 'plankHold'        // sec
-  | 'pushUps'          // reps in 1 min
-  | 'jumpRope'         // unbroken reps
-  | 'wallSit'          // sec
-  | 'runMaxDistance';  // km
+  | 'burpees'           // max unbroken set
+  | 'plankHold'         // sec
+  | 'pushUps'           // reps in 1 min
+  | 'jumpRope'          // unbroken reps
+  | 'wallSit'           // sec
+  | 'runMaxDistance';   // km
 
 type Threshold = { min: number; rank: Rank };
 
 type RankThresholds = Record<EnduranceTest, Threshold[]>;
 
 export const enduranceRankThresholds: RankThresholds = {
-  run1_5Mile: [
-    { min: 0, rank: 'Mythic' },   // placeholder to avoid empty list crash
-    { min: 360, rank: 'Mythic' },  // ≤ 6:00
-    { min: 361, rank: 'SS' },      // 6:01–7:00
-    { min: 421, rank: 'S' },       // 7:01–8:30
-    { min: 511, rank: 'A' },
-    { min: 601, rank: 'B' },
-    { min: 691, rank: 'C' },
-    { min: 781, rank: 'D' },
-    { min: 901, rank: 'E' },       // > 15:00
+  burpees: [
+    { min: 0, rank: 'E' },         // bottom 59%
+    { min: 20, rank: 'D' },        // 60–69%
+    { min: 36, rank: 'C' },        // 70–79%
+    { min: 56, rank: 'B' },        // 80–89%
+    { min: 76, rank: 'A' },        // 90–98.9%
+    { min: 116, rank: 'S' },       // top 1%
+    { min: 201, rank: 'SS' },      // top 0.1%
+    { min: 501, rank: 'Mythic' },  // top 0.01%
   ],
 
   plankHold: [

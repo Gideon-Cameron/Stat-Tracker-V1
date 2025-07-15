@@ -2,13 +2,15 @@ import React, { useEffect, useState } from 'react';
 import EnduranceInput, { EnduranceFormData } from '../../components/statInputs/EnduranceInput';
 import { calculateEnduranceRank } from '../../utils/calculateEnduranceRank';
 import { calculateAverageStrengthRank } from '../../utils/calculateAverageStrength';
-import { EnduranceTest } from '../../data/enduranceRankThresholds';
+import { EnduranceTest, enduranceRankThresholds } from '../../data/enduranceRankThresholds';
 import { Rank } from '../../types/Rank';
 import RadarChart from '../../components/RadarChart';
 import { useAuth } from '../../context/AuthContext';
 import { saveUserStats } from '../../utils/saveUserStats';
 import { loadUserStats } from '../../utils/loadUserStats';
 import { loadUserHistory } from '../../utils/loadUserHistory';
+
+import SubRankDisplay from '../../components/SubRankDisplay';
 
 const EnduranceStatPage: React.FC = () => {
   const { user } = useAuth();
@@ -44,7 +46,7 @@ const EnduranceStatPage: React.FC = () => {
       if (saved) {
         const { averageScore, globalRank, ...inputs } = saved;
         const ranks: Record<EnduranceTest, Rank> = {
-          run1_5Mile: calculateEnduranceRank('run1_5Mile', Number(inputs.run1_5Mile)),
+          burpees: calculateEnduranceRank('burpees', Number(inputs.burpees)),
           plankHold: calculateEnduranceRank('plankHold', Number(inputs.plankHold)),
           pushUps: calculateEnduranceRank('pushUps', Number(inputs.pushUps)),
           jumpRope: calculateEnduranceRank('jumpRope', Number(inputs.jumpRope)),
@@ -65,7 +67,7 @@ const EnduranceStatPage: React.FC = () => {
 
   const handleSubmit = async (data: EnduranceFormData) => {
     const ranks: Record<EnduranceTest, Rank> = {
-      run1_5Mile: calculateEnduranceRank('run1_5Mile', Number(data.run1_5Mile)),
+      burpees: calculateEnduranceRank('burpees', Number(data.burpees)),
       plankHold: calculateEnduranceRank('plankHold', Number(data.plankHold)),
       pushUps: calculateEnduranceRank('pushUps', Number(data.pushUps)),
       jumpRope: calculateEnduranceRank('jumpRope', Number(data.jumpRope)),
@@ -104,7 +106,7 @@ const EnduranceStatPage: React.FC = () => {
     const { averageScore, globalRank, ...inputs } = snapshot;
 
     const ranks: Record<EnduranceTest, Rank> = {
-      run1_5Mile: calculateEnduranceRank('run1_5Mile', Number(inputs.run1_5Mile)),
+      burpees: calculateEnduranceRank('burpees', Number(inputs.burpees)),
       plankHold: calculateEnduranceRank('plankHold', Number(inputs.plankHold)),
       pushUps: calculateEnduranceRank('pushUps', Number(inputs.pushUps)),
       jumpRope: calculateEnduranceRank('jumpRope', Number(inputs.jumpRope)),
@@ -131,7 +133,6 @@ const EnduranceStatPage: React.FC = () => {
       if (historyIndex < history.length - 1) {
         updateFromSnapshot(historyIndex + 1);
       } else {
-        // Return to current stats
         const restoreCurrent = async () => {
           if (!user) return;
           const saved = await loadUserStats<EnduranceFormData & { averageScore: number; globalRank: Rank }>(
@@ -141,7 +142,7 @@ const EnduranceStatPage: React.FC = () => {
           if (saved) {
             const { averageScore, globalRank, ...inputs } = saved;
             const ranks: Record<EnduranceTest, Rank> = {
-              run1_5Mile: calculateEnduranceRank('run1_5Mile', Number(inputs.run1_5Mile)),
+              burpees: calculateEnduranceRank('burpees', Number(inputs.burpees)),
               plankHold: calculateEnduranceRank('plankHold', Number(inputs.plankHold)),
               pushUps: calculateEnduranceRank('pushUps', Number(inputs.pushUps)),
               jumpRope: calculateEnduranceRank('jumpRope', Number(inputs.jumpRope)),
@@ -209,28 +210,26 @@ const EnduranceStatPage: React.FC = () => {
           )}
 
           <ul className="grid grid-cols-1 sm:grid-cols-2 gap-x-4 gap-y-3 mt-6">
-            {Object.entries(result).map(([test, rank]) => {
-              // const currentValue = formData?.[test as keyof EnduranceFormData] || '';
-              // const prevSnapshot = historyIndex !== null && historyIndex > 0 ? history[historyIndex - 1] : null;
-              // const previousValue = prevSnapshot?.[test as keyof EnduranceFormData] || '';
-              // const difference = Number(currentValue) - Number(previousValue);
+          {Object.entries(result).map(([testKey]) => {
+  const value = formData?.[testKey as keyof EnduranceFormData];
+  const thresholds = enduranceRankThresholds[testKey as EnduranceTest];
 
-              return (
-                <li key={test} className="flex justify-between items-center border-b py-2">
-                  <span className="capitalize whitespace-nowrap">
-                    {test.replace(/([A-Z])/g, ' $1').replace(/_/g, ' ')}
-                  </span>
-                  <span className="font-bold whitespace-nowrap ml-4 text-blue-700 flex items-center gap-1">
-                    {rank}
-                    {/* {prevSnapshot && difference !== 0 && (
-                      <span className={`text-sm ${difference > 0 ? 'text-green-600' : 'text-red-600'}`}>
-                        {difference > 0 ? `↑ (+${difference})` : `↓ (${difference})`}
-                      </span>
-                    )} */}
-                  </span>
-                </li>
-              );
-            })}
+  return (
+    <li key={testKey} className="flex justify-between items-center border-b py-2">
+      <span className="capitalize whitespace-nowrap">
+        {testKey.replace(/([A-Z])/g, ' $1').replace(/_/g, ' ')}
+      </span>
+      {value !== undefined && thresholds ? (
+        <SubRankDisplay
+          value={Number(value)}
+          thresholds={thresholds}
+        />
+      ) : (
+        <span className="text-gray-400">No data</span>
+      )}
+    </li>
+  );
+})}
           </ul>
 
           {average && (
