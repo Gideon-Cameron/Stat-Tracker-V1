@@ -2,13 +2,16 @@ import React, { useEffect, useState } from 'react';
 import SpeedInput, { SpeedFormData } from '../../components/statInputs/SpeedInput';
 import { calculateSpeedRank } from '../../utils/calculateSpeedRank';
 import { calculateAverageSpeedRank } from '../../utils/calculateAverageSpeedRank';
-import { SpeedTest } from '../../data/speedRankThresholds';
+import { SpeedTest, speedRankThresholds  } from '../../data/speedRankThresholds';
 import { Rank } from '../../types/Rank';
 import RadarChart from '../../components/RadarChart';
 import { useAuth } from '../../context/AuthContext';
 import { saveUserStats } from '../../utils/saveUserStats';
 import { loadUserStats } from '../../utils/loadUserStats';
 import { loadUserHistory } from '../../utils/loadUserHistory';
+
+import SubRankDisplay from '../../components/SubRankDisplay';
+
 
 const VALID_SPEED_KEYS: SpeedTest[] = [
   'sprint100m',
@@ -177,17 +180,29 @@ const SpeedStatPage: React.FC = () => {
               </button>
             </div>
           )}
-
+ 
           <RadarChart data={result} />
 
           <ul className="grid grid-cols-1 sm:grid-cols-2 gap-x-4 gap-y-3 mt-6">
-            {Object.entries(result).map(([test, rank]) => (
-              <li key={test} className="flex justify-between items-center border-b py-2">
-                <span className="capitalize whitespace-nowrap">{test.replace(/([A-Z])/g, ' $1')}</span>
-                <span className="font-bold text-blue-700 whitespace-nowrap ml-4">{rank}</span>
-              </li>
-            ))}
-          </ul>
+  {Object.entries(result).map(([test]) => {
+    const value = formData?.[test as keyof SpeedFormData];
+
+    return (
+      <li key={test} className="flex justify-between items-center border-b py-2">
+        <span className="capitalize whitespace-nowrap">{test.replace(/([A-Z])/g, ' $1')}</span>
+        {value !== undefined ? (
+          <SubRankDisplay
+            value={Number(value)}
+            thresholds={speedRankThresholds[test as SpeedTest]}
+          />
+        ) : (
+          <span className="text-gray-400">No data</span>
+        )}
+      </li>
+    );
+  })}
+</ul>
+
 
           {average && (
             <div className="mt-6 text-center">
