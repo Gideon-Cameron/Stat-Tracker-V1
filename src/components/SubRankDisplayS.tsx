@@ -19,29 +19,34 @@ export interface Threshold {
 interface SubRankResult {
   rank: Rank;
   modifier: '-' | '' | '+';
-  percentToNext: number; // 0–100
+  percentToNext: number;
 }
 
 interface Props {
   value: number;
   thresholds: Threshold[];
+  inverted?: boolean; // NEW: pass true for speed tests
 }
 
-// ✅ Updated logic: thresholds are sorted ascending before processing
-function computeSubRank(value: number, thresholds: Threshold[]): SubRankResult {
-  const sorted = [...thresholds].sort((a, b) => a.min - b.min);
+// Modified logic to handle both normal and inverted scoring
+function computeSubRank(value: number, thresholds: Threshold[], inverted: boolean): SubRankResult {
+  const sorted = inverted ? [...thresholds].sort((a, b) => a.min - b.min) : [...thresholds].sort((a, b) => b.min - a.min);
 
-  for (let i = sorted.length - 1; i >= 0; i--) {
+  for (let i = 0; i < sorted.length; i++) {
     const current = sorted[i];
     const next = sorted[i + 1];
 
-    if (value >= current.min) {
+    const matched = inverted ? value <= current.min : value >= current.min;
+
+    if (matched) {
       if (!next) {
         return { rank: current.rank, modifier: '', percentToNext: 100 };
       }
 
-      const span = next.min - current.min;
-      const progress = span === 0 ? 1 : (value - current.min) / span;
+      const span = Math.abs(next.min - current.min);
+      const progress = span === 0 ? 1 : inverted
+        ? (current.min - value) / span
+        : (value - current.min) / span;
 
       let modifier: '-' | '' | '+' = '';
       if (progress < 0.33) modifier = '-';
@@ -59,8 +64,8 @@ function computeSubRank(value: number, thresholds: Threshold[]): SubRankResult {
   return { rank: 'E', modifier: '-', percentToNext: 0 };
 }
 
-const SubRankDisplay: React.FC<Props> = ({ value, thresholds }) => {
-  const { rank, modifier, percentToNext } = computeSubRank(value, thresholds);
+const SubRankDisplay: React.FC<Props> = ({ value, thresholds, inverted = false }) => {
+  const { rank, modifier, percentToNext } = computeSubRank(value, thresholds, inverted);
   const label = `${rank}${modifier}` as SubRank;
 
   const radius = 30;

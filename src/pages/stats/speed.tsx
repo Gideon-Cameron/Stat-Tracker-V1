@@ -10,7 +10,7 @@ import { saveUserStats } from '../../utils/saveUserStats';
 import { loadUserStats } from '../../utils/loadUserStats';
 import { loadUserHistory } from '../../utils/loadUserHistory';
 
-import SubRankDisplay from '../../components/SubRankDisplay';
+import SubRankDisplay from '../../components/SubRankDisplayS';
 
 
 const VALID_SPEED_KEYS: SpeedTest[] = [
