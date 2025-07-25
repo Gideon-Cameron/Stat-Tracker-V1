@@ -190,31 +190,31 @@ const FlexibilityPage: React.FC = () => {
           <RadarChart data={result} />
 
           <ul className="grid grid-cols-1 sm:grid-cols-2 gap-x-4 gap-y-3 mt-6">
-  {Object.entries(result).map(([test]) => {
-    const currentValue = formData?.[test as keyof FlexibilityFormData] ?? '';
-    const prevSnapshot =
-      historyIndex !== null && historyIndex > 0 ? history[historyIndex - 1] : null;
-    const previousValue = prevSnapshot?.[test as keyof FlexibilityFormData] ?? '';
-    const difference = Number(currentValue) - Number(previousValue);
+            {Object.entries(result).map(([test ]) => {
+            const currentValue = formData?.[test as keyof FlexibilityFormData] ?? '';
+            const prevSnapshot =
+            historyIndex !== null && historyIndex > 0 ? history[historyIndex - 1] : null;
+            const previousValue = prevSnapshot?.[test as keyof FlexibilityFormData] ?? '';
+            const difference = Number(currentValue) - Number(previousValue);
 
-    return (
-      <li key={test} className="flex justify-between items-center border-b py-2">
-        <span className="capitalize whitespace-nowrap">
-          {test.replace(/([A-Z])/g, ' $1')}
+              return (
+                <li key={test} className="flex justify-between items-center border-b py-2">
+                <span className="capitalize whitespace-nowrap">{test.replace(/([A-Z])/g, ' $1')}</span>
+                <span className="ml-4 flex items-center gap-2">
+                  <SubRankDisplay
+                  value={Number(currentValue)}
+                  thresholds={flexibilityRankThresholds[test as FlexibilityTest]}
+                />
+                {prevSnapshot && difference !== 0 && (
+                  <span className={`text-sm ${difference > 0 ? 'text-green-600' : 'text-red-600'}`}>
+                  {difference > 0 ? `↑ (+${difference})` : `↓ (${difference})`}
+                </span>
+              )}
         </span>
-        {currentValue !== '' ? (
-          <SubRankDisplay
-            value={Number(currentValue)}
-            thresholds={flexibilityRankThresholds[test as FlexibilityTest]}
-          />
-        ) : (
-          <span className="text-gray-400">No data</span>
-        )}
       </li>
     );
   })}
 </ul>
-
 
 
           {average && (
