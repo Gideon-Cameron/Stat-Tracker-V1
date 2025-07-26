@@ -12,7 +12,7 @@ const GoalList: React.FC<GoalListProps> = ({ goals, onComplete, onDelete }) => {
   if (goals.length === 0) {
     return (
       <div className="text-center text-gray-500 py-8">
-        No goals set yet. Add one to get started!
+        No goals set yet. Add one now to get started!
       </div>
     );
   }
@@ -32,3 +32,4 @@ const GoalList: React.FC<GoalListProps> = ({ goals, onComplete, onDelete }) => {
 };
 
 export default GoalList;
+
