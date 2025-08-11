@@ -1,5 +1,5 @@
 export interface Goal {
-    id: string; // Unique goal ID (can be generated with uuid for local testing)
+    id: string; // Unique goal ID (can be generated with uuid for local testing.)
     userId: string; // Useful when syncing to Firestore
     statKey: string; // e.g. "strength", "benchPress", "toeTouch"
     statLabel: string; // Human-readable, e.g. "Bench Press Max"
