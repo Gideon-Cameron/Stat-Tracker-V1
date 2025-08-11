@@ -6,7 +6,7 @@ import SpeedStatPage from './pages/stats/speed';
 import SkillStatPage from './pages/stats/skill';
 import FlexibilityStatPage from './pages/stats/flexibility';
 import StatsIndex from './pages/stats/index';
-import LoginPage from './pages/Login';
+import LoginPage from './pages/login';
 import { useAuth } from './context/AuthContext';
 import Home from './pages/home'; 
 
