@@ -23,8 +23,8 @@ const GoalList: React.FC<GoalListProps> = ({ goals, onComplete, onDelete }) => {
         <GoalCard
           key={goal.id}
           goal={goal}
-          onComplete={onComplete}
-          onDelete={onDelete}
+          onMarkComplete={onComplete}
+          onEdit={onDelete}
         />
       ))}
     </div>
@@ -32,4 +32,3 @@ const GoalList: React.FC<GoalListProps> = ({ goals, onComplete, onDelete }) => {
 };
 
 export default GoalList;
-
