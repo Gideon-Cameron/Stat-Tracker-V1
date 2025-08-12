@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Link, Navigate } from 'react-router-dom';
 import StrengthStatPage from './pages/stats/strength';
 import EnduranceStatPage from './pages/stats/endurance';
 import SpeedStatPage from './pages/stats/speed';
@@ -8,7 +8,25 @@ import FlexibilityStatPage from './pages/stats/flexibility';
 import StatsIndex from './pages/stats/index';
 import LoginPage from './pages/login';
 import { useAuth } from './context/AuthContext';
-import Home from './pages/home'; 
+import Home from './pages/home';
+
+// Protects routes for logged-in users only
+const ProtectedRoute: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  const { user } = useAuth();
+  if (!user) {
+    return <Navigate to="/login" replace />;
+  }
+  return <>{children}</>;
+};
+
+// Redirects logged-in users away from the login page
+const RedirectIfLoggedIn: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  const { user } = useAuth();
+  if (user) {
+    return <Navigate to="/" replace />;
+  }
+  return <>{children}</>;
+};
 
 const App: React.FC = () => {
   const { user, logout } = useAuth();
@@ -29,10 +47,7 @@ const App: React.FC = () => {
               <Link to="/stats/skill" className="hover:underline">Skill</Link>
               <Link to="/stats/flexibility" className="hover:underline">Flexibility</Link>
               {user ? (
-                <>
-                  {/* <span className="text-sm hidden sm:inline">Hello, {user.email}</span> */}
-                  <button onClick={logout} className="text-sm ml-2 hover:text-red-300">Logout</button>
-                </>
+                <button onClick={logout} className="text-sm ml-2 hover:text-red-300">Logout</button>
               ) : (
                 <Link to="/login" className="hover:underline">Login</Link>
               )}
@@ -42,14 +57,75 @@ const App: React.FC = () => {
 
         <main className="py-6 px-4">
           <Routes>
-            <Route path="/" element={<Home />} /> {/* ✅ Dashboard as Homepage */}
-            <Route path="/login" element={<LoginPage />} />
-            <Route path="/stats" element={<StatsIndex />} />
-            <Route path="/stats/strength" element={<StrengthStatPage />} />
-            <Route path="/stats/endurance" element={<EnduranceStatPage />} />
-            <Route path="/stats/speed" element={<SpeedStatPage />} />
-            <Route path="/stats/skill" element={<SkillStatPage />} />
-            <Route path="/stats/flexibility" element={<FlexibilityStatPage />} />
+            {/* Home page requires login */}
+            <Route
+              path="/"
+              element={
+                <ProtectedRoute>
+                  <Home />
+                </ProtectedRoute>
+              }
+            />
+
+            {/* Login page redirects if already logged in */}
+            <Route
+              path="/login"
+              element={
+                <RedirectIfLoggedIn>
+                  <LoginPage />
+                </RedirectIfLoggedIn>
+              }
+            />
+
+            {/* Stats pages require login */}
+            <Route
+              path="/stats"
+              element={
+                <ProtectedRoute>
+                  <StatsIndex />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/stats/strength"
+              element={
+                <ProtectedRoute>
+                  <StrengthStatPage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/stats/endurance"
+              element={
+                <ProtectedRoute>
+                  <EnduranceStatPage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/stats/speed"
+              element={
+                <ProtectedRoute>
+                  <SpeedStatPage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/stats/skill"
+              element={
+                <ProtectedRoute>
+                  <SkillStatPage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/stats/flexibility"
+              element={
+                <ProtectedRoute>
+                  <FlexibilityStatPage />
+                </ProtectedRoute>
+              }
+            />
           </Routes>
         </main>
       </div>
