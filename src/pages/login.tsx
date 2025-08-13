@@ -44,116 +44,114 @@ const LoginPage: React.FC = () => {
   };
 
   return (
-    <div className="max-w-md mx-auto py-12 px-4">
-      <h1 className="text-2xl font-bold mb-6 text-center">Welcome to Stat Tracker</h1>
+    <div className="min-h-screen flex flex-col items-center justify-center bg-[#0a192f] px-4">
+      <h1 className="text-3xl font-bold text-[#64ffda] mb-8">Stat Tracker</h1>
 
       {user ? (
-        <div className="text-center">
-          <p className="mb-4">You’re logged in as <strong>{user.email}</strong></p>
+        <div className="bg-[#112240] p-6 rounded-md shadow-lg w-full max-w-sm text-center">
+          <p className="mb-4 text-[#ccd6f6]">
+            You’re logged in as <strong>{user.email}</strong>
+          </p>
           <button
             onClick={() => logout()}
-            className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600"
+            className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 transition"
           >
             Logout
           </button>
         </div>
       ) : (
-        <form onSubmit={handleAuth} className="space-y-4">
-          {/* Email */}
-          <input
-            type="email"
-            placeholder="Email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-            className="w-full px-4 py-2 border rounded"
-          />
-
-          {/* Password field only in login/signup */}
-          {mode !== 'forgot' && (
+        <div className="bg-[#112240] p-6 rounded-md shadow-lg w-full max-w-sm">
+          <form onSubmit={handleAuth} className="space-y-4">
             <input
-              type="password"
-              placeholder="Password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
+              type="email"
+              placeholder="Email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
               required
-              className="w-full px-4 py-2 border rounded"
+              className="w-full px-4 py-2 rounded bg-[#0a192f] text-[#ccd6f6] border border-[#233554] focus:border-[#64ffda] focus:outline-none"
             />
-          )}
 
-          {/* Error & success messages */}
-          {error && <p className="text-red-600 text-sm">{error}</p>}
-          {message && <p className="text-green-600 text-sm">{message}</p>}
+            {mode !== 'forgot' && (
+              <input
+                type="password"
+                placeholder="Password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
+                className="w-full px-4 py-2 rounded bg-[#0a192f] text-[#ccd6f6] border border-[#233554] focus:border-[#64ffda] focus:outline-none"
+              />
+            )}
 
-          {/* Submit button */}
-          <button
-            type="submit"
-            className="w-full bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-700 transition"
-          >
-            {mode === 'login' && 'Log In'}
-            {mode === 'signup' && 'Create Account'}
-            {mode === 'forgot' && 'Send Reset Email'}
-          </button>
+            {error && <p className="text-red-500 text-sm">{error}</p>}
+            {message && <p className="text-green-500 text-sm">{message}</p>}
 
-          {/* Google login only in login mode */}
-          {mode === 'login' && (
             <button
-              type="button"
-              onClick={handleGoogleLogin}
-              className="w-full bg-white border border-gray-300 text-gray-700 py-2 mt-3 rounded hover:bg-gray-100"
+              type="submit"
+              className="w-full bg-[#64ffda] text-[#0a192f] font-semibold py-2 px-4 rounded hover:brightness-110 transition"
             >
-              Continue with Google
+              {mode === 'login' && 'Log In'}
+              {mode === 'signup' && 'Create Account'}
+              {mode === 'forgot' && 'Send Reset Email'}
             </button>
-          )}
 
-          {/* Links */}
-          <p className="text-sm text-center mt-4">
             {mode === 'login' && (
-              <>
-                Need an account?{' '}
-                <button
-                  type="button"
-                  className="text-blue-600 hover:underline"
-                  onClick={() => setMode('signup')}
-                >
-                  Sign up
-                </button>
-                <br />
-                <button
-                  type="button"
-                  className="text-blue-600 hover:underline mt-2"
-                  onClick={() => setMode('forgot')}
-                >
-                  Forgot your password?
-                </button>
-              </>
+              <button
+                type="button"
+                onClick={handleGoogleLogin}
+                className="w-full bg-[#0a192f] border border-[#64ffda] text-[#64ffda] py-2 mt-3 rounded hover:bg-[#112240] transition"
+              >
+                Continue with Google
+              </button>
             )}
-            {mode === 'signup' && (
-              <>
-                Already have an account?{' '}
-                <button
-                  type="button"
-                  className="text-blue-600 hover:underline"
-                  onClick={() => setMode('login')}
-                >
-                  Log in
-                </button>
-              </>
-            )}
-            {mode === 'forgot' && (
-              <>
-                Remember your password?{' '}
-                <button
-                  type="button"
-                  className="text-blue-600 hover:underline"
-                  onClick={() => setMode('login')}
-                >
-                  Log in
-                </button>
-              </>
-            )}
-          </p>
-        </form>
+
+            <div className="text-sm text-center mt-4 text-[#8892b0]">
+              {mode === 'login' && (
+                <>
+                  Need an account?{' '}
+                  <button
+                    type="button"
+                    className="text-[#64ffda] hover:underline"
+                    onClick={() => setMode('signup')}
+                  >
+                    Sign up
+                  </button>
+                  <br />
+                  <button
+                    type="button"
+                    className="text-[#64ffda] hover:underline mt-2"
+                    onClick={() => setMode('forgot')}
+                  >
+                    Forgot your password?
+                  </button>
+                </>
+              )}
+              {mode === 'signup' && (
+                <>
+                  Already have an account?{' '}
+                  <button
+                    type="button"
+                    className="text-[#64ffda] hover:underline"
+                    onClick={() => setMode('login')}
+                  >
+                    Log in
+                  </button>
+                </>
+              )}
+              {mode === 'forgot' && (
+                <>
+                  Remember your password?{' '}
+                  <button
+                    type="button"
+                    className="text-[#64ffda] hover:underline"
+                    onClick={() => setMode('login')}
+                  >
+                    Log in
+                  </button>
+                </>
+              )}
+            </div>
+          </form>
+        </div>
       )}
     </div>
   );
