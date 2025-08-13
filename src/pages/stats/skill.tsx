@@ -134,28 +134,28 @@ const SkillStatPage: React.FC = () => {
   };
 
   if (loading) {
-    return <p className="text-center mt-10">Loading saved data...</p>;
+    return <p className="text-center mt-10 text-[#64ffda]">Loading saved data...</p>;
   }
 
   return (
-    <div className="py-10 px-6 max-w-3xl mx-auto">
-      <h1 className="text-2xl font-bold mb-6 text-center">Skill Stat Assessment</h1>
+    <div className="py-10 px-6 max-w-3xl mx-auto text-white">
+      <h1 className="text-3xl font-bold mb-6 text-center text-[#64ffda]">Skill Stat Assessment</h1>
       <SkillInput onSubmit={handleSubmit} initialData={formData ?? undefined} />
 
       {result && (
-        <div className="mt-10 bg-gray-100 p-6 rounded-lg shadow-md">
-          <h2 className="text-xl font-semibold mb-4">Your Skill Ranks</h2>
+        <div className="mt-10 bg-[#112240] p-6 rounded-lg shadow-lg border border-[#233554]">
+          <h2 className="text-xl font-semibold mb-4 text-[#64ffda]">Your Skill Ranks</h2>
 
           {history.length > 0 && (
             <div className="flex justify-center items-center gap-4 mb-4">
               <button
                 onClick={goToPreviousSnapshot}
                 disabled={history.length === 0 || (historyIndex !== null && historyIndex === 0)}
-                className="bg-gray-300 px-3 py-1 rounded disabled:opacity-50"
+                className="bg-[#233554] text-white px-3 py-1 rounded hover:bg-[#64ffda] hover:text-black transition disabled:opacity-50 disabled:hover:bg-[#233554] disabled:hover:text-white"
               >
                 ← Previous
               </button>
-              <span className="text-sm text-gray-600">
+              <span className="text-sm text-gray-400">
                 {historyIndex === null
                   ? 'Viewing: Current Stats'
                   : `Viewing: Snapshot ${historyIndex + 1} of ${history.length}`}
@@ -163,7 +163,7 @@ const SkillStatPage: React.FC = () => {
               <button
                 onClick={goToNextSnapshot}
                 disabled={history.length === 0}
-                className="bg-gray-300 px-3 py-1 rounded disabled:opacity-50"
+                className="bg-[#233554] text-white px-3 py-1 rounded hover:bg-[#64ffda] hover:text-black transition disabled:opacity-50 disabled:hover:bg-[#233554] disabled:hover:text-white"
               >
                 Next →
               </button>
@@ -174,9 +174,12 @@ const SkillStatPage: React.FC = () => {
 
           <ul className="grid grid-cols-1 sm:grid-cols-2 gap-x-4 gap-y-3 mt-6">
             {Object.entries(result).map(([test, rank]) => (
-              <li key={test} className="flex justify-between items-center border-b py-2">
+              <li
+                key={test}
+                className="flex justify-between items-center border-b border-[#233554] py-2"
+              >
                 <span className="capitalize whitespace-nowrap">{test.replace(/([A-Z])/g, ' $1')}</span>
-                <span className="font-bold text-blue-700 whitespace-nowrap ml-4">{rank}</span>
+                <span className="font-bold text-[#64ffda] whitespace-nowrap ml-4">{rank}</span>
               </li>
             ))}
           </ul>
@@ -184,10 +187,11 @@ const SkillStatPage: React.FC = () => {
           {average && (
             <div className="mt-6 text-center">
               <p className="text-lg">
-                <span className="font-semibold">Average Skill Score:</span> {average.averageScore}
+                <span className="font-semibold text-gray-300">Average Skill Score:</span>{' '}
+                {average.averageScore}
               </p>
               <p className="text-xl mt-1">
-                <span className="font-bold text-blue-800">Global Rank:</span> {average.globalRank}
+                <span className="font-bold text-[#64ffda]">Global Rank:</span> {average.globalRank}
               </p>
             </div>
           )}
