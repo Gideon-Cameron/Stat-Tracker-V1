@@ -53,10 +53,16 @@ const EnduranceInput: React.FC<Props> = ({ onSubmit, initialData }) => {
   ];
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-6 max-w-md mx-auto p-4">
+    <form
+      onSubmit={handleSubmit}
+      className="space-y-6 max-w-md mx-auto p-6 bg-[#0a192f] rounded-lg shadow-lg border border-[#112240]"
+    >
       {fields.map((field) => (
         <div key={field.name} className="flex flex-col">
-          <label htmlFor={field.name} className="mb-1 text-sm font-medium">
+          <label
+            htmlFor={field.name}
+            className="mb-1 text-sm font-medium text-[#64ffda]"
+          >
             {field.label}
           </label>
           <input
@@ -67,13 +73,16 @@ const EnduranceInput: React.FC<Props> = ({ onSubmit, initialData }) => {
             onChange={handleChange}
             min={0}
             inputMode="numeric"
-            className="border border-gray-300 px-3 py-2 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="bg-[#112240] border border-[#233554] text-white px-3 py-2 rounded-md shadow-sm 
+              focus:outline-none focus:ring-2 focus:ring-[#64ffda] focus:border-[#64ffda]
+              placeholder-gray-400"
           />
         </div>
       ))}
       <button
         type="submit"
-        className="w-full bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-700 transition"
+        className="w-full bg-[#64ffda] text-[#0a192f] py-2 px-4 rounded font-semibold 
+          hover:bg-teal-300 transition-colors duration-300"
       >
         Submit
       </button>
