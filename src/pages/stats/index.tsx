@@ -20,7 +20,8 @@ const statCategories = [
   {
     name: 'Skill',
     path: '/stats/skill',
-    description: 'Evaluate your control, balance, and bodyweight skills with advanced calisthenics moves.',
+    description:
+      'Evaluate your control, balance, and bodyweight skills with advanced calisthenics moves.',
   },
   {
     name: 'Flexibility',
@@ -31,19 +32,22 @@ const statCategories = [
 
 const StatsIndex: React.FC = () => {
   return (
-    <div className="max-w-5xl mx-auto px-4 py-12">
-      <h1 className="text-3xl font-bold text-center mb-10">Select a Stat Category</h1>
+    <div className="min-h-screen bg-[#0a192f] px-4 py-12">
+      <h1 className="text-3xl font-bold text-center mb-10 text-[#64ffda]">
+        Select a Stat Category
+      </h1>
 
-      {/* 💡 Flexbox layout instead of grid */}
+      {/* Flex layout */}
       <div className="flex flex-wrap justify-center gap-6">
         {statCategories.map(({ name, path, description }) => (
           <Link
             key={name}
             to={path}
-            className="w-full sm:w-[280px] bg-white p-6 rounded-lg border shadow-sm hover:shadow-md transition"
+            className="w-full sm:w-[280px] bg-[#112240] p-6 rounded-lg border border-[#233554] shadow-md 
+            hover:shadow-lg hover:scale-[1.03] hover:border-[#64ffda] transition-all duration-200"
           >
-            <h2 className="text-xl font-semibold mb-2 text-blue-700 hover:underline">{name}</h2>
-            <p className="text-sm text-gray-700">{description}</p>
+            <h2 className="text-xl font-semibold mb-2 text-[#ccd6f6]">{name}</h2>
+            <p className="text-sm text-[#8892b0]">{description}</p>
           </Link>
         ))}
       </div>

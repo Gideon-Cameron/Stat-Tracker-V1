@@ -33,29 +33,71 @@ const App: React.FC = () => {
 
   return (
     <Router>
-      <div className="min-h-screen bg-white text-gray-900">
-        <nav className="bg-blue-600 text-white px-6 py-4 shadow">
-          <div className="flex justify-between items-center max-w-5xl mx-auto">
-            <h1 className="text-xl font-bold">
+      <div className="min-h-screen bg-[#0a192f] text-[#ccd6f6]">
+        {/* Navbar */}
+        <nav className="bg-[#112240] text-[#ccd6f6] px-6 py-4 shadow-lg sticky top-0 z-50 border-b border-[#233554]">
+          <div className="flex justify-between items-center max-w-6xl mx-auto">
+            <h1 className="text-xl font-bold text-[#64ffda] hover:text-[#52e0c4] transition-colors">
               <Link to="/">Stat Tracker</Link>
             </h1>
             <div className="space-x-4 flex items-center">
-              <Link to="/stats" className="hover:underline">All Stats</Link>
-              <Link to="/stats/strength" className="hover:underline">Strength</Link>
-              <Link to="/stats/endurance" className="hover:underline">Endurance</Link>
-              <Link to="/stats/speed" className="hover:underline">Speed</Link>
-              <Link to="/stats/skill" className="hover:underline">Skill</Link>
-              <Link to="/stats/flexibility" className="hover:underline">Flexibility</Link>
+              <Link
+                to="/stats"
+                className="hover:text-[#64ffda] transition-colors"
+              >
+                All Stats
+              </Link>
+              <Link
+                to="/stats/strength"
+                className="hover:text-[#64ffda] transition-colors"
+              >
+                Strength
+              </Link>
+              <Link
+                to="/stats/endurance"
+                className="hover:text-[#64ffda] transition-colors"
+              >
+                Endurance
+              </Link>
+              <Link
+                to="/stats/speed"
+                className="hover:text-[#64ffda] transition-colors"
+              >
+                Speed
+              </Link>
+              <Link
+                to="/stats/skill"
+                className="hover:text-[#64ffda] transition-colors"
+              >
+                Skill
+              </Link>
+              <Link
+                to="/stats/flexibility"
+                className="hover:text-[#64ffda] transition-colors"
+              >
+                Flexibility
+              </Link>
               {user ? (
-                <button onClick={logout} className="text-sm ml-2 hover:text-red-300">Logout</button>
+                <button
+                  onClick={logout}
+                  className="text-sm ml-2 text-red-400 hover:text-red-300 transition-colors"
+                >
+                  Logout
+                </button>
               ) : (
-                <Link to="/login" className="hover:underline">Login</Link>
+                <Link
+                  to="/login"
+                  className="hover:text-[#64ffda] transition-colors"
+                >
+                  Login
+                </Link>
               )}
             </div>
           </div>
         </nav>
 
-        <main className="py-6 px-4">
+        {/* Main Content */}
+        <main className="py-8 px-4 max-w-6xl mx-auto">
           <Routes>
             {/* Home page requires login */}
             <Route
