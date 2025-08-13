@@ -107,13 +107,13 @@ const LoginPage: React.FC = () => {
             <div className="text-sm text-center mt-4 text-[#8892b0]">
               {mode === 'login' && (
                 <>
-                  Need an account?{' '}
+                  Don't have an account?{' '}
                   <button
                     type="button"
                     className="text-[#64ffda] hover:underline"
                     onClick={() => setMode('signup')}
                   >
-                    Sign up
+                    Create one
                   </button>
                   <br />
                   <button
