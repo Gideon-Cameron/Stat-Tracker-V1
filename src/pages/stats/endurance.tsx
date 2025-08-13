@@ -9,7 +9,6 @@ import { useAuth } from '../../context/AuthContext';
 import { saveUserStats } from '../../utils/saveUserStats';
 import { loadUserStats } from '../../utils/loadUserStats';
 import { loadUserHistory } from '../../utils/loadUserHistory';
-
 import SubRankDisplay from '../../components/SubRankDisplay';
 
 const EnduranceStatPage: React.FC = () => {
@@ -33,12 +32,9 @@ const EnduranceStatPage: React.FC = () => {
         'endurance'
       );
 
-      const allHistory = await loadUserHistory<EnduranceFormData & {
-        averageScore: number;
-        globalRank: Rank;
-        id: string;
-        timestamp: number;
-      }>(user, 'endurance');
+      const allHistory = await loadUserHistory<
+        EnduranceFormData & { averageScore: number; globalRank: Rank; id: string; timestamp: number }
+      >(user, 'endurance');
 
       setHistory(allHistory);
       setHistoryIndex(null);
@@ -88,12 +84,9 @@ const EnduranceStatPage: React.FC = () => {
         globalRank: averageResult.globalRank,
       });
 
-      const updatedHistory = await loadUserHistory<EnduranceFormData & {
-        averageScore: number;
-        globalRank: Rank;
-        id: string;
-        timestamp: number;
-      }>(user, 'endurance');
+      const updatedHistory = await loadUserHistory<
+        EnduranceFormData & { averageScore: number; globalRank: Rank; id: string; timestamp: number }
+      >(user, 'endurance');
 
       setHistory(updatedHistory);
     }
@@ -161,27 +154,33 @@ const EnduranceStatPage: React.FC = () => {
     }
   };
 
-  if (loading) return <p className="text-center mt-10">Loading saved data...</p>;
+  if (loading) return <p className="text-center mt-10 text-[#64ffda]">Loading saved data...</p>;
 
   return (
-    <div className="py-10 px-6 max-w-3xl mx-auto">
-      <h1 className="text-2xl font-bold mb-6 text-center">Endurance Stat Assessment</h1>
+    <div className="py-10 px-6 max-w-3xl mx-auto text-white">
+      <h1 className="text-2xl font-bold mb-6 text-center text-[#64ffda]">
+        Endurance Stat Assessment
+      </h1>
+
       <EnduranceInput onSubmit={handleSubmit} initialData={formData ?? undefined} />
 
       {result && (
-        <div className="mt-10 bg-gray-100 p-6 rounded-lg shadow-md">
-          <h2 className="text-xl font-semibold mb-4">Your Endurance Ranks</h2>
+        <div className="mt-10 bg-[#0a192f] border border-[#112240] p-6 rounded-lg shadow-lg">
+          <h2 className="text-xl font-semibold mb-4 text-[#64ffda]">
+            Your Endurance Ranks
+          </h2>
 
           {history.length > 1 && (
             <div className="flex justify-center items-center gap-4 mb-4">
               <button
                 onClick={goToPreviousSnapshot}
                 disabled={historyIndex === 0 && history.length > 1}
-                className="bg-gray-300 px-3 py-1 rounded disabled:opacity-50"
+                className="bg-[#112240] text-[#64ffda] px-3 py-1 rounded border border-[#233554] 
+                  hover:bg-[#1a2d4a] disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 ← Previous
               </button>
-              <span className="text-sm text-gray-600">
+              <span className="text-sm text-gray-400">
                 {historyIndex === null
                   ? 'Viewing: Current Stats'
                   : `Viewing: Snapshot ${historyIndex + 1} of ${history.length}`}
@@ -189,7 +188,8 @@ const EnduranceStatPage: React.FC = () => {
               <button
                 onClick={goToNextSnapshot}
                 disabled={historyIndex === null && !formData}
-                className="bg-gray-300 px-3 py-1 rounded disabled:opacity-50"
+                className="bg-[#112240] text-[#64ffda] px-3 py-1 rounded border border-[#233554] 
+                  hover:bg-[#1a2d4a] disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 Next →
               </button>
@@ -210,35 +210,39 @@ const EnduranceStatPage: React.FC = () => {
           )}
 
           <ul className="grid grid-cols-1 sm:grid-cols-2 gap-x-4 gap-y-3 mt-6">
-          {Object.entries(result).map(([testKey]) => {
-  const value = formData?.[testKey as keyof EnduranceFormData];
-  const thresholds = enduranceRankThresholds[testKey as EnduranceTest];
+            {Object.entries(result).map(([testKey]) => {
+              const value = formData?.[testKey as keyof EnduranceFormData];
+              const thresholds = enduranceRankThresholds[testKey as EnduranceTest];
 
-  return (
-    <li key={testKey} className="flex justify-between items-center border-b py-2">
-      <span className="capitalize whitespace-nowrap">
-        {testKey.replace(/([A-Z])/g, ' $1').replace(/_/g, ' ')}
-      </span>
-      {value !== undefined && thresholds ? (
-        <SubRankDisplay
-          value={Number(value)}
-          thresholds={thresholds}
-        />
-      ) : (
-        <span className="text-gray-400">No data</span>
-      )}
-    </li>
-  );
-})}
+              return (
+                <li
+                  key={testKey}
+                  className="flex justify-between items-center border-b border-[#233554] py-2"
+                >
+                  <span className="capitalize whitespace-nowrap text-gray-300">
+                    {testKey.replace(/([A-Z])/g, ' $1').replace(/_/g, ' ')}
+                  </span>
+                  {value !== undefined && thresholds ? (
+                    <SubRankDisplay value={Number(value)} thresholds={thresholds} />
+                  ) : (
+                    <span className="text-gray-500">No data</span>
+                  )}
+                </li>
+              );
+            })}
           </ul>
 
           {average && (
             <div className="mt-6 text-center">
               <p className="text-lg">
-                <span className="font-semibold">Average Endurance Score:</span> {average.averageScore}
+                <span className="font-semibold text-[#64ffda]">
+                  Average Endurance Score:
+                </span>{' '}
+                {average.averageScore}
               </p>
               <p className="text-xl mt-1">
-                <span className="font-bold text-blue-800">Global Rank:</span> {average.globalRank}
+                <span className="font-bold text-[#64ffda]">Global Rank:</span>{' '}
+                {average.globalRank}
               </p>
             </div>
           )}
