@@ -3,37 +3,44 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 
 const LoginPage: React.FC = () => {
-  const { login, signup, loginWithGoogle, logout, user } = useAuth();
+  const { login, signup, loginWithGoogle, logout, resetPassword, user } = useAuth();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [mode, setMode] = useState<'login' | 'signup'>('login');
+  const [mode, setMode] = useState<'login' | 'signup' | 'forgot'>('login');
   const [error, setError] = useState('');
+  const [message, setMessage] = useState('');
   const navigate = useNavigate();
 
   const handleAuth = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
+    setMessage('');
     try {
-        if (mode === 'login') {
-          await login(email, password);
-        } else {
-          await signup(email, password);
-        }
-        navigate('/stats');
-      } catch (err: unknown) {
-        const message = err instanceof Error ? err.message : 'Authentication failed.';
-        setError(message);
+      if (mode === 'login') {
+        await login(email, password);
+        navigate('/');
+      } else if (mode === 'signup') {
+        await signup(email, password);
+        navigate('/');
+      } else if (mode === 'forgot') {
+        await resetPassword(email);
+        setMessage('Password reset email sent! Please check your inbox.');
+        setMode('login');
       }
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : 'Authentication failed.';
+      setError(message);
+    }
   };
 
   const handleGoogleLogin = async () => {
     try {
-        await loginWithGoogle();
-        navigate('/stats');
-      } catch (err: unknown) {
-        const message = err instanceof Error ? err.message : 'Google login failed.';
-        setError(message);
-      }
+      await loginWithGoogle();
+      navigate('/');
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : 'Google login failed.';
+      setError(message);
+    }
   };
 
   return (
@@ -52,6 +59,7 @@ const LoginPage: React.FC = () => {
         </div>
       ) : (
         <form onSubmit={handleAuth} className="space-y-4">
+          {/* Email */}
           <input
             type="email"
             placeholder="Email"
@@ -60,41 +68,90 @@ const LoginPage: React.FC = () => {
             required
             className="w-full px-4 py-2 border rounded"
           />
-          <input
-            type="password"
-            placeholder="Password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-            className="w-full px-4 py-2 border rounded"
-          />
 
+          {/* Password field only in login/signup */}
+          {mode !== 'forgot' && (
+            <input
+              type="password"
+              placeholder="Password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+              className="w-full px-4 py-2 border rounded"
+            />
+          )}
+
+          {/* Error & success messages */}
           {error && <p className="text-red-600 text-sm">{error}</p>}
+          {message && <p className="text-green-600 text-sm">{message}</p>}
 
+          {/* Submit button */}
           <button
             type="submit"
             className="w-full bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-700 transition"
           >
-            {mode === 'login' ? 'Log In' : 'Create Account'}
+            {mode === 'login' && 'Log In'}
+            {mode === 'signup' && 'Create Account'}
+            {mode === 'forgot' && 'Send Reset Email'}
           </button>
 
-          <button
-            type="button"
-            onClick={handleGoogleLogin}
-            className="w-full bg-white border border-gray-300 text-gray-700 py-2 mt-3 rounded hover:bg-gray-100"
-          >
-            Continue with Google
-          </button>
-
-          <p className="text-sm text-center mt-4">
-            {mode === 'login' ? 'Need an account?' : 'Already have an account?'}{' '}
+          {/* Google login only in login mode */}
+          {mode === 'login' && (
             <button
               type="button"
-              className="text-blue-600 hover:underline"
-              onClick={() => setMode(mode === 'login' ? 'signup' : 'login')}
+              onClick={handleGoogleLogin}
+              className="w-full bg-white border border-gray-300 text-gray-700 py-2 mt-3 rounded hover:bg-gray-100"
             >
-              {mode === 'login' ? 'Sign up' : 'Log in'}
+              Continue with Google
             </button>
+          )}
+
+          {/* Links */}
+          <p className="text-sm text-center mt-4">
+            {mode === 'login' && (
+              <>
+                Need an account?{' '}
+                <button
+                  type="button"
+                  className="text-blue-600 hover:underline"
+                  onClick={() => setMode('signup')}
+                >
+                  Sign up
+                </button>
+                <br />
+                <button
+                  type="button"
+                  className="text-blue-600 hover:underline mt-2"
+                  onClick={() => setMode('forgot')}
+                >
+                  Forgot your password?
+                </button>
+              </>
+            )}
+            {mode === 'signup' && (
+              <>
+                Already have an account?{' '}
+                <button
+                  type="button"
+                  className="text-blue-600 hover:underline"
+                  onClick={() => setMode('login')}
+                >
+                  Log in
+                </button>
+              </>
+            )}
+            {mode === 'forgot' && (
+              <>
+                Remember your password?{' '}
+                <button
+                  type="button"
+                  className="text-blue-600 hover:underline"
+                  onClick={() => setMode('login')}
+                >
+                  Log in
+                </button>
+              </>
+            )}
           </p>
         </form>
       )}
