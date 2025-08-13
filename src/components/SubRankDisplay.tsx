@@ -27,7 +27,6 @@ interface Props {
   thresholds: Threshold[];
 }
 
-// ✅ Updated logic: thresholds are sorted ascending before processing
 function computeSubRank(value: number, thresholds: Threshold[]): SubRankResult {
   const sorted = [...thresholds].sort((a, b) => a.min - b.min);
 
@@ -71,9 +70,13 @@ const SubRankDisplay: React.FC<Props> = ({ value, thresholds }) => {
 
   return (
     <div className="relative w-[60px] h-[60px]">
-      <svg height={radius * 2} width={radius * 2} className="transform -rotate-90">
+      <svg
+        height={radius * 2}
+        width={radius * 2}
+        className="transform -rotate-90 drop-shadow-md"
+      >
         <circle
-          stroke="#e2e8f0"
+          stroke="#233554"
           fill="transparent"
           strokeWidth={stroke}
           r={normalizedRadius}
@@ -81,7 +84,7 @@ const SubRankDisplay: React.FC<Props> = ({ value, thresholds }) => {
           cy={radius}
         />
         <circle
-          stroke="#3b82f6"
+          stroke="#64ffda"
           fill="transparent"
           strokeWidth={stroke}
           strokeLinecap="round"
@@ -90,9 +93,10 @@ const SubRankDisplay: React.FC<Props> = ({ value, thresholds }) => {
           r={normalizedRadius}
           cx={radius}
           cy={radius}
+          className="transition-all duration-300 ease-out"
         />
       </svg>
-      <span className="absolute inset-0 flex items-center justify-center text-sm font-bold text-blue-700">
+      <span className="absolute inset-0 flex items-center justify-center text-sm font-bold text-[#64ffda]">
         {label}
       </span>
     </div>
