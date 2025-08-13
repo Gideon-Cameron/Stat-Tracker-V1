@@ -25,12 +25,13 @@ interface SubRankResult {
 interface Props {
   value: number;
   thresholds: Threshold[];
-  inverted?: boolean; // NEW: pass true for speed tests
+  inverted?: boolean; // pass true for speed tests
 }
 
-// Modified logic to handle both normal and inverted scoring
 function computeSubRank(value: number, thresholds: Threshold[], inverted: boolean): SubRankResult {
-  const sorted = inverted ? [...thresholds].sort((a, b) => a.min - b.min) : [...thresholds].sort((a, b) => b.min - a.min);
+  const sorted = inverted
+    ? [...thresholds].sort((a, b) => a.min - b.min)
+    : [...thresholds].sort((a, b) => b.min - a.min);
 
   for (let i = 0; i < sorted.length; i++) {
     const current = sorted[i];
@@ -78,7 +79,7 @@ const SubRankDisplay: React.FC<Props> = ({ value, thresholds, inverted = false }
     <div className="relative w-[60px] h-[60px]">
       <svg height={radius * 2} width={radius * 2} className="transform -rotate-90">
         <circle
-          stroke="#e2e8f0"
+          stroke="#233554" // darker background ring
           fill="transparent"
           strokeWidth={stroke}
           r={normalizedRadius}
@@ -86,7 +87,7 @@ const SubRankDisplay: React.FC<Props> = ({ value, thresholds, inverted = false }
           cy={radius}
         />
         <circle
-          stroke="#3b82f6"
+          stroke="#64ffda" // teal accent
           fill="transparent"
           strokeWidth={stroke}
           strokeLinecap="round"
@@ -97,7 +98,7 @@ const SubRankDisplay: React.FC<Props> = ({ value, thresholds, inverted = false }
           cy={radius}
         />
       </svg>
-      <span className="absolute inset-0 flex items-center justify-center text-sm font-bold text-blue-700">
+      <span className="absolute inset-0 flex items-center justify-center text-sm font-bold text-[#64ffda]">
         {label}
       </span>
     </div>
