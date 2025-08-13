@@ -48,12 +48,9 @@ const StrengthStatPage: React.FC = () => {
         user,
         'strength'
       );
-      const allHistory = await loadUserHistory<StrengthFormData & {
-        averageScore: number;
-        globalRank: Rank;
-        id: string;
-        timestamp: number;
-      }>(user, 'strength');
+      const allHistory = await loadUserHistory<
+        StrengthFormData & { averageScore: number; globalRank: Rank; id: string; timestamp: number }
+      >(user, 'strength');
 
       setHistory(allHistory);
       setHistoryIndex(null);
@@ -99,12 +96,9 @@ const StrengthStatPage: React.FC = () => {
         globalRank: averageResult.globalRank,
       });
 
-      const updatedHistory = await loadUserHistory<StrengthFormData & {
-        averageScore: number;
-        globalRank: Rank;
-        id: string;
-        timestamp: number;
-      }>(user, 'strength');
+      const updatedHistory = await loadUserHistory<
+        StrengthFormData & { averageScore: number; globalRank: Rank; id: string; timestamp: number }
+      >(user, 'strength');
 
       setHistory(updatedHistory);
     }
@@ -150,27 +144,27 @@ const StrengthStatPage: React.FC = () => {
     }
   };
 
-  if (loading) return <p className="text-center mt-10">Loading saved data...</p>;
+  if (loading) return <p className="text-center mt-10 text-[#64ffda]">Loading saved data...</p>;
 
   return (
-    <div className="py-10 px-6 max-w-3xl mx-auto">
-      <h1 className="text-2xl font-bold mb-6 text-center">Strength Stat Assessment</h1>
+    <div className="py-10 px-6 max-w-3xl mx-auto text-[#ccd6f6]">
+      <h1 className="text-3xl font-bold mb-6 text-center text-[#64ffda]">Strength Stat Assessment</h1>
       <StrengthInput onSubmit={handleSubmit} initialData={formData ?? undefined} />
 
       {result && (
-        <div className="mt-10 bg-gray-100 p-6 rounded-lg shadow-md">
-          <h2 className="text-xl font-semibold mb-4">Your Strength Ranks</h2>
+        <div className="mt-10 bg-[#112240] p-6 rounded-lg shadow-lg border border-[#233554]">
+          <h2 className="text-xl font-semibold mb-4 text-[#64ffda]">Your Strength Ranks</h2>
 
           {history.length > 0 && (
-            <div className="flex justify-center items-center gap-4 mb-4">
+            <div className="flex justify-center items-center gap-4 mb-6">
               <button
                 onClick={goToPreviousSnapshot}
                 disabled={history.length === 0 || (historyIndex !== null && historyIndex === 0)}
-                className="bg-gray-300 px-3 py-1 rounded disabled:opacity-50"
+                className="bg-[#233554] px-3 py-1 rounded text-sm hover:bg-[#2d3f66] disabled:opacity-50 transition"
               >
                 ← Previous
               </button>
-              <span className="text-sm text-gray-600">
+              <span className="text-sm text-gray-400">
                 {historyIndex === null
                   ? 'Viewing: Current Stats'
                   : `Viewing: Snapshot ${historyIndex + 1} of ${history.length}`}
@@ -178,7 +172,7 @@ const StrengthStatPage: React.FC = () => {
               <button
                 onClick={goToNextSnapshot}
                 disabled={history.length === 0}
-                className="bg-gray-300 px-3 py-1 rounded disabled:opacity-50"
+                className="bg-[#233554] px-3 py-1 rounded text-sm hover:bg-[#2d3f66] disabled:opacity-50 transition"
               >
                 Next →
               </button>
@@ -192,7 +186,10 @@ const StrengthStatPage: React.FC = () => {
               const value = formData?.[test as keyof StrengthFormData];
 
               return (
-                <li key={test} className="flex justify-between items-center border-b py-2">
+                <li
+                  key={test}
+                  className="flex justify-between items-center border-b border-[#233554] py-2"
+                >
                   <span className="capitalize whitespace-nowrap">{test.replace(/([A-Z])/g, ' $1')}</span>
                   {value !== undefined ? (
                     <SubRankDisplay
@@ -200,7 +197,7 @@ const StrengthStatPage: React.FC = () => {
                       thresholds={strengthRankThresholds[test as StrengthTest]}
                     />
                   ) : (
-                    <span className="text-gray-400">No data</span>
+                    <span className="text-gray-500">No data</span>
                   )}
                 </li>
               );
@@ -210,10 +207,11 @@ const StrengthStatPage: React.FC = () => {
           {average && (
             <div className="mt-6 text-center">
               <p className="text-lg">
-                <span className="font-semibold">Average Strength Score:</span> {average.averageScore}
+                <span className="font-semibold text-[#64ffda]">Average Strength Score:</span>{' '}
+                {average.averageScore}
               </p>
               <p className="text-xl mt-1">
-                <span className="font-bold text-blue-800">Global Rank:</span> {average.globalRank}
+                <span className="font-bold text-[#64ffda]">Global Rank:</span> {average.globalRank}
               </p>
             </div>
           )}
