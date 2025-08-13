@@ -2,16 +2,14 @@ import React, { useEffect, useState } from 'react';
 import SpeedInput, { SpeedFormData } from '../../components/statInputs/SpeedInput';
 import { calculateSpeedRank } from '../../utils/calculateSpeedRank';
 import { calculateAverageSpeedRank } from '../../utils/calculateAverageSpeedRank';
-import { SpeedTest, speedRankThresholds  } from '../../data/speedRankThresholds';
+import { SpeedTest, speedRankThresholds } from '../../data/speedRankThresholds';
 import { Rank } from '../../types/Rank';
 import RadarChart from '../../components/RadarChart';
 import { useAuth } from '../../context/AuthContext';
 import { saveUserStats } from '../../utils/saveUserStats';
 import { loadUserStats } from '../../utils/loadUserStats';
 import { loadUserHistory } from '../../utils/loadUserHistory';
-
 import SubRankDisplay from '../../components/SubRankDisplayS';
-
 
 const VALID_SPEED_KEYS: SpeedTest[] = [
   'sprint100m',
@@ -146,23 +144,28 @@ const SpeedStatPage: React.FC = () => {
     }
   };
 
-  if (loading) return <p className="text-center mt-10">Loading saved data...</p>;
+  if (loading) {
+    return <p className="text-center mt-10 text-gray-500 text-lg">Loading saved data...</p>;
+  }
 
   return (
     <div className="py-10 px-6 max-w-3xl mx-auto">
-      <h1 className="text-2xl font-bold mb-6 text-center">Speed Stat Assessment</h1>
+      <h1 className="text-3xl font-bold mb-8 text-center text-gray-900">
+        Speed Stat Assessment
+      </h1>
+
       <SpeedInput onSubmit={handleSubmit} initialData={formData ?? undefined} />
 
       {result && (
-        <div className="mt-10 bg-gray-100 p-6 rounded-lg shadow-md">
-          <h2 className="text-xl font-semibold mb-4">Your Speed Ranks</h2>
+        <div className="mt-12 bg-white p-6 rounded-lg shadow-lg border border-gray-200">
+          <h2 className="text-xl font-semibold mb-6 text-gray-800">Your Speed Ranks</h2>
 
           {history.length > 0 && (
-            <div className="flex justify-center items-center gap-4 mb-4">
+            <div className="flex justify-center items-center gap-4 mb-6">
               <button
                 onClick={goToPreviousSnapshot}
                 disabled={history.length === 0 || (historyIndex !== null && historyIndex === 0)}
-                className="bg-gray-300 px-3 py-1 rounded disabled:opacity-50"
+                className="bg-gray-200 hover:bg-gray-300 text-gray-700 px-4 py-2 rounded-lg transition disabled:opacity-50"
               >
                 ← Previous
               </button>
@@ -174,43 +177,50 @@ const SpeedStatPage: React.FC = () => {
               <button
                 onClick={goToNextSnapshot}
                 disabled={history.length === 0}
-                className="bg-gray-300 px-3 py-1 rounded disabled:opacity-50"
+                className="bg-gray-200 hover:bg-gray-300 text-gray-700 px-4 py-2 rounded-lg transition disabled:opacity-50"
               >
                 Next →
               </button>
             </div>
           )}
- 
-          <RadarChart data={result} />
+
+          <div className="mb-8">
+            <RadarChart data={result} />
+          </div>
 
           <ul className="grid grid-cols-1 sm:grid-cols-2 gap-x-4 gap-y-3 mt-6">
-  {Object.entries(result).map(([test]) => {
-    const value = formData?.[test as keyof SpeedFormData];
-
-    return (
-      <li key={test} className="flex justify-between items-center border-b py-2">
-        <span className="capitalize whitespace-nowrap">{test.replace(/([A-Z])/g, ' $1')}</span>
-        {value !== undefined ? (
-          <SubRankDisplay
-            value={Number(value)}
-            thresholds={speedRankThresholds[test as SpeedTest]}
-          />
-        ) : (
-          <span className="text-gray-400">No data</span>
-        )}
-      </li>
-    );
-  })}
-</ul>
-
+            {Object.entries(result).map(([test]) => {
+              const value = formData?.[test as keyof SpeedFormData];
+              return (
+                <li
+                  key={test}
+                  className="flex justify-between items-center border-b py-2 text-gray-700"
+                >
+                  <span className="capitalize whitespace-nowrap font-medium">
+                    {test.replace(/([A-Z])/g, ' $1')}
+                  </span>
+                  {value !== undefined ? (
+                    <SubRankDisplay
+                      value={Number(value)}
+                      thresholds={speedRankThresholds[test as SpeedTest]}
+                    />
+                  ) : (
+                    <span className="text-gray-400 italic">No data</span>
+                  )}
+                </li>
+              );
+            })}
+          </ul>
 
           {average && (
-            <div className="mt-6 text-center">
-              <p className="text-lg">
-                <span className="font-semibold">Average Speed Score:</span> {average.averageScore}
+            <div className="mt-8 text-center">
+              <p className="text-lg text-gray-800">
+                <span className="font-semibold">Average Speed Score:</span>{' '}
+                {average.averageScore}
               </p>
               <p className="text-xl mt-1">
-                <span className="font-bold text-blue-800">Global Rank:</span> {average.globalRank}
+                <span className="font-bold text-blue-700">Global Rank:</span>{' '}
+                {average.globalRank}
               </p>
             </div>
           )}
