@@ -11,7 +11,6 @@ import { loadUserStats } from '../../utils/loadUserStats';
 import { loadUserHistory } from '../../utils/loadUserHistory';
 import SubRankDisplay from '../../components/SubRankDisplay';
 
-
 const VALID_TEST_KEYS: FlexibilityTest[] = [
   'frontSplitLeft',
   'frontSplitRight',
@@ -152,27 +151,30 @@ const FlexibilityPage: React.FC = () => {
     }
   };
 
-  if (loading) return <p className="text-center mt-10">Loading saved data...</p>;
+  if (loading) return <p className="text-center mt-10 text-[#64ffda]">Loading saved data...</p>;
 
   return (
-    <div className="py-10 px-6 max-w-3xl mx-auto">
-      <h1 className="text-2xl font-bold mb-6 text-center">Flexibility Stat Assessment</h1>
-      <FlexibilityInput onSubmit={handleSubmit} initialData={formData ?? undefined} />
+    <div className="py-10 px-6 max-w-4xl mx-auto text-[#ccd6f6]">
+      <h1 className="text-2xl font-bold mb-6 text-center text-[#64ffda]">Flexibility Stat Assessment</h1>
+
+      <div className="mb-10">
+        <FlexibilityInput onSubmit={handleSubmit} initialData={formData ?? undefined} />
+      </div>
 
       {result && (
-        <div className="mt-10 bg-gray-100 p-6 rounded-lg shadow-md">
-          <h2 className="text-xl font-semibold mb-4">Your Flexibility Ranks</h2>
+        <div className="mt-10 bg-[#0a192f] p-6 rounded-lg shadow-lg border border-[#233554]">
+          <h2 className="text-xl font-semibold mb-4 text-[#64ffda]">Your Flexibility Ranks</h2>
 
           {history.length > 0 && (
             <div className="flex justify-center items-center gap-4 mb-4">
               <button
                 onClick={goToPreviousSnapshot}
                 disabled={history.length === 0 || (historyIndex !== null && historyIndex === 0)}
-                className="bg-gray-300 px-3 py-1 rounded disabled:opacity-50"
+                className="bg-[#112240] border border-[#233554] text-[#ccd6f6] px-3 py-1 rounded hover:bg-[#1d2d50] disabled:opacity-50 transition"
               >
                 ← Previous
               </button>
-              <span className="text-sm text-gray-600">
+              <span className="text-sm text-gray-400">
                 {historyIndex === null
                   ? 'Viewing: Current Stats'
                   : `Viewing: Snapshot ${historyIndex + 1} of ${history.length}`}
@@ -180,7 +182,7 @@ const FlexibilityPage: React.FC = () => {
               <button
                 onClick={goToNextSnapshot}
                 disabled={history.length === 0}
-                className="bg-gray-300 px-3 py-1 rounded disabled:opacity-50"
+                className="bg-[#112240] border border-[#233554] text-[#ccd6f6] px-3 py-1 rounded hover:bg-[#1d2d50] disabled:opacity-50 transition"
               >
                 Next →
               </button>
@@ -190,40 +192,49 @@ const FlexibilityPage: React.FC = () => {
           <RadarChart data={result} />
 
           <ul className="grid grid-cols-1 sm:grid-cols-2 gap-x-4 gap-y-3 mt-6">
-            {Object.entries(result).map(([test ]) => {
-            const currentValue = formData?.[test as keyof FlexibilityFormData] ?? '';
-            const prevSnapshot =
-            historyIndex !== null && historyIndex > 0 ? history[historyIndex - 1] : null;
-            const previousValue = prevSnapshot?.[test as keyof FlexibilityFormData] ?? '';
-            const difference = Number(currentValue) - Number(previousValue);
+            {Object.entries(result).map(([test]) => {
+              const currentValue = formData?.[test as keyof FlexibilityFormData] ?? '';
+              const prevSnapshot =
+                historyIndex !== null && historyIndex > 0 ? history[historyIndex - 1] : null;
+              const previousValue = prevSnapshot?.[test as keyof FlexibilityFormData] ?? '';
+              const difference = Number(currentValue) - Number(previousValue);
 
               return (
-                <li key={test} className="flex justify-between items-center border-b py-2">
-                <span className="capitalize whitespace-nowrap">{test.replace(/([A-Z])/g, ' $1')}</span>
-                <span className="ml-4 flex items-center gap-2">
-                  <SubRankDisplay
-                  value={Number(currentValue)}
-                  thresholds={flexibilityRankThresholds[test as FlexibilityTest]}
-                />
-                {prevSnapshot && difference !== 0 && (
-                  <span className={`text-sm ${difference > 0 ? 'text-green-600' : 'text-red-600'}`}>
-                  {difference > 0 ? `↑ (+${difference})` : `↓ (${difference})`}
-                </span>
-              )}
-        </span>
-      </li>
-    );
-  })}
-</ul>
-
+                <li
+                  key={test}
+                  className="flex justify-between items-center border-b border-[#233554] py-2"
+                >
+                  <span className="capitalize whitespace-nowrap text-[#ccd6f6]">
+                    {test.replace(/([A-Z])/g, ' $1')}
+                  </span>
+                  <span className="ml-4 flex items-center gap-2">
+                    <SubRankDisplay
+                      value={Number(currentValue)}
+                      thresholds={flexibilityRankThresholds[test as FlexibilityTest]}
+                    />
+                    {prevSnapshot && difference !== 0 && (
+                      <span
+                        className={`text-sm ${
+                          difference > 0 ? 'text-green-400' : 'text-red-400'
+                        }`}
+                      >
+                        {difference > 0 ? `↑ (+${difference})` : `↓ (${difference})`}
+                      </span>
+                    )}
+                  </span>
+                </li>
+              );
+            })}
+          </ul>
 
           {average && (
             <div className="mt-6 text-center">
               <p className="text-lg">
-                <span className="font-semibold">Average Flexibility Score:</span> {average.averageScore}
+                <span className="font-semibold text-[#64ffda]">Average Flexibility Score:</span>{' '}
+                {average.averageScore}
               </p>
               <p className="text-xl mt-1">
-                <span className="font-bold text-blue-800">Global Rank:</span> {average.globalRank}
+                <span className="font-bold text-[#64ffda]">Global Rank:</span> {average.globalRank}
               </p>
             </div>
           )}
