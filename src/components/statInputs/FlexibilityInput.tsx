@@ -49,32 +49,40 @@ const FlexibilityInput: React.FC<Props> = ({ onSubmit, initialData }) => {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-6 max-w-md mx-auto p-4">
-      {testFields.map((field) => (
-        <div key={field.name} className="flex flex-col">
-          <label htmlFor={field.name} className="mb-1 text-sm font-medium">
-            {field.label}
-          </label>
-          <input
-            type="number"
-            name={field.name}
-            id={field.name}
-            value={formData[field.name]}
-            onChange={handleChange}
-            min={0}
-            max={100}
-            inputMode="numeric"
-            className="border border-gray-300 px-3 py-2 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-          />
-        </div>
-      ))}
-      <button
-        type="submit"
-        className="w-full bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-700 transition"
+    <form
+  onSubmit={handleSubmit}
+  className="space-y-6 max-w-md mx-auto p-6 bg-[#0a192f] border border-[#233554] rounded-lg shadow-lg"
+>
+  {testFields.map((field) => (
+    <div key={field.name} className="flex flex-col">
+      <label
+        htmlFor={field.name}
+        className="mb-1 text-sm font-medium text-[#64ffda]"
       >
-        Submit
-      </button>
-    </form>
+        {field.label}
+      </label>
+      <input
+        type="number"
+        name={field.name}
+        id={field.name}
+        value={formData[field.name]}
+        onChange={handleChange}
+        min={0}
+        max={100}
+        inputMode="numeric"
+        className="bg-[#112240] border border-[#233554] text-[#ccd6f6] px-3 py-2 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-[#64ffda] placeholder-gray-500"
+      />
+    </div>
+  ))}
+
+  <button
+    type="submit"
+    className="w-full bg-[#64ffda] text-[#0a192f] py-2 px-4 rounded font-semibold hover:bg-[#52d1bd] transition"
+  >
+    Submit
+  </button>
+</form>
+
   );
 };
 
