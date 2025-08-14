@@ -139,46 +139,49 @@ const SkillInput: React.FC<Props> = ({ onSubmit, initialData }) => {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-6 max-w-md mx-auto p-4">
-      {categories.map(({ name, label, levels }) => (
-        <div key={name} className="flex flex-col">
-          <label className="mb-1 text-sm font-medium flex items-center">
-            {label}
-            <Tooltip.Root>
-              <Tooltip.Trigger asChild>
-                <span className="ml-2 text-blue-600 cursor-help">❓</span>
-              </Tooltip.Trigger>
-              <Tooltip.Content
-                side="right"
-                className="bg-black text-white text-xs px-2 py-1 rounded shadow max-w-xs z-50"
-              >
-                Choose the highest level of progression you've mastered.
-              </Tooltip.Content>
-            </Tooltip.Root>
-          </label>
-          <select
-            name={name}
-            value={formData[name]}
-            onChange={handleChange}
-            className="border border-gray-300 px-3 py-2 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+    <form
+  onSubmit={handleSubmit}
+  className="space-y-6 max-w-md mx-auto p-4 bg-[#0a192f] rounded-lg shadow-lg border border-[#233554]"
+>
+  {categories.map(({ name, label, levels }) => (
+    <div key={name} className="flex flex-col">
+      <label className="mb-1 text-sm font-medium flex items-center text-[#64ffda]">
+        {label}
+        <Tooltip.Root>
+          <Tooltip.Trigger asChild>
+            <span className="ml-2 text-[#64ffda] cursor-help">❓</span>
+          </Tooltip.Trigger>
+          <Tooltip.Content
+            side="right"
+            className="bg-[#112240] text-[#ccd6f6] text-xs px-3 py-2 rounded-md shadow-md border border-[#233554] max-w-xs z-50"
           >
-            <option value="">Select skill level</option>
-            {levels.map((level) => (
-              <option key={level.value} value={level.value}>
-                {level.label}
-              </option>
-            ))}
-          </select>
-        </div>
-      ))}
-
-      <button
-        type="submit"
-        className="w-full bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-700 transition"
+            Choose the highest level of progression you've mastered.
+          </Tooltip.Content>
+        </Tooltip.Root>
+      </label>
+      <select
+        name={name}
+        value={formData[name]}
+        onChange={handleChange}
+        className="bg-[#112240] border border-[#233554] text-[#ccd6f6] px-3 py-2 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-[#64ffda]"
       >
-        Submit
-      </button>
-    </form>
+        <option value="">Select skill level</option>
+        {levels.map((level) => (
+          <option key={level.value} value={level.value}>
+            {level.label}
+          </option>
+        ))}
+      </select>
+    </div>
+  ))}
+
+  <button
+    type="submit"
+    className="w-full bg-[#64ffda] text-[#0a192f] font-semibold py-2 px-4 rounded hover:bg-[#52e0c4] transition"
+  >
+    Submit
+  </button>
+</form>
   );
 };
 
