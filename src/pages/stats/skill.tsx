@@ -1,22 +1,26 @@
-import React, { useEffect, useState } from 'react';
-import SkillInput, { SkillFormData } from '../../components/statInputs/SkillInput';
-import { SkillTest } from '../../data/skillRankThresholds';
-import { Rank } from '../../types/Rank';
-import { calculateSkillRank } from '../../utils/calculateSkillRank';
-import { calculateAverageSkillRank } from '../../utils/calculateAverageSkill';
-import RadarChart from '../../components/RadarChart';
-import { useAuth } from '../../context/AuthContext';
-import { loadUserStats } from '../../utils/loadUserStats';
-import { saveUserStats } from '../../utils/saveUserStats';
-import { loadUserHistory } from '../../utils/loadUserHistory';
+import React, { useEffect, useState } from "react";
+import SkillInput, { SkillFormData } from "../../components/statInputs/SkillInput";
+import { SkillTest } from "../../data/skillRankThresholds";
+import { Rank } from "../../types/Rank";
+import { calculateSkillRank } from "../../utils/calculateSkillRank";
+import { calculateAverageSkillRank } from "../../utils/calculateAverageSkill";
+import RadarChart from "../../components/RadarChart";
+import { useAuth } from "../../context/AuthContext";
+import { loadUserStats } from "../../utils/loadUserStats";
+import { saveUserStats } from "../../utils/saveUserStats";
+import { loadUserHistory } from "../../utils/loadUserHistory";
+
+// ✅ Tooltip + descriptions (used inside SkillInput, not here directly)
+import Tooltip from "../../components/Tooltip";
+import { skillDescriptions } from "../../data/skillDescriptions";
 
 const VALID_TEST_KEYS: SkillTest[] = [
-  'pushSkill',
-  'pullSkill',
-  'handstandSkill',
-  'coreSkill',
-  'legSkill',
-  'leverSkill',
+  "pushSkill",
+  "pullSkill",
+  "handstandSkill",
+  "coreSkill",
+  "legSkill",
+  "leverSkill",
 ];
 
 const SkillStatPage: React.FC = () => {
@@ -38,12 +42,13 @@ const SkillStatPage: React.FC = () => {
   useEffect(() => {
     const fetchData = async () => {
       if (user) {
-        const saved = await loadUserStats<SkillFormData & { averageScore: number; globalRank: Rank }>(user, 'skill');
-        const allHistory = await loadUserHistory<SkillFormData & {
-          averageScore: number;
-          globalRank: Rank;
-          id: string;
-        }>(user, 'skill');
+        const saved = await loadUserStats<
+          SkillFormData & { averageScore: number; globalRank: Rank }
+        >(user, "skill");
+
+        const allHistory = await loadUserHistory<
+          SkillFormData & { averageScore: number; globalRank: Rank; id: string }
+        >(user, "skill");
 
         setHistory(allHistory);
         setHistoryIndex(null);
@@ -81,17 +86,15 @@ const SkillStatPage: React.FC = () => {
     setCurrentSnapshot({ result: ranks, average: averageResult });
 
     if (user) {
-      await saveUserStats(user, 'skill', {
+      await saveUserStats(user, "skill", {
         ...data,
         averageScore: averageResult.averageScore,
         globalRank: averageResult.globalRank,
       });
 
-      const updatedHistory = await loadUserHistory<SkillFormData & {
-        averageScore: number;
-        globalRank: Rank;
-        id: string;
-      }>(user, 'skill');
+      const updatedHistory = await loadUserHistory<
+        SkillFormData & { averageScore: number; globalRank: Rank; id: string }
+      >(user, "skill");
 
       setHistory(updatedHistory);
       setHistoryIndex(null);
@@ -139,7 +142,11 @@ const SkillStatPage: React.FC = () => {
 
   return (
     <div className="py-10 px-6 max-w-3xl mx-auto text-white">
-      <h1 className="text-3xl font-bold mb-6 text-center text-[#64ffda]">Skill Stat Assessment</h1>
+      <h1 className="text-3xl font-bold mb-6 text-center text-[#64ffda]">
+        Skill Stat Assessment
+      </h1>
+
+      {/* ✅ This renders all dropdowns (tooltips come from inside SkillInput) */}
       <SkillInput onSubmit={handleSubmit} initialData={formData ?? undefined} />
 
       {result && (
@@ -157,7 +164,7 @@ const SkillStatPage: React.FC = () => {
               </button>
               <span className="text-sm text-gray-400">
                 {historyIndex === null
-                  ? 'Viewing: Current Stats'
+                  ? "Viewing: Current Stats"
                   : `Viewing: Snapshot ${historyIndex + 1} of ${history.length}`}
               </span>
               <button
@@ -178,7 +185,9 @@ const SkillStatPage: React.FC = () => {
                 key={test}
                 className="flex justify-between items-center border-b border-[#233554] py-2"
               >
-                <span className="capitalize whitespace-nowrap">{test.replace(/([A-Z])/g, ' $1')}</span>
+                <span className="capitalize whitespace-nowrap">
+                  {test.replace(/([A-Z])/g, " $1")}
+                </span>
                 <span className="font-bold text-[#64ffda] whitespace-nowrap ml-4">{rank}</span>
               </li>
             ))}
@@ -187,11 +196,12 @@ const SkillStatPage: React.FC = () => {
           {average && (
             <div className="mt-6 text-center">
               <p className="text-lg">
-                <span className="font-semibold text-gray-300">Average Skill Score:</span>{' '}
+                <span className="font-semibold text-gray-300">Average Skill Score:</span>{" "}
                 {average.averageScore}
               </p>
               <p className="text-xl mt-1">
-                <span className="font-bold text-[#64ffda]">Global Rank:</span> {average.globalRank}
+                <span className="font-bold text-[#64ffda]">Global Rank:</span>{" "}
+                {average.globalRank}
               </p>
             </div>
           )}
