@@ -108,7 +108,6 @@ const categories: { name: keyof SkillFormData; label: string; levels: SkillLevel
   },
 ];
 
-
 const SkillInput: React.FC<Props> = ({ onSubmit, initialData }) => {
   const [formData, setFormData] = useState<SkillFormData>({
     pushSkill: '',
@@ -148,19 +147,8 @@ const SkillInput: React.FC<Props> = ({ onSubmit, initialData }) => {
 
         return (
           <div key={name} className="flex flex-col">
-            <label className="mb-1 text-sm font-medium flex items-center text-[#64ffda]">
+            <label className="mb-1 text-sm font-medium text-[#64ffda]">
               {label}
-              <Tooltip.Root>
-                <Tooltip.Trigger asChild>
-                  <span className="ml-2 text-[#64ffda] cursor-help">❓</span>
-                </Tooltip.Trigger>
-                <Tooltip.Content
-                  side="right"
-                  className="bg-[#112240] text-[#ccd6f6] text-xs px-3 py-2 rounded-md shadow-md border border-[#233554] max-w-xs z-50"
-                >
-                  Choose the highest level of progression you've mastered.
-                </Tooltip.Content>
-              </Tooltip.Root>
             </label>
 
             <div className="flex items-center">
@@ -184,6 +172,7 @@ const SkillInput: React.FC<Props> = ({ onSubmit, initialData }) => {
                     <button
                       type="button"
                       className="ml-2 text-[#64ffda] hover:text-[#52e0c4] transition text-sm font-bold cursor-help"
+                      aria-label="Show description"
                     >
                       ⓘ
                     </button>
