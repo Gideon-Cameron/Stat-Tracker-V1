@@ -171,7 +171,7 @@ const SkillInput: React.FC<Props> = ({ onSubmit, initialData }) => {
                   <Tooltip.Trigger asChild>
                     <button
                       type="button"
-                      className="ml-2 text-[#64ffda] hover:text-[#52e0c4] transition text-sm font-bold cursor-help"
+                      className="ml-2 text-[#64ffda] hover:text-[#52e0c4] transition text-sm font-bold"
                       aria-label="Show description"
                     >
                       ⓘ
