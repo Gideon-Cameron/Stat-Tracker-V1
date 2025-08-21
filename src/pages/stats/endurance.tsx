@@ -165,7 +165,7 @@ const EnduranceStatPage: React.FC = () => {
       <EnduranceInput onSubmit={handleSubmit} initialData={formData ?? undefined} />
 
       {result && (
-        <div className="mt-10 bg-[#0a192f] border border-[#112240] p-6 rounded-lg shadow-lg">
+        <div className="mt-10 bg-[#112240] p-6 rounded-lg shadow-lg border border-[#233554]">
           <h2 className="text-xl font-semibold mb-4 text-[#64ffda]">
             Your Endurance Ranks
           </h2>
