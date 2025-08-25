@@ -59,13 +59,13 @@ export const enduranceRankThresholds: RankThresholds = {
 
   wallSit: [
     { min: 0, rank: 'E' },
-    { min: 30, rank: 'D' },
-    { min: 61, rank: 'C' },
-    { min: 91, rank: 'B' },
-    { min: 121, rank: 'A' },
-    { min: 151, rank: 'S' },
-    { min: 181, rank: 'SS' },
-    { min: 241, rank: 'Mythic' },
+    { min: 60, rank: 'D' },
+    { min: 75, rank: 'C' },
+    { min: 90, rank: 'B' },
+    { min: 120, rank: 'A' },
+    { min: 180, rank: 'S' },
+    { min: 240, rank: 'SS' },
+    { min: 600, rank: 'Mythic' },
   ],
 
   runMaxDistance: [
