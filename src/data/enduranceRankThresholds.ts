@@ -17,11 +17,11 @@ export const enduranceRankThresholds: RankThresholds = {
     { min: 0, rank: 'E' },         // bottom 59%
     { min: 20, rank: 'D' },        // 60–69%
     { min: 36, rank: 'C' },        // 70–79%
-    { min: 56, rank: 'B' },        // 80–89%
-    { min: 76, rank: 'A' },        // 90–98.9%
-    { min: 116, rank: 'S' },       // top 1%
-    { min: 201, rank: 'SS' },      // top 0.1%
-    { min: 501, rank: 'Mythic' },  // top 0.01%
+    { min: 45, rank: 'B' },        // 80–89%
+    { min: 60, rank: 'A' },        // 90–98.9%
+    { min: 75, rank: 'S' },       // top 1%
+    { min: 90, rank: 'SS' },      // top 0.1%
+    { min: 120, rank: 'Mythic' },  // top 0.01%
   ],
 
   plankHold: [
