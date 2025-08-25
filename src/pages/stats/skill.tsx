@@ -10,9 +10,6 @@ import { loadUserStats } from "../../utils/loadUserStats";
 import { saveUserStats } from "../../utils/saveUserStats";
 import { loadUserHistory } from "../../utils/loadUserHistory";
 
-// ✅ Tooltip + descriptions (used inside SkillInput, not here directly)
-import Tooltip from "../../components/Tooltip";
-import { skillDescriptions } from "../../data/skillDescriptions";
 
 const VALID_TEST_KEYS: SkillTest[] = [
   "pushSkill",
