@@ -12,14 +12,16 @@ const PremiumButton: React.FC<PremiumButtonProps> = ({ firebaseUserId }) => {
     const monthlyId = import.meta.env.VITE_PADDLE_PRICE_MONTHLY as string;
     const yearlyId = import.meta.env.VITE_PADDLE_PRICE_YEARLY as string;
 
-    // @ts-expect-error - Paddle is attached globally
+    // Ensure Paddle is available
+    // @ts-expect-error - Paddle is global
+    if (!window.Paddle) {
+      console.error("Paddle SDK not loaded yet.");
+      return;
+    }
+
+    // @ts-expect-error - Paddle is global
     window.Paddle.Checkout.open({
-      items: [
-        {
-          priceId: monthlyId, // default monthly
-          quantity: 1,
-        },
-      ],
+      items: [{ priceId: monthlyId, quantity: 1 }],
       upsell: [
         {
           items: [{ priceId: yearlyId, quantity: 1 }],
@@ -27,7 +29,7 @@ const PremiumButton: React.FC<PremiumButtonProps> = ({ firebaseUserId }) => {
           message: "Get 2 months free with the annual plan.",
         },
       ],
-      passthrough: JSON.stringify({ firebaseUserId }), // attach Firebase UID for backend use
+      passthrough: JSON.stringify({ firebaseUserId }),
     });
   };
 
