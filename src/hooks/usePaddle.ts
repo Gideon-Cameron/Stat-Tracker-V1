@@ -9,11 +9,11 @@ export const usePaddle = (vendorId: string, sandbox: boolean = true) => {
       script.src = "https://cdn.paddle.com/paddle/paddle.js";
       script.async = true;
       script.onload = () => {
-        // @ts-ignore - Paddle is loaded globally
+        // @ts-expect-error - Paddle is loaded globally
         if (window.Paddle) {
-          // @ts-ignore
+          // @ts-expect-error Paddle is loadiong the window
           window.Paddle.Environment.set(sandbox ? "sandbox" : "production");
-          // @ts-ignore
+          // @ts-expect-error Stop asking
           window.Paddle.Setup({ vendor: vendorId });
         }
       };
