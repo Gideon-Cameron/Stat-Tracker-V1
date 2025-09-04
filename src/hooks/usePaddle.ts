@@ -1,23 +1,24 @@
 import { useEffect } from "react";
 
-export const usePaddle = (vendorId: string, sandbox: boolean = true) => {
+export const usePaddle = () => {
+  const clientToken = import.meta.env.VITE_PADDLE_CLIENT_TOKEN as string;
+  const env = import.meta.env.VITE_PADDLE_ENV || "sandbox";
+
   useEffect(() => {
-    // Load Paddle script if not already loaded
+    // Only load once
     if (!document.getElementById("paddle-js")) {
       const script = document.createElement("script");
       script.id = "paddle-js";
-      script.src = "https://cdn.paddle.com/paddle/paddle.js";
+      script.src = "https://cdn.paddle.com/paddle/v2/paddle.js"; // v2 SDK
       script.async = true;
       script.onload = () => {
-        // @ts-expect-error - Paddle is loaded globally
-        if (window.Paddle) {
-          // @ts-expect-error Paddle is loadiong the window
-          window.Paddle.Environment.set(sandbox ? "sandbox" : "production");
-          // @ts-expect-error Stop asking
-          window.Paddle.Setup({ vendor: vendorId });
-        }
+        // @ts-expect-error - Paddle is attached to window
+        window.Paddle.Setup({
+          token: clientToken,
+          environment: env, // "sandbox" or "production"
+        });
       };
       document.body.appendChild(script);
     }
-  }, [vendorId, sandbox]);
+  }, [clientToken, env]);
 };
