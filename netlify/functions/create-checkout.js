@@ -1,49 +1,41 @@
-import fetch from "node-fetch";
+// netlify/functions/create-checkout.js
+const fetch = require("node-fetch");
 
-export async function handler(event) {
+exports.handler = async (event) => {
   try {
     const { priceId, firebaseUserId } = JSON.parse(event.body);
 
-    // Call Paddle API to create a checkout session
-    const response = await fetch("https://sandbox-api.paddle.com/checkout", {
+    const res = await fetch("https://sandbox-api.paddle.com/transactions", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${process.env.PADDLE_API_KEY}`,
       },
       body: JSON.stringify({
-        customer: {
-          email: "test@example.com", // replace later with real user email
-        },
-        items: [
-          {
-            price_id: priceId,
-            quantity: 1,
-          },
-        ],
+        items: [{ price_id: priceId, quantity: 1 }],
         passthrough: JSON.stringify({ firebaseUserId }),
       }),
     });
 
-    const data = await response.json();
+    const data = await res.json();
+    console.log("📦 Paddle API response:", data);
 
-    if (!response.ok) {
-      console.error("Paddle API error:", data);
+    if (!res.ok) {
       return {
-        statusCode: response.status,
-        body: JSON.stringify(data),
+        statusCode: res.status,
+        body: JSON.stringify({ error: data }),
       };
     }
 
     return {
       statusCode: 200,
-      body: JSON.stringify({ token: data.id }), // transaction token
+      body: JSON.stringify({ token: data.data.id }),
     };
   } catch (err) {
-    console.error(err);
+    console.error("🔥 Netlify function error:", err);
     return {
       statusCode: 500,
-      body: JSON.stringify({ error: "Server error" }),
+      body: JSON.stringify({ error: err.message }),
     };
   }
-}
+};
