@@ -47,7 +47,7 @@ exports.handler = async (event) => {
       };
     }
 
-    // ✅ Return the transaction ID (token) to frontend
+    // ✅ Return the transaction ID (token) to frontend.
     return {
       statusCode: 200,
       body: JSON.stringify({ token: data.data.id }),
