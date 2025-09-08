@@ -43,10 +43,16 @@ const PremiumButton: React.FC<PremiumButtonProps> = ({ firebaseUserId }) => {
       // @ts-expect-error - Paddle is global
       console.log("✅ Paddle object loaded:", window.Paddle);
 
+      // Build checkout parameters
+      const checkoutParams = {
+        settings: { displayMode: "overlay" }, // optional
+        transactionId: data.token, // ✅ use transactionId instead of token
+      };
+      console.log("➡️ Calling Paddle.Checkout.open with:", checkoutParams);
+
+      // Open Paddle checkout
       // @ts-expect-error - Paddle is global
-      window.Paddle.Checkout.open({
-        token: data.token, // use transaction token from backend
-      });
+      window.Paddle.Checkout.open(checkoutParams);
     } catch (err) {
       console.error("🔥 Error creating checkout:", err);
     }
