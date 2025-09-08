@@ -33,26 +33,17 @@ const PremiumButton: React.FC<PremiumButtonProps> = ({ firebaseUserId }) => {
       }
 
       // Ensure Paddle is available
-      // @ts-expect-error - Paddle is global
       if (!window.Paddle) {
         console.error("❌ Paddle SDK not loaded yet.");
         return;
       }
 
-      // Debug: log Paddle object
-      // @ts-expect-error - Paddle is global
       console.log("✅ Paddle object loaded:", window.Paddle);
 
-      // Build checkout parameters
-      const checkoutParams = {
-        settings: { displayMode: "overlay" }, // optional
-        transactionId: data.token, // ✅ use transactionId instead of token
-      };
-      console.log("➡️ Calling Paddle.Checkout.open with:", checkoutParams);
-
-      // Open Paddle checkout
-      // @ts-expect-error - Paddle is global
-      window.Paddle.Checkout.open(checkoutParams);
+      window.Paddle.Checkout?.open({
+        token: data.token, // use transaction token from backend
+        settings: { displayMode: "overlay" },
+      });
     } catch (err) {
       console.error("🔥 Error creating checkout:", err);
     }
