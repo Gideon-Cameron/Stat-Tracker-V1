@@ -21,15 +21,14 @@ export const usePaddle = () => {
     script.async = true;
 
     script.onload = () => {
-      // @ts-expect-error - Paddle is attached globally
       if (window.Paddle) {
         console.log("✅ Paddle SDK script loaded, calling Paddle.Setup...");
-        // @ts-expect-error - Paddle is attached globally
+
         window.Paddle.Setup({
-          environment: env, // 👈 explicitly set environment
+          environment: env,
           token: clientToken,
         });
-        // @ts-expect-error 
+
         console.log("🔧 Paddle.Setup complete:", {
           env,
           clientToken: clientToken ? "✅ present" : "❌ missing",
