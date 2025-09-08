@@ -16,6 +16,9 @@ exports.handler = async (event) => {
       };
     }
 
+    // Root site URL (adjust if you later add a custom domain)
+    const siteUrl = "https://stats-beta-v1.netlify.app";
+
     // Build request body for Paddle Transactions API
     const body = {
       items: [{ price_id: priceId, quantity: 1 }],
@@ -23,6 +26,8 @@ exports.handler = async (event) => {
         email: "test@example.com", // TODO: replace with real user email later
       },
       passthrough: JSON.stringify({ firebaseUserId }),
+      success_url: `${siteUrl}/success`,
+      cancel_url: `${siteUrl}/cancel`,
     };
 
     console.log("➡️ Sending request to Paddle:", body);
