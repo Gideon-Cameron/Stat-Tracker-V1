@@ -7,7 +7,6 @@ exports.handler = async (event) => {
 
     const { priceId, firebaseUserId } = JSON.parse(event.body);
 
-    // Ensure we have API key
     if (!process.env.PADDLE_API_KEY) {
       console.error("❌ Missing Paddle API key in environment variables");
       return {
@@ -16,18 +15,14 @@ exports.handler = async (event) => {
       };
     }
 
-    // Root site URL (adjust if you later add a custom domain)
-    const siteUrl = "https://stats-beta-v1.netlify.app";
-
-    // Build request body for Paddle Transactions API
     const body = {
       items: [{ price_id: priceId, quantity: 1 }],
       customer: {
-        email: "test@example.com", // TODO: replace with real user email later
+        email: "test@example.com", // Replace later with actual user email
       },
       passthrough: JSON.stringify({ firebaseUserId }),
-      success_url: `${siteUrl}/success`,
-      cancel_url: `${siteUrl}/cancel`,
+      success_url: "https://stats-beta-v1.netlify.app/success", // ✅ Added
+      cancel_url: "https://stats-beta-v1.netlify.app/cancel",   // ✅ Added
     };
 
     console.log("➡️ Sending request to Paddle:", body);
@@ -52,7 +47,6 @@ exports.handler = async (event) => {
       };
     }
 
-    // ✅ Return the transaction ID (token) to frontend.
     return {
       statusCode: 200,
       body: JSON.stringify({ token: data.data.id }),
