@@ -1,5 +1,16 @@
 import { useEffect } from "react";
 
+declare global {
+  interface Window {
+    Paddle?: {
+      Setup: (options: { token: string }) => void;
+      Checkout: {
+        open: (options: Record<string, unknown>) => void;
+      };
+    };
+  }
+}
+
 export const usePaddle = () => {
   const clientToken = import.meta.env.VITE_PADDLE_CLIENT_TOKEN as string;
   const env = import.meta.env.VITE_PADDLE_ENV || "sandbox";
@@ -25,7 +36,6 @@ export const usePaddle = () => {
         console.log("✅ Paddle SDK script loaded, calling Paddle.Setup...");
 
         window.Paddle.Setup({
-          environment: env,
           token: clientToken,
         });
 
