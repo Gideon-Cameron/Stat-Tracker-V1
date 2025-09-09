@@ -5,6 +5,13 @@ interface PremiumButtonProps {
   firebaseUserId: string;
 }
 
+// Define what we expect from our Netlify function
+interface CheckoutResponse {
+  token?: string; // transaction ID returned from Paddle
+  raw?: unknown;  // raw Paddle API response (can be anything, so `unknown` is safer than `any`)
+  error?: unknown;
+}
+
 const PremiumButton: React.FC<PremiumButtonProps> = ({ firebaseUserId }) => {
   usePaddle();
 
@@ -24,7 +31,16 @@ const PremiumButton: React.FC<PremiumButtonProps> = ({ firebaseUserId }) => {
         }),
       });
 
-      const data = await res.json();
+      console.log("📊 Netlify response status:", res.status, res.statusText);
+
+      let data: CheckoutResponse;
+      try {
+        data = (await res.json()) as CheckoutResponse;
+      } catch (jsonErr) {
+        console.error("❌ Failed to parse JSON from Netlify response", jsonErr);
+        return;
+      }
+
       console.log("📦 Netlify function response:", data);
 
       if (!res.ok || !data.token) {
@@ -40,11 +56,11 @@ const PremiumButton: React.FC<PremiumButtonProps> = ({ firebaseUserId }) => {
 
       console.log("✅ Paddle object loaded:", window.Paddle);
 
-      // FIX: use transactionId instead of token
+      // Use the transaction ID returned by Paddle
       console.log("➡️ Opening Paddle checkout with transactionId:", data.token);
 
       window.Paddle.Checkout.open({
-        transactionId: data.token, // 👈 correct field
+        transactionId: data.token, // 👈 now matches what we return from create-checkout
         settings: { displayMode: "overlay" },
       });
     } catch (err) {
