@@ -39,7 +39,7 @@ const PremiumButton: React.FC<PremiumButtonProps> = ({ firebaseUserId }) => {
       }
 
       console.log("✅ Paddle object loaded:", window.Paddle);
-
+      console.log("➡️ Opening Paddle checkout with token:", data.token);
       window.Paddle.Checkout?.open({
         token: data.token, // use transaction token from backend
         settings: { displayMode: "overlay" },
