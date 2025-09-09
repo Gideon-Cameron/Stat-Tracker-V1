@@ -27,6 +27,13 @@ exports.handler = async (event) => {
     }
     console.log("🔑 Paddle API key exists? ", !!process.env.PADDLE_API_KEY);
 
+    // Sandbox vs Production URL
+    const env = process.env.VITE_PADDLE_ENV || "sandbox";
+    const apiUrl =
+      env === "sandbox"
+        ? "https://sandbox-api.paddle.com/transactions"
+        : "https://api.paddle.com/transactions";
+
     // Build Paddle request body
     const body = {
       items: [{ price_id: priceId, quantity: 1 }],
@@ -39,9 +46,10 @@ exports.handler = async (event) => {
     };
 
     console.log("➡️ Sending request to Paddle:", JSON.stringify(body, null, 2));
+    console.log("🌍 Using Paddle API URL:", apiUrl);
 
     // Call Paddle API
-    const res = await fetch("https://sandbox-api.paddle.com/transactions", {
+    const res = await fetch(apiUrl, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -50,7 +58,10 @@ exports.handler = async (event) => {
       body: JSON.stringify(body),
     });
 
-    const data = await res.json();
+    console.log("📊 Paddle response status:", res.status, res.statusText);
+    console.log("📑 Paddle response headers:", Object.fromEntries(res.headers));
+
+    const data = await res.json().catch(() => null);
     console.log("📦 Full Paddle API response:", JSON.stringify(data, null, 2));
 
     // If Paddle returned error
