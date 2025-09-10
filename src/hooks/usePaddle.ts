@@ -3,7 +3,7 @@ import { useEffect } from "react";
 declare global {
   interface Window {
     Paddle?: {
-      Setup: (options: { token: string }) => void;
+      Setup: (options: { token: string; environment?: string }) => void;
       Checkout: {
         open: (options: Record<string, unknown>) => void;
       };
@@ -21,7 +21,7 @@ export const usePaddle = () => {
       return;
     }
 
-    // Logs for debugging
+    // 🔍 Debugging logs
     console.log("⬇️ Loading Paddle SDK...");
     console.log("🔑 Full client token (from env):", clientToken);
     console.log("🔑 Token prefix:", clientToken?.slice(0, 5));
@@ -29,7 +29,7 @@ export const usePaddle = () => {
     console.log("🏠 Current domain (window.location.origin):", window.location.origin);
     console.log("📄 Full page URL (window.location.href):", window.location.href);
 
-    // Runtime warnings
+    // ⚠️ Runtime warnings
     if (window.location.origin.startsWith("https://")) {
       console.warn(
         "⚠️ WARNING: window.location.origin includes https:// — Paddle domain approvals usually require only the bare hostname (e.g. stats-beta-v1.netlify.app). Double-check your approved domains in Paddle Dashboard."
@@ -47,7 +47,7 @@ export const usePaddle = () => {
       );
     }
 
-    // Inject Paddle script
+    // 📥 Inject Paddle script
     const script = document.createElement("script");
     script.id = "paddle-js";
     script.src =
@@ -63,6 +63,7 @@ export const usePaddle = () => {
         try {
           window.Paddle.Setup({
             token: clientToken,
+            environment: env, // 👈 Force sandbox/production match
           });
 
           console.log("🔧 Paddle.Setup called successfully with:", {
