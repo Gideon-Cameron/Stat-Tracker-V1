@@ -59,20 +59,15 @@ exports.handler = async (event) => {
     });
 
     console.log("📊 Paddle response status:", res.status, res.statusText);
-    console.log(
-      "📑 Paddle response headers:",
-      Object.fromEntries(res.headers)
-    );
+    console.log("📑 Paddle response headers:", Object.fromEntries(res.headers));
 
+    // Read raw response text (sometimes errors are not valid JSON)
+    const text = await res.text();
     let data;
     try {
-      data = await res.json();
-    } catch (jsonErr) {
-      console.error("❌ Failed to parse Paddle JSON response", jsonErr);
-      return {
-        statusCode: res.status,
-        body: JSON.stringify({ error: "Invalid JSON from Paddle" }),
-      };
+      data = JSON.parse(text);
+    } catch {
+      data = { raw: text };
     }
 
     console.log("📦 Full Paddle API response:", JSON.stringify(data, null, 2));
@@ -83,7 +78,11 @@ exports.handler = async (event) => {
       console.error("❌ Paddle API error (body):", data);
       return {
         statusCode: res.status,
-        body: JSON.stringify({ error: data }),
+        body: JSON.stringify({
+          error: "Paddle API request failed",
+          status: res.status,
+          details: data,
+        }),
       };
     }
 
