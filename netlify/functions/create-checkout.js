@@ -3,12 +3,18 @@ const fetch = require("node-fetch");
 
 exports.handler = async (event) => {
   try {
-    console.log("📩 Incoming event body:", event.body);
+    console.log("🚀 --- Incoming Paddle Checkout Request ---");
+
+    console.log("📩 Raw incoming event body:", event.body);
+    console.log("🌐 Request headers:", event.headers);
+    console.log("🌍 Request origin (Referer):", event.headers?.referer || "❌ none");
+    console.log("🖥️ Host header (domain Netlify served):", event.headers?.host || "❌ none");
 
     // Parse incoming request
     let priceId, firebaseUserId;
     try {
       ({ priceId, firebaseUserId } = JSON.parse(event.body));
+      console.log("✅ Parsed request body:", { priceId, firebaseUserId });
     } catch (parseErr) {
       console.error("❌ Failed to parse request body:", parseErr);
       return {
@@ -25,14 +31,18 @@ exports.handler = async (event) => {
         body: JSON.stringify({ error: "Missing Paddle API key" }),
       };
     }
-    console.log("🔑 Paddle API key exists? ", !!process.env.PADDLE_API_KEY);
+    console.log("🔑 Paddle API key present? ", !!process.env.PADDLE_API_KEY);
 
-    // Sandbox vs Production URL
+    // Log env vars we rely on
     const env = process.env.VITE_PADDLE_ENV || "sandbox";
+    console.log("🌍 Paddle environment (from env):", env);
+
+    // Which Paddle endpoint are we calling?
     const apiUrl =
       env === "sandbox"
         ? "https://sandbox-api.paddle.com/transactions"
         : "https://api.paddle.com/transactions";
+    console.log("🌐 Paddle API URL being used:", apiUrl);
 
     // Build Paddle request body
     const body = {
@@ -45,8 +55,7 @@ exports.handler = async (event) => {
       cancel_url: "https://stats-beta-v1.netlify.app/cancel",
     };
 
-    console.log("➡️ Sending request to Paddle:", JSON.stringify(body, null, 2));
-    console.log("🌍 Using Paddle API URL:", apiUrl);
+    console.log("➡️ Sending request body to Paddle:", JSON.stringify(body, null, 2));
 
     // Call Paddle API
     const res = await fetch(apiUrl, {
@@ -59,18 +68,26 @@ exports.handler = async (event) => {
     });
 
     console.log("📊 Paddle response status:", res.status, res.statusText);
-    console.log("📑 Paddle response headers:", Object.fromEntries(res.headers));
+
+    // Log response headers for debugging
+    try {
+      console.log("📑 Paddle response headers:", Object.fromEntries(res.headers));
+    } catch {
+      console.log("📑 Paddle response headers could not be read.");
+    }
 
     // Read raw response text (sometimes errors are not valid JSON)
     const text = await res.text();
+    console.log("📦 Raw Paddle API response text:", text);
+
     let data;
     try {
       data = JSON.parse(text);
+      console.log("✅ Parsed Paddle API response JSON:", JSON.stringify(data, null, 2));
     } catch {
       data = { raw: text };
+      console.warn("⚠️ Paddle response was not JSON. Returning raw text.");
     }
-
-    console.log("📦 Full Paddle API response:", JSON.stringify(data, null, 2));
 
     // If Paddle returned error
     if (!res.ok) {
@@ -94,7 +111,7 @@ exports.handler = async (event) => {
         body: JSON.stringify({ token: data.data.id, raw: data }),
       };
     } else {
-      console.warn("⚠️ Paddle response missing expected `data.id` field");
+      console.warn("⚠️ Paddle response missing expected `data.id` field:", data);
       return {
         statusCode: 200,
         body: JSON.stringify({ raw: data }),
