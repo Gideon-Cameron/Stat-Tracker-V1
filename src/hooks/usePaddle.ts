@@ -3,7 +3,7 @@ import { useEffect } from "react";
 declare global {
   interface Window {
     Paddle?: {
-      Setup: (options: { token: string; environment?: string }) => void;
+      Setup: (options: { token: string }) => void;
       Checkout: {
         open: (options: Record<string, unknown>) => void;
       };
@@ -35,19 +35,16 @@ export const usePaddle = () => {
       if (window.Paddle) {
         console.log("✅ Paddle SDK script loaded, calling Paddle.Setup...");
 
-        // 🔑 Log what’s actually being passed in
+        // 🔑 Debug info
         console.log("🔑 Paddle client token (from env):", clientToken);
         console.log("🌍 Paddle environment (from env):", env);
 
+        // Only pass the token (environment is auto-detected from script URL)
         window.Paddle.Setup({
           token: clientToken,
-          environment: env,
         });
 
-        console.log("🔧 Paddle.Setup complete:", {
-          env,
-          tokenPresent: !!clientToken,
-        });
+        console.log("🔧 Paddle.Setup complete");
       } else {
         console.error("❌ Paddle SDK did not attach to window");
       }

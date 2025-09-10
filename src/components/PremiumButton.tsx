@@ -41,10 +41,14 @@ const PremiumButton: React.FC<PremiumButtonProps> = ({ firebaseUserId }) => {
         return;
       }
 
-      console.log("📦 Netlify function response:", data);
+      console.log("📦 Netlify function response (full):", data);
+
+      if (data.error) {
+        console.error("🚨 Paddle API returned an error:", data.error);
+      }
 
       if (!res.ok || !data.token) {
-        console.error("❌ Failed to create checkout session:", data);
+        console.error("❌ Failed to create checkout session. Response was:", data);
         return;
       }
 
@@ -54,17 +58,22 @@ const PremiumButton: React.FC<PremiumButtonProps> = ({ firebaseUserId }) => {
         return;
       }
 
-      console.log("✅ Paddle object loaded:", window.Paddle);
+      console.log("✅ Paddle object loaded. Available methods:", Object.keys(window.Paddle));
 
       // Use the transaction ID returned by Paddle
-      console.log("➡️ Opening Paddle checkout with transactionId:", data.token);
+      console.log("➡️ About to open Paddle checkout with transactionId:", data.token);
 
-      window.Paddle.Checkout.open({
-        transactionId: data.token, // 👈 now matches what we return from create-checkout
-        settings: { displayMode: "overlay" },
-      });
+      try {
+        window.Paddle.Checkout.open({
+          transactionId: data.token, // 👈 from Netlify function
+          settings: { displayMode: "overlay" },
+        });
+        console.log("🎉 Paddle.Checkout.open() was called successfully.");
+      } catch (checkoutErr) {
+        console.error("🔥 Error calling Paddle.Checkout.open:", checkoutErr);
+      }
     } catch (err) {
-      console.error("🔥 Error creating checkout:", err);
+      console.error("🔥 Unexpected error creating checkout:", err);
     }
   };
 
