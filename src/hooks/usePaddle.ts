@@ -21,7 +21,11 @@ export const usePaddle = () => {
       return;
     }
 
-    console.log(`⬇️ Loading Paddle SDK for environment: ${env}`);
+    console.log("⬇️ Loading Paddle SDK...");
+    console.log("🔑 Client token (from env):", clientToken);
+    console.log("🌍 Paddle environment (from env):", env);
+    console.log("🏠 Current domain (window.location.origin):", window.location.origin);
+    console.log("📄 Full page URL (window.location.href):", window.location.href);
 
     const script = document.createElement("script");
     script.id = "paddle-js";
@@ -35,16 +39,19 @@ export const usePaddle = () => {
       if (window.Paddle) {
         console.log("✅ Paddle SDK script loaded, calling Paddle.Setup...");
 
-        // 🔑 Debug info
-        console.log("🔑 Paddle client token (from env):", clientToken);
-        console.log("🌍 Paddle environment (from env):", env);
+        try {
+          window.Paddle.Setup({
+            token: clientToken,
+          });
 
-        // Only pass the token (environment is auto-detected from script URL)
-        window.Paddle.Setup({
-          token: clientToken,
-        });
-
-        console.log("🔧 Paddle.Setup complete");
+          console.log("🔧 Paddle.Setup called successfully with:", {
+            tokenPresent: !!clientToken,
+            env,
+            origin: window.location.origin,
+          });
+        } catch (err) {
+          console.error("🔥 Error calling Paddle.Setup:", err);
+        }
       } else {
         console.error("❌ Paddle SDK did not attach to window");
       }
