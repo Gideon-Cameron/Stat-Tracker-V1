@@ -21,12 +21,33 @@ export const usePaddle = () => {
       return;
     }
 
+    // Logs for debugging
     console.log("⬇️ Loading Paddle SDK...");
-    console.log("🔑 Client token (from env):", clientToken);
+    console.log("🔑 Full client token (from env):", clientToken);
+    console.log("🔑 Token prefix:", clientToken?.slice(0, 5));
     console.log("🌍 Paddle environment (from env):", env);
     console.log("🏠 Current domain (window.location.origin):", window.location.origin);
     console.log("📄 Full page URL (window.location.href):", window.location.href);
 
+    // Runtime warnings
+    if (window.location.origin.startsWith("https://")) {
+      console.warn(
+        "⚠️ WARNING: window.location.origin includes https:// — Paddle domain approvals usually require only the bare hostname (e.g. stats-beta-v1.netlify.app). Double-check your approved domains in Paddle Dashboard."
+      );
+    }
+
+    if (env === "sandbox" && !clientToken.startsWith("test_")) {
+      console.error(
+        "❌ ENV/TOKEN MISMATCH: You are in sandbox mode but using a non-sandbox client token!"
+      );
+    }
+    if (env !== "sandbox" && clientToken.startsWith("test_")) {
+      console.error(
+        "❌ ENV/TOKEN MISMATCH: You are in production mode but using a sandbox (test_) client token!"
+      );
+    }
+
+    // Inject Paddle script
     const script = document.createElement("script");
     script.id = "paddle-js";
     script.src =
@@ -46,6 +67,7 @@ export const usePaddle = () => {
 
           console.log("🔧 Paddle.Setup called successfully with:", {
             tokenPresent: !!clientToken,
+            tokenPrefix: clientToken?.slice(0, 5),
             env,
             origin: window.location.origin,
           });
