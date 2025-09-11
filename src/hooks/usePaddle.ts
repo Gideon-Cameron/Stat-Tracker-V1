@@ -29,13 +29,14 @@ export const usePaddle = () => {
     console.log("🏠 Current domain (window.location.origin):", window.location.origin);
     console.log("📄 Full page URL (window.location.href):", window.location.href);
 
-    // ⚠️ Runtime warnings
+    // ⚠️ Runtime domain warning
     if (window.location.origin.startsWith("https://")) {
       console.warn(
         "⚠️ WARNING: window.location.origin includes https:// — Paddle domain approvals usually require only the bare hostname (e.g. stats-beta-v1.netlify.app). Double-check your approved domains in Paddle Dashboard."
       );
     }
 
+    // 🧪 Token/environment mismatch checks
     if (env === "sandbox" && !clientToken.startsWith("test_")) {
       console.error(
         "❌ ENV/TOKEN MISMATCH: You are in sandbox mode but using a non-sandbox client token!"
@@ -47,13 +48,18 @@ export const usePaddle = () => {
       );
     }
 
-    // 📥 Inject Paddle script
-    const script = document.createElement("script");
-    script.id = "paddle-js";
-    script.src =
+    // 📥 Decide which Paddle script to load
+    const expectedScript =
       env === "sandbox"
         ? "https://sandbox-cdn.paddle.com/paddle/v2/paddle.js"
         : "https://cdn.paddle.com/paddle/v2/paddle.js";
+
+    console.log("📜 Expected Paddle script URL:", expectedScript);
+
+    // Inject Paddle script
+    const script = document.createElement("script");
+    script.id = "paddle-js";
+    script.src = expectedScript;
     script.async = true;
 
     script.onload = () => {
@@ -61,16 +67,15 @@ export const usePaddle = () => {
         console.log("✅ Paddle SDK script loaded, calling Paddle.Setup...");
 
         try {
-          // ✅ Only pass the token
-          window.Paddle.Setup({
-            token: clientToken,
-          });
+          // ✅ Only pass the token (no environment!)
+          window.Paddle.Setup({ token: clientToken });
 
           console.log("🔧 Paddle.Setup called successfully with:", {
             tokenPresent: !!clientToken,
             tokenPrefix: clientToken?.slice(0, 5),
             env,
             origin: window.location.origin,
+            scriptSrc: script.src,
           });
         } catch (err) {
           console.error("🔥 Error calling Paddle.Setup:", err);
@@ -81,7 +86,7 @@ export const usePaddle = () => {
     };
 
     script.onerror = () => {
-      console.error("🔥 Failed to load Paddle SDK script");
+      console.error("🔥 Failed to load Paddle SDK script:", expectedScript);
     };
 
     document.body.appendChild(script);
