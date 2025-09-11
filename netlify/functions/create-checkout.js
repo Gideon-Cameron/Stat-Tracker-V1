@@ -42,6 +42,9 @@ exports.handler = async (event) => {
       env === "sandbox"
         ? "https://sandbox-api.paddle.com/transactions"
         : "https://api.paddle.com/transactions";
+
+        console.log("🔍 Effective env in function:", env);
+        console.log("🔍 Using Paddle API key prefix:", process.env.PADDLE_API_KEY?.slice(0, 5));
     console.log("🌐 Paddle API URL being used:", apiUrl);
 
     // Build Paddle request body
