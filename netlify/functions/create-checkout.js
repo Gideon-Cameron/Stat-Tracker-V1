@@ -11,10 +11,10 @@ exports.handler = async (event) => {
     console.log("🖥️ Host header (domain Netlify served):", event.headers?.host || "❌ none");
 
     // Parse incoming request
-    let priceId, firebaseUserId;
+    let priceId, firebaseUserId, email;
     try {
-      ({ priceId, firebaseUserId } = JSON.parse(event.body));
-      console.log("✅ Parsed request body:", { priceId, firebaseUserId });
+      ({ priceId, firebaseUserId, email } = JSON.parse(event.body));
+      console.log("✅ Parsed request body:", { priceId, firebaseUserId, email });
     } catch (parseErr) {
       console.error("❌ Failed to parse request body:", parseErr);
       return {
@@ -43,15 +43,15 @@ exports.handler = async (event) => {
         ? "https://sandbox-api.paddle.com/transactions"
         : "https://api.paddle.com/transactions";
 
-        console.log("🔍 Effective env in function:", env);
-        console.log("🔍 Using Paddle API key prefix:", process.env.PADDLE_API_KEY?.slice(0, 5));
+    console.log("🔍 Effective env in function:", env);
+    console.log("🔍 Using Paddle API key prefix:", process.env.PADDLE_API_KEY?.slice(0, 5));
     console.log("🌐 Paddle API URL being used:", apiUrl);
 
     // Build Paddle request body
     const body = {
       items: [{ price_id: priceId, quantity: 1 }],
       customer: {
-        email: userEmail, // ✅ Replace with the actual logged-in user's email
+        email: email, // ✅ now using the real email passed from frontend
       },
       passthrough: JSON.stringify({ firebaseUserId }),
       success_url: "https://stats-beta-v1.netlify.app/success",
