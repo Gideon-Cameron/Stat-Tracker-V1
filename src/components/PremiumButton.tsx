@@ -3,6 +3,7 @@ import { usePaddle } from "../hooks/usePaddle";
 
 interface PremiumButtonProps {
   firebaseUserId: string;
+  email: string; // 👈 new prop, required to send to backend
 }
 
 // Define what we expect from our Netlify function
@@ -12,7 +13,7 @@ interface CheckoutResponse {
   error?: unknown;
 }
 
-const PremiumButton: React.FC<PremiumButtonProps> = ({ firebaseUserId }) => {
+const PremiumButton: React.FC<PremiumButtonProps> = ({ firebaseUserId, email }) => {
   usePaddle();
 
   const handleCheckout = async () => {
@@ -28,6 +29,7 @@ const PremiumButton: React.FC<PremiumButtonProps> = ({ firebaseUserId }) => {
         body: JSON.stringify({
           priceId: monthlyId, // start with monthly plan
           firebaseUserId,
+          email, // 👈 send logged-in user's email to backend
         }),
       });
 
