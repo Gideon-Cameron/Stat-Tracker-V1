@@ -85,7 +85,7 @@ const App: React.FC = () => {
 
               {user ? (
                 <>
-                  <PremiumButton firebaseUserId={user.uid} /> {/* NEW */}
+                   <PremiumButton firebaseUserId={user.uid} email={user.email ?? ''} />
                   <button
                     onClick={logout}
                     className="text-sm ml-2 text-red-400 hover:text-red-300 transition-colors"
