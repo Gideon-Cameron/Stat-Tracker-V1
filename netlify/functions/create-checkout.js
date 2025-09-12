@@ -51,7 +51,7 @@ exports.handler = async (event) => {
     const body = {
       items: [{ price_id: priceId, quantity: 1 }],
       customer: {
-        email: "test@example.com", // TODO: replace with real user email
+        email: userEmail, // ✅ Replace with the actual logged-in user's email
       },
       passthrough: JSON.stringify({ firebaseUserId }),
       success_url: "https://stats-beta-v1.netlify.app/success",
