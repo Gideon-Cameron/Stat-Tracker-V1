@@ -54,8 +54,9 @@ exports.handler = async (event) => {
         email: email, // ✅ now using the real email passed from frontend
       },
       passthrough: JSON.stringify({ firebaseUserId }),
-      success_url: "https://stats-beta-v1.netlify.app/success",
-      cancel_url: "https://stats-beta-v1.netlify.app/cancel",
+      success_url: "https://stat-tracker-v1.netlify.app/success",
+      cancel_url: "https://stat-tracker-v1.netlify.app/cancel",
+
     };
 
     console.log("➡️ Sending request body to Paddle:", JSON.stringify(body, null, 2));
