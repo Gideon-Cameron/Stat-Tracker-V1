@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { lazy } from 'react';
 import { BrowserRouter as Router, Routes, Route, Link, Navigate } from 'react-router-dom';
 import StrengthStatPage from './pages/stats/strength';
 import EnduranceStatPage from './pages/stats/endurance';
@@ -10,10 +10,16 @@ import LoginPage from './pages/login';
 import { useAuth } from './context/AuthContext';
 import Home from './pages/home';
 import PremiumButton from './components/PremiumButton';
+import Footer from './components/Footer'; // ✅ Import Footer
 
 // ✅ New imports
 import Success from './pages/Success';
 import Cancel from './pages/Cancel';
+
+
+const TermsPage = lazy(() => import('./pages/TermsPage'));
+const PrivacyPolicyPage = lazy(() => import('./pages/PrivacyPolicyPage'));
+const RefundsPage = lazy(() => import('./pages/RefundsPage'));
 
 // Protects routes for logged-in users only
 const ProtectedRoute: React.FC<{ children: React.ReactNode }> = ({ children }) => {
@@ -38,7 +44,7 @@ const App: React.FC = () => {
 
   return (
     <Router>
-      <div className="min-h-screen bg-[#0a192f] text-[#ccd6f6]">
+      <div className="min-h-screen flex flex-col bg-[#0a192f] text-[#ccd6f6]">
         {/* Navbar */}
         <nav className="bg-[#112240] text-[#ccd6f6] px-6 py-4 shadow-lg sticky top-0 z-50 border-b border-[#233554]">
           <div className="flex justify-between items-center max-w-6xl mx-auto">
@@ -85,7 +91,7 @@ const App: React.FC = () => {
 
               {user ? (
                 <>
-                   <PremiumButton firebaseUserId={user.uid} email={user.email ?? ''} />
+                  <PremiumButton firebaseUserId={user.uid} email={user.email ?? ''} />
                   <button
                     onClick={logout}
                     className="text-sm ml-2 text-red-400 hover:text-red-300 transition-colors"
@@ -106,7 +112,7 @@ const App: React.FC = () => {
         </nav>
 
         {/* Main Content */}
-        <main className="py-8 px-4 max-w-6xl mx-auto">
+        <main className="flex-grow py-8 px-4 max-w-6xl mx-auto">
           <Routes>
             {/* Home page requires login */}
             <Route
@@ -181,8 +187,16 @@ const App: React.FC = () => {
             {/* ✅ Paddle checkout redirects */}
             <Route path="/success" element={<Success />} />
             <Route path="/cancel" element={<Cancel />} />
+
+            {/* ✅ Legal Pages */}
+            <Route path="/terms" element={<TermsPage />} />
+              <Route path="/privacy" element={<PrivacyPolicyPage />} />
+              <Route path="/refunds" element={<RefundsPage />} />
           </Routes>
         </main>
+
+        {/* ✅ Footer on every page */}
+        <Footer />
       </div>
     </Router>
   );
