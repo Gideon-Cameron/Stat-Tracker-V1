@@ -60,6 +60,7 @@ const StrengthInput: React.FC<Props> = ({ onSubmit, initialData }) => {
 
   return (
     <form
+      id="strength-form" // 👈 form wrapper for tutorial
       onSubmit={handleSubmit}
       className="space-y-6 max-w-md mx-auto p-4 bg-[#0a192f] rounded-lg shadow-lg border border-[#233554]"
     >
@@ -73,8 +74,8 @@ const StrengthInput: React.FC<Props> = ({ onSubmit, initialData }) => {
           </label>
           <input
             type="number"
+            id={`${field.name}-input`} // 👈 unique ID for tutorial targeting
             name={field.name}
-            id={field.name}
             value={formData[field.name as keyof StrengthFormData]}
             onChange={handleChange}
             min={0}
@@ -84,6 +85,7 @@ const StrengthInput: React.FC<Props> = ({ onSubmit, initialData }) => {
         </div>
       ))}
       <button
+        id="submit-button" // 👈 tutorial will point here
         type="submit"
         className="w-full bg-[#64ffda] text-[#0a192f] font-semibold py-2 px-4 rounded hover:bg-[#52e0c4] transition"
       >
