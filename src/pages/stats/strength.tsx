@@ -149,10 +149,17 @@ const StrengthStatPage: React.FC = () => {
   return (
     <div className="py-10 px-6 max-w-3xl mx-auto text-[#ccd6f6]">
       <h1 className="text-3xl font-bold mb-6 text-center text-[#64ffda]">Strength Stat Assessment</h1>
-      <StrengthInput onSubmit={handleSubmit} initialData={formData ?? undefined} />
+
+      {/* Tutorial will point here */}
+      <div id="strength-input-section">
+        <StrengthInput onSubmit={handleSubmit} initialData={formData ?? undefined} />
+      </div>
 
       {result && (
-        <div className="mt-10 bg-[#112240] p-6 rounded-lg shadow-lg border border-[#233554]">
+        <div
+          id="strength-results-section"
+          className="mt-10 bg-[#112240] p-6 rounded-lg shadow-lg border border-[#233554]"
+        >
           <h2 className="text-xl font-semibold mb-4 text-[#64ffda]">Your Strength Ranks</h2>
 
           {history.length > 0 && (
@@ -179,7 +186,10 @@ const StrengthStatPage: React.FC = () => {
             </div>
           )}
 
-          <RadarChart data={result} />
+          {/* Tutorial will point here */}
+          <div id="strength-graph">
+            <RadarChart data={result} />
+          </div>
 
           <ul className="grid grid-cols-1 sm:grid-cols-2 gap-x-4 gap-y-3 mt-6">
             {Object.entries(result).map(([test]) => {
@@ -190,7 +200,9 @@ const StrengthStatPage: React.FC = () => {
                   key={test}
                   className="flex justify-between items-center border-b border-[#233554] py-2"
                 >
-                  <span className="capitalize whitespace-nowrap">{test.replace(/([A-Z])/g, ' $1')}</span>
+                  <span className="capitalize whitespace-nowrap">
+                    {test.replace(/([A-Z])/g, ' $1')}
+                  </span>
                   {value !== undefined ? (
                     <SubRankDisplay
                       value={Number(value)}
@@ -205,7 +217,7 @@ const StrengthStatPage: React.FC = () => {
           </ul>
 
           {average && (
-            <div className="mt-6 text-center">
+            <div id="rank-display" className="mt-6 text-center">
               <p className="text-lg">
                 <span className="font-semibold text-[#64ffda]">Average Strength Score:</span>{' '}
                 {average.averageScore}
