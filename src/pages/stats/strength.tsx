@@ -10,6 +10,7 @@ import { saveUserStats } from '../../utils/saveUserStats';
 import { loadUserStats } from '../../utils/loadUserStats';
 import { loadUserHistory } from '../../utils/loadUserHistory';
 import SubRankDisplay from '../../components/SubRankDisplay';
+import StrengthTutorial from '../../tutorials/StrengthTutorial';
 
 const STRENGTH_TESTS: StrengthTest[] = [
   'benchPress',
@@ -148,7 +149,9 @@ const StrengthStatPage: React.FC = () => {
 
   return (
     <div className="py-10 px-6 max-w-3xl mx-auto text-[#ccd6f6]">
-      <h1 className="text-3xl font-bold mb-6 text-center text-[#64ffda]">Strength Stat Assessment</h1>
+      <h1 className="text-3xl font-bold mb-6 text-center text-[#64ffda]">
+        Strength Stat Assessment
+      </h1>
 
       {/* Tutorial will point here */}
       <div id="strength-input-section">
@@ -229,6 +232,9 @@ const StrengthStatPage: React.FC = () => {
           )}
         </div>
       )}
+
+      {/* 👇 Tutorial injected here */}
+      <StrengthTutorial />
     </div>
   );
 };
