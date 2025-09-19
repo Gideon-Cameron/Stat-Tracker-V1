@@ -6,51 +6,25 @@ const StrengthTutorial: React.FC = () => {
 
   const steps: Step[] = [
     {
-      target: "#benchPress-input",
+      target: "#strength-input-section",
       content:
-        "Start by entering your Bench Press max here. Fill out ALL the fields with your stats, or your best estimation if you’re not sure.",
-      disableBeacon: true, // force tutorial to start without requiring click
-    },
-    {
-      target: "#squat-input",
-      content: "Next, enter your Squat max in kilograms.",
-    },
-    {
-      target: "#deadlift-input",
-      content: "Enter your Deadlift max in kilograms.",
-    },
-    {
-      target: "#overheadPress-input",
-      content: "Fill in your Overhead Press numbers.",
-    },
-    {
-      target: "#pullUps-input",
-      content: "Record how many Pull-Ups you can do.",
-    },
-    {
-      target: "#pushUps-input",
-      content: "Add your Push-Up count.",
-    },
-    {
-      target: "#barHang-input",
-      content: "How long can you hang on the bar? Enter in seconds.",
-    },
-    {
-      target: "#plankHold-input",
-      content: "How long can you hold a plank? Enter in seconds.",
+        "Start by entering your strength stats. If you’re not sure about some, just enter your best estimation — you can always update them later.",
+      disableBeacon: true,
     },
     {
       target: "#submit-button",
-      content: "Once all fields are filled, click Submit to calculate your ranks.",
+      content:
+        "Once you’ve filled out your stats, click Submit to calculate your ranks.",
     },
     {
       target: "#strength-graph",
-      content: "Here’s your strength profile graph. Each axis shows one exercise compared to global data.",
+      content:
+        "Here’s your strength profile graph. Each axis shows how you compare globally for different lifts and exercises.",
     },
     {
       target: "#rank-display",
       content:
-        "Your overall rank is shown here. For example, A = top 10% of people, Mythic = top 0.01%.",
+        "This is your overall strength rank! Ready to get started? See where you stand now and track your progress over time.",
     },
   ];
 
@@ -73,7 +47,7 @@ const StrengthTutorial: React.FC = () => {
       styles={{
         options: {
           zIndex: 10000,
-          primaryColor: "#64ffda", // match your theme
+          primaryColor: "#64ffda", // matches your theme
           backgroundColor: "#0a192f",
           textColor: "#ccd6f6",
         },
