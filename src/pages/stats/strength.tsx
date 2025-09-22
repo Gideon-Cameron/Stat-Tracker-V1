@@ -234,7 +234,7 @@ const StrengthStatPage: React.FC = () => {
       )}
 
       {/* Tutorial injected here */}
-      <StrengthTutorial />
+      <StrengthTutorial hasResults={!!result} />
     </div>
   );
 };

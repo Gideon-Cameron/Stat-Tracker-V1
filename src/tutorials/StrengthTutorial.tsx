@@ -1,10 +1,16 @@
 import React, { useEffect, useState } from "react";
 import Joyride, { Step } from "react-joyride";
 
-const StrengthTutorial: React.FC = () => {
-  const [run, setRun] = useState(false);
+type Props = {
+  hasResults: boolean; // 👈 we'll pass this from strength.tsx
+};
 
-  const steps: Step[] = [
+const StrengthTutorial: React.FC<Props> = ({ hasResults }) => {
+  const [run, setRun] = useState(false);
+  const [steps, setSteps] = useState<Step[]>([]);
+
+  // Phase 1 steps (before submit)
+  const initialSteps: Step[] = [
     {
       target: "#strength-input-section",
       content:
@@ -16,6 +22,10 @@ const StrengthTutorial: React.FC = () => {
       content:
         "Once you’ve filled out your stats, click Submit to calculate your ranks.",
     },
+  ];
+
+  // Phase 2 steps (after submit)
+  const resultSteps: Step[] = [
     {
       target: "#strength-graph",
       content:
@@ -28,13 +38,23 @@ const StrengthTutorial: React.FC = () => {
     },
   ];
 
+  // Start tutorial if user hasn’t seen it before
   useEffect(() => {
     const hasSeen = localStorage.getItem("seenStrengthTutorial");
     if (!hasSeen) {
+      setSteps(initialSteps);
       setRun(true);
       localStorage.setItem("seenStrengthTutorial", "true");
     }
   }, []);
+
+  // Trigger phase 2 once results are available
+  useEffect(() => {
+    if (hasResults) {
+      setSteps(resultSteps);
+      setRun(true);
+    }
+  }, [hasResults]);
 
   return (
     <Joyride
