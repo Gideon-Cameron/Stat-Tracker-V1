@@ -44,13 +44,28 @@ const StrengthTutorial: React.FC = () => {
       showSkipButton
       showProgress
       spotlightClicks
+      scrollToFirstStep
       styles={{
         options: {
           zIndex: 10000,
-          primaryColor: "#64ffda", // matches your theme
+          primaryColor: "#52e0c4", // slightly darker teal
           backgroundColor: "#0a192f",
           textColor: "#ccd6f6",
         },
+        buttonNext: {
+          backgroundColor: "#52e0c4", // darker version of your theme button
+          color: "#0a192f",
+        },
+        buttonBack: {
+          color: "#8892b0", // softer muted tone for back button
+        },
+      }}
+      locale={{
+        back: "Back",
+        close: "Close",
+        last: "Finish", // changed from "Last"
+        next: "Next",
+        skip: "Skip",
       }}
     />
   );

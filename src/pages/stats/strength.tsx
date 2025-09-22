@@ -153,8 +153,8 @@ const StrengthStatPage: React.FC = () => {
         Strength Stat Assessment
       </h1>
 
-      {/* Tutorial will point here */}
-      <div id="strength-input-section">
+      {/* Tutorial step: input form */}
+      <div id="strength-input-section" className="scroll-mt-32 mb-16">
         <StrengthInput onSubmit={handleSubmit} initialData={formData ?? undefined} />
       </div>
 
@@ -189,8 +189,8 @@ const StrengthStatPage: React.FC = () => {
             </div>
           )}
 
-          {/* Tutorial will point here */}
-          <div id="strength-graph">
+          {/* Tutorial step: graph */}
+          <div id="strength-graph" className="scroll-mt-32 mb-16">
             <RadarChart data={result} />
           </div>
 
@@ -220,7 +220,7 @@ const StrengthStatPage: React.FC = () => {
           </ul>
 
           {average && (
-            <div id="rank-display" className="mt-6 text-center">
+            <div id="rank-display" className="mt-6 text-center scroll-mt-32 mb-16">
               <p className="text-lg">
                 <span className="font-semibold text-[#64ffda]">Average Strength Score:</span>{' '}
                 {average.averageScore}
@@ -233,7 +233,7 @@ const StrengthStatPage: React.FC = () => {
         </div>
       )}
 
-      {/* 👇 Tutorial injected here */}
+      {/* Tutorial injected here */}
       <StrengthTutorial />
     </div>
   );
