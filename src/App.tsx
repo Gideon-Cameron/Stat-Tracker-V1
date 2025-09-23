@@ -59,6 +59,7 @@ const App: React.FC = () => {
                 All Stats
               </Link>
               <Link
+                id="strength-link"
                 to="/stats/strength"
                 className="hover:text-[#64ffda] transition-colors"
               >

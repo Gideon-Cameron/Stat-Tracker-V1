@@ -11,6 +11,7 @@ import { GlobalSnapshot } from '../types/GlobalSnapshot';
 
 // ✅ Import the new tutorial
 import MainTutorial from '../tutorials/MainTutorial';
+                          
 
 const Home: React.FC = () => {
   const { user } = useAuth();
