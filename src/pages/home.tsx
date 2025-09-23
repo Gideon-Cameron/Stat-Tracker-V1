@@ -9,6 +9,9 @@ import RadarChart from '../components/RadarChart';
 import { calculateAverageRank } from '../utils/calculateAverageGeneric';
 import { GlobalSnapshot } from '../types/GlobalSnapshot';
 
+// ✅ Import the new tutorial
+import MainTutorial from '../tutorials/MainTutorial';
+
 const Home: React.FC = () => {
   const { user } = useAuth();
   const [loading, setLoading] = useState(true);
@@ -94,6 +97,9 @@ const Home: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-[#0a192f] py-10 px-6 flex flex-col items-center">
+      {/* ✅ Add tutorial */}
+      <MainTutorial />
+
       <h1 className="text-3xl font-bold mb-6 text-[#64ffda] text-center">
         Your Fitness Dashboard
       </h1>
@@ -128,7 +134,8 @@ const Home: React.FC = () => {
             </div>
           )}
 
-          <div className="mb-6">
+          {/* ✅ Add id for tutorial targeting */}
+          <div id="main-graph" className="mb-6">
             <RadarChart data={activeSnapshot.rankMap} />
           </div>
 
