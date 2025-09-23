@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import Joyride, { Step } from "react-joyride";
 
 type Props = {
-  hasResults: boolean; // 👈 we'll pass this from strength.tsx
+  hasResults: boolean; // 👈 passed from strength.tsx
 };
 
 const StrengthTutorial: React.FC<Props> = ({ hasResults }) => {
@@ -12,9 +12,9 @@ const StrengthTutorial: React.FC<Props> = ({ hasResults }) => {
   // Phase 1 steps (before submit)
   const initialSteps: Step[] = [
     {
-      target: "#strength-input-section",
+      target: "#deadlift-input", // 👈 directly points to Deadlift field
       content:
-        "Start by entering your strength stats. If you’re not sure about some, just enter your best estimation — you can always update them later.",
+        "Start by entering your stats. If you’re not sure, just put your best estimation — you can always update them later.",
       disableBeacon: true,
     },
     {
@@ -65,6 +65,7 @@ const StrengthTutorial: React.FC<Props> = ({ hasResults }) => {
       showProgress
       spotlightClicks
       scrollToFirstStep
+      scrollOffset={window.innerHeight / 4} // 👈 keeps target in view, not at very top
       styles={{
         options: {
           zIndex: 10000,
@@ -73,17 +74,17 @@ const StrengthTutorial: React.FC<Props> = ({ hasResults }) => {
           textColor: "#ccd6f6",
         },
         buttonNext: {
-          backgroundColor: "#52e0c4", // darker version of your theme button
+          backgroundColor: "#52e0c4", // darker button version
           color: "#0a192f",
         },
         buttonBack: {
-          color: "#8892b0", // softer muted tone for back button
+          color: "#8892b0", // softer muted tone
         },
       }}
       locale={{
         back: "Back",
         close: "Close",
-        last: "Finish", // changed from "Last"
+        last: "Finish",
         next: "Next",
         skip: "Skip",
       }}
