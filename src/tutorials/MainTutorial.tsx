@@ -6,7 +6,7 @@ const MainTutorial: React.FC = () => {
 
   const steps: Step[] = [
     {
-      target: "body", // center of screen
+      target: "body",
       placement: "center",
       content:
         "👋 Welcome to your personalized stat tracker! Here you can see how you rank on a global scale.",
@@ -25,8 +25,9 @@ const MainTutorial: React.FC = () => {
             <br />
             <strong>E</strong> = top 50% • <strong>D</strong> = top 40% •{" "}
             <strong>C</strong> = top 30% • <strong>B</strong> = top 20% •{" "}
-            <strong>A</strong> = top 10% • <strong>S</strong> = top 5% •{" "}
-            <strong>SS</strong> = top 1%.
+            <strong>A</strong> = top 10% • <strong>S</strong> = top 1% •{" "}
+            <strong>SS</strong> = top 0.1% • <strong>Mythic</strong> = top
+            0.01%.
           </p>
         </div>
       ),
@@ -54,6 +55,7 @@ const MainTutorial: React.FC = () => {
       showSkipButton
       showProgress
       scrollToFirstStep
+      scrollOffset={150} // ✅ keeps step centered & visible
       spotlightClicks
       styles={{
         options: {
