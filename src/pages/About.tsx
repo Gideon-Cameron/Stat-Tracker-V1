@@ -66,8 +66,8 @@ const About: React.FC = () => {
               show.
             </li>
             <li>
-              <strong className="text-[#64ffda]">S Rank</strong> — Top 1%. Elite
-              status. You’ve reached the level most only dream of achieving.
+              <strong className="text-[#64ffda]">S Rank</strong> 
+               represents the top 1% of people, and now you have done it, you have reached elate levels, and you are now the cream of the crop, reaching where most will only dream to go.
             </li>
             <li>
               <strong className="text-[#64ffda]">SS Rank</strong> — Top 0.1%.
