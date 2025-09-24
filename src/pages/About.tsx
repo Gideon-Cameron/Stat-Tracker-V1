@@ -12,20 +12,26 @@ const About: React.FC = () => {
 
         {/* Product Description */}
         <section className="mb-10">
-          <p className="text-lg leading-relaxed mb-4">
-            <strong>Stat Tracker</strong> is a fitness tracking platform that
-            shows you where you truly stand on a <strong>global scale</strong>.
-            Instead of just logging your workouts, Stat Tracker compares your
-            performance against users worldwide and gives you a clear, visual
-            breakdown of your rank across strength, endurance, speed, skill, and
-            flexibility.
-          </p>
-          <p className="text-lg leading-relaxed">
-            Our goal is simple: to give you an{" "}
-            <strong>easy-to-understand visual profile</strong> of your fitness
-            level, so you can see your progress, measure yourself against others,
-            and stay motivated as you climb the ranks.
-          </p>
+        <p className="text-lg leading-relaxed mb-4">
+  <strong>Stat Tracker</strong> isn’t just another workout logger — it’s your
+  window into how you measure up against the world. Every rep, run, or stretch
+  is transformed into a <strong>global ranking</strong>, so you can see exactly
+  where you stand and how far you’ve come.
+</p>
+<p className="text-lg leading-relaxed mb-4">
+  I built this platform because I wanted more than just numbers in a notebook. 
+  I wanted a way to <strong>stay motivated</strong>, to push forward, and to 
+  actually see my progress in a way that’s clear and inspiring. That’s why
+  Stat Tracker gives you a <strong>visual profile</strong> of your fitness —
+  showing your strengths, your weaknesses, and how you stack up worldwide.
+</p>
+<p className="text-lg leading-relaxed">
+  Whether you’re just starting out or chasing the top, Stat Tracker makes
+  your journey <strong>easy to track, fun to follow, and impossible to ignore</strong>.
+  Every small improvement moves you up the ranks, and every rank earned is proof
+  that you’re stronger than yesterday.
+</p>
+
         </section>
 
         {/* Ranking System */}
@@ -40,44 +46,53 @@ const About: React.FC = () => {
           </p>
 
           <ul className="space-y-6 text-lg leading-relaxed">
-            <li>
-              <strong className="text-[#64ffda]">E Rank</strong> — Top 50%.
-              You’re in the global average range, which can mean anything from
-              almost no exercise to average fitness levels.
-            </li>
-            <li>
-              <strong className="text-[#64ffda]">D Rank</strong> — Top 40%.
-              Above average, but not yet elevated. A solid starting point for
-              those looking to climb higher.
-            </li>
-            <li>
-              <strong className="text-[#64ffda]">C Rank</strong> — Top 30%.
-              Typically represents casual gym-goers or light training. Reaching
-              this rank means you’re above average and building momentum.
-            </li>
-            <li>
-              <strong className="text-[#64ffda]">B Rank</strong> — Top 20%.
-              Well above average. At this point you’re in the “in-between” —
-              will you push further or settle back down?
-            </li>
-            <li>
-              <strong className="text-[#64ffda]">A Rank</strong> — Top 10%.
-              Approaching elite levels. This is where serious progress begins to
-              show.
-            </li>
-            <li>
-              <strong className="text-[#64ffda]">S Rank</strong> 
-               represents the top 1% of people, and now you have done it, you have reached elate levels, and you are now the cream of the crop, reaching where most will only dream to go.
-            </li>
-            <li>
-              <strong className="text-[#64ffda]">SS Rank</strong> — Top 0.1%.
-              Beyond elite. This is for those unwilling to stop at the peak.
-            </li>
-            <li>
-              <strong className="text-[#64ffda]">Mythic</strong> — Top 0.01%.
-              One in ten thousand. The absolute pinnacle of global performance.
-            </li>
-          </ul>
+        <li>
+    <strong className="text-[#64ffda]">E Rank</strong> — Top 50%.  
+    You’re standing with the global average. This range spans from little-to-no
+    training up to everyday fitness levels. Everyone starts here — it’s your
+    first step into the journey.
+  </li>
+  <li>
+    <strong className="text-[#64ffda]">D Rank</strong> — Top 40%.  
+    You’ve already pulled ahead of the crowd. Above average, but still room to
+    grow. This is the foundation for anyone serious about climbing higher.
+  </li>
+  <li>
+    <strong className="text-[#64ffda]">C Rank</strong> — Top 30%.  
+    The mark of the casual gym-goer. Reaching C means you’re no longer just
+    average — you’re building momentum and standing out from the pack.
+  </li>
+  <li>
+    <strong className="text-[#64ffda]">B Rank</strong> — Top 20%.  
+    Now it’s getting exciting. You’re well above average, in the zone where
+    progress starts to demand consistency. At this point, you’re in the
+    “in-between” — push forward, and greatness awaits.
+  </li>
+  <li>
+    <strong className="text-[#64ffda]">A Rank</strong> — Top 10%.  
+    Welcome to the edge of elite. You’ve broken into the upper tier, and your
+    dedication is showing. From here, the climb gets harder — and far more
+    rewarding.
+  </li>
+  <li>
+    <strong className="text-[#64ffda]">S Rank</strong> — Top 1%.  
+    You’ve joined the elite. This is the level most only dream about — proof
+    that your discipline, training, and drive have carried you far beyond the
+    ordinary.
+  </li>
+  <li>
+    <strong className="text-[#64ffda]">SS Rank</strong> — Top 0.1%.  
+    Almost untouchable. This rank is for the relentless — those who refuse to
+    stop at the summit and instead carve a new peak above it.
+  </li>
+  <li>
+    <strong className="text-[#64ffda]">Mythic</strong> — Top 0.01%.  
+    One in ten thousand. A living legend. If you’ve reached this rank, you’re
+    not just fit — you’re a rarity, standing at the absolute pinnacle of global
+    performance.
+  </li>
+</ul>
+
         </section>
 
         {/* Closing */}
