@@ -10,6 +10,7 @@ import { saveUserStats } from '../../utils/saveUserStats';
 import { loadUserStats } from '../../utils/loadUserStats';
 import { loadUserHistory } from '../../utils/loadUserHistory';
 import SubRankDisplay from '../../components/SubRankDisplay';
+import { formatRankPercentage } from '../../utils/formatRankPercentage';
 
 const VALID_TEST_KEYS: FlexibilityTest[] = [
   'frontSplitLeft',
@@ -231,7 +232,7 @@ const FlexibilityPage: React.FC = () => {
             <div className="mt-6 text-center">
               <p className="text-lg">
                 <span className="font-semibold text-[#64ffda]">Average Flexibility Score:</span>{' '}
-                {average.averageScore}
+                {formatRankPercentage(average.averageScore)}
               </p>
               <p className="text-xl mt-1">
                 <span className="font-bold text-[#64ffda]">Global Rank:</span> {average.globalRank}
