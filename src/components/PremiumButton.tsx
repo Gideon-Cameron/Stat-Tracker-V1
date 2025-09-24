@@ -81,11 +81,11 @@ const PremiumButton: React.FC<PremiumButtonProps> = ({ firebaseUserId, email }) 
 
   return (
     <button
-      onClick={handleCheckout}
-      className="px-4 py-2 bg-indigo-600 text-white rounded hover:bg-indigo-700"
-    >
-      Go Premium
-    </button>
+  onClick={handleCheckout}
+  className="px-4 py-2 rounded font-semibold text-white bg-gradient-to-r from-pink-500 via-purple-500 to-indigo-500 hover:from-indigo-500 hover:via-purple-500 hover:to-pink-500 transition-all duration-300 shadow-lg"
+>
+  Go Premium
+</button>
   );
 };
 
