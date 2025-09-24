@@ -10,12 +10,12 @@ import LoginPage from './pages/login';
 import { useAuth } from './context/AuthContext';
 import Home from './pages/home';
 import PremiumButton from './components/PremiumButton';
-import Footer from './components/Footer'; // ✅ Import Footer
+import Footer from './components/Footer';
 
 // ✅ New imports
 import Success from './pages/Success';
 import Cancel from './pages/Cancel';
-
+import About from './pages/About'; // <-- Import About page
 
 const TermsPage = lazy(() => import('./pages/TermsPage'));
 const PrivacyPolicyPage = lazy(() => import('./pages/PrivacyPolicyPage'));
@@ -88,6 +88,12 @@ const App: React.FC = () => {
                 className="hover:text-[#64ffda] transition-colors"
               >
                 Flexibility
+              </Link>
+              <Link
+                to="/about"
+                className="hover:text-[#64ffda] transition-colors"
+              >
+                About
               </Link>
 
               {user ? (
@@ -191,8 +197,11 @@ const App: React.FC = () => {
 
             {/* ✅ Legal Pages */}
             <Route path="/terms" element={<TermsPage />} />
-              <Route path="/privacy" element={<PrivacyPolicyPage />} />
-              <Route path="/refunds" element={<RefundsPage />} />
+            <Route path="/privacy" element={<PrivacyPolicyPage />} />
+            <Route path="/refunds" element={<RefundsPage />} />
+
+            {/* ✅ About Page */}
+            <Route path="/about" element={<About />} />
           </Routes>
         </main>
 
