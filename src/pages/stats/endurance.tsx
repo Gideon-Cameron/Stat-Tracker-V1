@@ -10,6 +10,7 @@ import { saveUserStats } from '../../utils/saveUserStats';
 import { loadUserStats } from '../../utils/loadUserStats';
 import { loadUserHistory } from '../../utils/loadUserHistory';
 import SubRankDisplay from '../../components/SubRankDisplay';
+import { formatRankPercentage } from '../../utils/formatRankPercentage';
 
 const EnduranceStatPage: React.FC = () => {
   const { user } = useAuth();
@@ -238,7 +239,7 @@ const EnduranceStatPage: React.FC = () => {
                 <span className="font-semibold text-[#64ffda]">
                   Average Endurance Score:
                 </span>{' '}
-                {average.averageScore}
+                {formatRankPercentage(average.averageScore)}
               </p>
               <p className="text-xl mt-1">
                 <span className="font-bold text-[#64ffda]">Global Rank:</span>{' '}
