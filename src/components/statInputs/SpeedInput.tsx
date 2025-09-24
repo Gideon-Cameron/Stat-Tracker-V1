@@ -53,10 +53,16 @@ const SpeedInput: React.FC<Props> = ({ onSubmit, initialData }) => {
   ];
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-6 max-w-md mx-auto p-4">
+    <form
+      onSubmit={handleSubmit}
+      className="space-y-6 max-w-md mx-auto p-6 bg-[#0a192f] border border-[#233554] rounded-lg shadow-lg"
+    >
       {fields.map((field) => (
         <div key={field.name} className="flex flex-col">
-          <label htmlFor={field.name} className="mb-1 text-sm font-medium text-[#64ffda]">
+          <label
+            htmlFor={field.name}
+            className="mb-1 text-sm font-medium text-[#64ffda]"
+          >
             {field.label}
           </label>
           <input
@@ -73,7 +79,7 @@ const SpeedInput: React.FC<Props> = ({ onSubmit, initialData }) => {
       ))}
       <button
         type="submit"
-        className="w-full bg-[#64ffda] text-[#0a192f] font-semibold py-2 px-4 rounded hover:bg-[#52e0c4] transition"
+        className="w-full bg-[#64ffda] text-[#0a192f] py-2 px-4 rounded font-semibold hover:bg-[#52d1bd] transition"
       >
         Submit
       </button>
