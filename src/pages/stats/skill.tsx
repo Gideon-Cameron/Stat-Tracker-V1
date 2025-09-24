@@ -9,6 +9,7 @@ import { useAuth } from "../../context/AuthContext";
 import { loadUserStats } from "../../utils/loadUserStats";
 import { saveUserStats } from "../../utils/saveUserStats";
 import { loadUserHistory } from "../../utils/loadUserHistory";
+import { formatRankPercentage } from "../../utils/formatRankPercentage";
 
 
 const VALID_TEST_KEYS: SkillTest[] = [
@@ -194,7 +195,7 @@ const SkillStatPage: React.FC = () => {
             <div className="mt-6 text-center">
               <p className="text-lg">
                 <span className="font-semibold text-gray-300">Average Skill Score:</span>{" "}
-                {average.averageScore}
+                {formatRankPercentage(average.averageScore)}
               </p>
               <p className="text-xl mt-1">
                 <span className="font-bold text-[#64ffda]">Global Rank:</span>{" "}
