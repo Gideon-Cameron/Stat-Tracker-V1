@@ -9,9 +9,12 @@ import RadarChart from '../components/RadarChart';
 import { calculateAverageRank } from '../utils/calculateAverageGeneric';
 import { GlobalSnapshot } from '../types/GlobalSnapshot';
 
-// ✅ Import the new tutorial
+// ✅ Import Firestore
+import { doc, getDoc, updateDoc } from 'firebase/firestore';
+import { db } from '../lib/firebase';
+
+// ✅ Import the tutorial
 import MainTutorial from '../tutorials/MainTutorial';
-                          
 
 const Home: React.FC = () => {
   const { user } = useAuth();
@@ -19,6 +22,7 @@ const Home: React.FC = () => {
   const [snapshots, setSnapshots] = useState<GlobalSnapshot[]>([]);
   const [historyIndex, setHistoryIndex] = useState<number | null>(null);
   const [latestSnapshot, setLatestSnapshot] = useState<GlobalSnapshot | null>(null);
+  const [showTutorial, setShowTutorial] = useState(false); // 👈 Track tutorial visibility
 
   useEffect(() => {
     if (!user) return;
@@ -56,6 +60,15 @@ const Home: React.FC = () => {
         await saveGlobalSnapshot(user, currentSnapshot);
         const updatedHistory = await loadGlobalSnapshots(user);
         setSnapshots(updatedHistory);
+      }
+
+      // ✅ Check Firestore for tutorial status
+      const userDocRef = doc(db, 'users', user.uid);
+      const userSnap = await getDoc(userDocRef);
+
+      if (!userSnap.exists() || !userSnap.data().hasSeenMainTutorial) {
+        setShowTutorial(true);
+        await updateDoc(userDocRef, { hasSeenMainTutorial: true });
       }
 
       setLoading(false);
@@ -98,8 +111,8 @@ const Home: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-[#0a192f] py-10 px-6 flex flex-col items-center">
-      {/* ✅ Add tutorial */}
-      <MainTutorial />
+      {/* ✅ Show tutorial only if Firestore says they haven't seen it */}
+      {showTutorial && <MainTutorial />}
 
       <h1 className="text-3xl font-bold mb-6 text-[#64ffda] text-center">
         Your Fitness Dashboard
