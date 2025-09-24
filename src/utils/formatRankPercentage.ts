@@ -1,6 +1,8 @@
 // utils/formatRankPercentage.ts
 export function formatRankPercentage(score: number): string {
-    switch (score) {
+    const floored = Math.floor(score);
+  
+    switch (floored) {
       case 1:
         return "Bottom 50%"; // E rank
       case 2:
