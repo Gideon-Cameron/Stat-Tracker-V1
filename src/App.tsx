@@ -15,7 +15,8 @@ import Footer from './components/Footer';
 // ✅ New imports
 import Success from './pages/Success';
 import Cancel from './pages/Cancel';
-import About from './pages/About'; // <-- Import About page
+import About from './pages/About'; // <-- About page
+import Pricing from './pages/Pricing'; // <-- Pricing page
 
 const TermsPage = lazy(() => import('./pages/TermsPage'));
 const PrivacyPolicyPage = lazy(() => import('./pages/PrivacyPolicyPage'));
@@ -94,6 +95,12 @@ const App: React.FC = () => {
                 className="hover:text-[#64ffda] transition-colors"
               >
                 About
+              </Link>
+              <Link
+                to="/pricing"
+                className="hover:text-[#64ffda] transition-colors"
+              >
+                Pricing
               </Link>
 
               {user ? (
@@ -200,8 +207,9 @@ const App: React.FC = () => {
             <Route path="/privacy" element={<PrivacyPolicyPage />} />
             <Route path="/refunds" element={<RefundsPage />} />
 
-            {/* ✅ About Page */}
+            {/* ✅ Public Pages */}
             <Route path="/about" element={<About />} />
+            <Route path="/pricing" element={<Pricing />} />
           </Routes>
         </main>
 
