@@ -11,6 +11,7 @@ import { loadUserStats } from '../../utils/loadUserStats';
 import { loadUserHistory } from '../../utils/loadUserHistory';
 import SubRankDisplay from '../../components/SubRankDisplay';
 import StrengthTutorial from '../../tutorials/StrengthTutorial';
+import { formatRankPercentage } from '../../utils/formatRankPercentage';
 
 const STRENGTH_TESTS: StrengthTest[] = [
   'benchPress',
@@ -223,7 +224,7 @@ const StrengthStatPage: React.FC = () => {
             <div id="rank-display" className="mt-6 text-center scroll-mt-32 mb-16">
               <p className="text-lg">
                 <span className="font-semibold text-[#64ffda]">Average Strength Score:</span>{' '}
-                {average.averageScore}
+                {formatRankPercentage(average.averageScore)}
               </p>
               <p className="text-xl mt-1">
                 <span className="font-bold text-[#64ffda]">Global Rank:</span> {average.globalRank}
