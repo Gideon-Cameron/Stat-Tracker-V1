@@ -130,91 +130,93 @@ const App: React.FC = () => {
         </nav>
 
         {/* Main Content */}
-        <main className="flex-grow py-8 px-4 max-w-6xl mx-auto">
-          <Routes>
-            {/* Home page requires login */}
-            <Route
-              path="/"
-              element={
-                <ProtectedRoute>
-                  <Home />
-                </ProtectedRoute>
-              }
-            />
+        <main className="flex-grow py-8 px-4">
+          <div className="max-w-6xl mx-auto">
+            <Routes>
+              {/* Home page requires login */}
+              <Route
+                path="/"
+                element={
+                  <ProtectedRoute>
+                    <Home />
+                  </ProtectedRoute>
+                }
+              />
 
-            {/* Login page redirects if already logged in */}
-            <Route
-              path="/login"
-              element={
-                <RedirectIfLoggedIn>
-                  <LoginPage />
-                </RedirectIfLoggedIn>
-              }
-            />
+              {/* Login page redirects if already logged in */}
+              <Route
+                path="/login"
+                element={
+                  <RedirectIfLoggedIn>
+                    <LoginPage />
+                  </RedirectIfLoggedIn>
+                }
+              />
 
-            {/* Stats pages require login */}
-            <Route
-              path="/stats"
-              element={
-                <ProtectedRoute>
-                  <StatsIndex />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/stats/strength"
-              element={
-                <ProtectedRoute>
-                  <StrengthStatPage />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/stats/endurance"
-              element={
-                <ProtectedRoute>
-                  <EnduranceStatPage />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/stats/speed"
-              element={
-                <ProtectedRoute>
-                  <SpeedStatPage />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/stats/skill"
-              element={
-                <ProtectedRoute>
-                  <SkillStatPage />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/stats/flexibility"
-              element={
-                <ProtectedRoute>
-                  <FlexibilityStatPage />
-                </ProtectedRoute>
-              }
-            />
+              {/* Stats pages require login */}
+              <Route
+                path="/stats"
+                element={
+                  <ProtectedRoute>
+                    <StatsIndex />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/stats/strength"
+                element={
+                  <ProtectedRoute>
+                    <StrengthStatPage />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/stats/endurance"
+                element={
+                  <ProtectedRoute>
+                    <EnduranceStatPage />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/stats/speed"
+                element={
+                  <ProtectedRoute>
+                    <SpeedStatPage />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/stats/skill"
+                element={
+                  <ProtectedRoute>
+                    <SkillStatPage />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/stats/flexibility"
+                element={
+                  <ProtectedRoute>
+                    <FlexibilityStatPage />
+                  </ProtectedRoute>
+                }
+              />
 
-            {/* ✅ Paddle checkout redirects */}
-            <Route path="/success" element={<Success />} />
-            <Route path="/cancel" element={<Cancel />} />
+              {/* ✅ Paddle checkout redirects */}
+              <Route path="/success" element={<Success />} />
+              <Route path="/cancel" element={<Cancel />} />
 
-            {/* ✅ Legal Pages */}
-            <Route path="/terms" element={<TermsPage />} />
-            <Route path="/privacy" element={<PrivacyPolicyPage />} />
-            <Route path="/refunds" element={<RefundsPage />} />
+              {/* ✅ Legal Pages */}
+              <Route path="/terms" element={<TermsPage />} />
+              <Route path="/privacy" element={<PrivacyPolicyPage />} />
+              <Route path="/refunds" element={<RefundsPage />} />
 
-            {/* ✅ Public Pages */}
-            <Route path="/about" element={<About />} />
-            <Route path="/pricing" element={<Pricing />} />
-          </Routes>
+              {/* ✅ Public Pages */}
+              <Route path="/about" element={<About />} />
+              <Route path="/pricing" element={<Pricing />} />
+            </Routes>
+          </div>
         </main>
 
         {/* ✅ Footer on every page */}
