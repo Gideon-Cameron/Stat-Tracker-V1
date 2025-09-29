@@ -219,7 +219,7 @@ const App: React.FC = () => {
           </div>
         </main>
 
-        {/* ✅ Footer on every page */}
+        
         <Footer />
       </div>
     </Router>
