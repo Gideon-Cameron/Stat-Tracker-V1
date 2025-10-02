@@ -1,54 +1,60 @@
-# React + TypeScript + Vite
+# 🏋️ Stat Tracker
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+[![Live Demo](https://img.shields.io/badge/Live%20Site-Stat%20Tracker-64ffda?style=for-the-badge&logo=netlify)](https://stat-tracker-v1.netlify.app/)
 
-Currently, two official plugins are available:
+Track your fitness stats across **strength, speed, endurance, flexibility, and skill**.  
+Compare your performance globally, unlock ranks, and visualize your progress over time.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+---
 
-## Expanding the ESLint configuration
+## 🚀 Live Demo
+👉 [https://stat-tracker-v1.netlify.app/](https://stat-tracker-v1.netlify.app/)
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+---
 
-```js
-export default tseslint.config({
-  extends: [
-    // Remove ...tseslint.configs.recommended and replace with this
-    ...tseslint.configs.recommendedTypeChecked,
-    // Alternatively, use this for stricter rules
-    ...tseslint.configs.strictTypeChecked,
-    // Optionally, add this for stylistic rules
-    ...tseslint.configs.stylisticTypeChecked,
-  ],
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
-```
+## ✨ Features
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+- 🔓 **Free Tier**
+  - Global comparison & ranking system (E → Mythic)
+  - Radar graph of your stats
+  - Access to all stat categories
+  - Fitness dashboard with current stats
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+- 🌟 **Premium (coming soon)**
+  - Sub ranks with progress circles
+  - Weekly snapshots of your stats
+  - Goal tracking
+  - Ad-free experience
 
-export default tseslint.config({
-  plugins: {
-    // Add the react-x and react-dom plugins
-    'react-x': reactX,
-    'react-dom': reactDom,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended typescript rules
-    ...reactX.configs['recommended-typescript'].rules,
-    ...reactDom.configs.recommended.rules,
-  },
-})
-```
+- 🎯 **Tutorial System**
+  - Guided onboarding for new users  
+  - Tooltips & highlights powered by `react-joyride`
+
+- 📊 **Data Visualization**
+  - Interactive charts and stat breakdowns
+  - Mobile-friendly responsive design
+
+- 🔐 **Authentication**
+  - Secure login via Firebase Auth
+
+- 💾 **Data Storage**
+  - User stats & tutorial progress stored in Firestore
+
+---
+
+## 🛠 Tech Stack
+
+- **Frontend**: React 18 + TypeScript + Vite  
+- **Styling**: TailwindCSS  
+- **Auth & Database**: Firebase (Auth + Firestore)  
+- **Payments**: Paddle (Premium subscriptions – coming soon)  
+- **Hosting**: Netlify  
+
+---
+
+## 📦 Getting Started
+
+1. Clone the repo:
+   ```bash
+   git clone https://github.com/your-username/stat-tracker.git
+   cd stat-tracker
