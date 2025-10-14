@@ -134,7 +134,7 @@ const Home: React.FC = () => {
             </div>
           )}
 
-          {/* ✅ Add id for tutorial targeting */}
+          
           <div id="main-graph" className="mb-6">
             <RadarChart data={activeSnapshot.rankMap} />
           </div>
