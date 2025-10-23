@@ -62,7 +62,6 @@ const PremiumButton: React.FC<PremiumButtonProps> = ({ firebaseUserId, email }) 
 
       console.log("✅ Paddle object loaded. Available methods:", Object.keys(window.Paddle));
 
-      // Use the transaction ID returned by Paddle
       console.log("➡️ About to open Paddle checkout with transactionId:", data.token);
 
       try {
