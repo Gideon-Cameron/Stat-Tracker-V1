@@ -54,7 +54,6 @@ const PremiumButton: React.FC<PremiumButtonProps> = ({ firebaseUserId, email }) 
         return;
       }
 
-      // Ensure Paddle SDK is loaded
       if (!window.Paddle) {
         console.error("❌ Paddle SDK not loaded yet.");
         return;
