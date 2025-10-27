@@ -27,7 +27,7 @@ const PremiumButton: React.FC<PremiumButtonProps> = ({ firebaseUserId, email }) 
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          priceId: monthlyId, // start with monthly plan
+          priceId: monthlyId, 
           firebaseUserId,
           email, 
         }),
