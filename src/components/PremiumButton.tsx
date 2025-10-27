@@ -29,7 +29,7 @@ const PremiumButton: React.FC<PremiumButtonProps> = ({ firebaseUserId, email }) 
         body: JSON.stringify({
           priceId: monthlyId, // start with monthly plan
           firebaseUserId,
-          email, // 👈 send logged-in user's email to backend
+          email, 
         }),
       });
 
