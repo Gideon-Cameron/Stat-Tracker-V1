@@ -18,7 +18,7 @@ const PremiumButton: React.FC<PremiumButtonProps> = ({ firebaseUserId, email }) 
 
   const handleCheckout = async () => {
     const monthlyId = import.meta.env.VITE_PADDLE_PRICE_MONTHLY as string;
-    // const yearlyId = import.meta.env.VITE_PADDLE_PRICE_YEARLY as string;
+   
 
     try {
       console.log("📡 Calling Netlify function to create checkout...");
