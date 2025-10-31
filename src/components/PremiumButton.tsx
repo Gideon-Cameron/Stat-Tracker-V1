@@ -9,7 +9,7 @@ interface PremiumButtonProps {
 // Define what we expect from our Netlify function
 interface CheckoutResponse {
   token?: string; // transaction ID returned from Paddle
-  raw?: unknown;  // raw Paddle API response (can be anything, so `unknown` is safer than `any`)
+  raw?: unknown;  
   error?: unknown;
 }
 
