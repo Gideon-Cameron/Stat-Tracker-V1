@@ -9,13 +9,13 @@ import StatsIndex from './pages/stats/index';
 import LoginPage from './pages/login';
 import { useAuth } from './context/AuthContext';
 import Home from './pages/home';
-import PremiumButton from './components/PremiumButton';
+import LandingPage from './pages/LandingPage';
 import Footer from './components/Footer';
 
 // ✅ New imports
 import Success from './pages/Success';
 import Cancel from './pages/Cancel';
-import About from './pages/About'; // <-- About page
+import About from './pages/About';   // <-- About page
 import Pricing from './pages/Pricing'; // <-- Pricing page
 
 const TermsPage = lazy(() => import('./pages/TermsPage'));
@@ -97,6 +97,12 @@ const App: React.FC = () => {
                 About
               </Link>
               <Link
+                to="/landing"
+                className="hover:text-[#64ffda] transition-colors"
+               >
+                Landing
+                </Link>
+              <Link
                 to="/pricing"
                 className="hover:text-[#64ffda] transition-colors"
               >
@@ -105,7 +111,12 @@ const App: React.FC = () => {
 
               {user ? (
                 <>
-                  <PremiumButton firebaseUserId={user.uid} email={user.email ?? ''} />
+                  <Link
+                    to="/pricing"
+                    className="bg-[#64ffda] text-[#0a192f] font-semibold px-3 py-1 rounded hover:bg-[#52e0c4] transition-colors"
+                  >
+                    Go Premium
+                  </Link>
                   <button
                     onClick={logout}
                     className="text-sm ml-2 text-red-400 hover:text-red-300 transition-colors"
@@ -210,6 +221,7 @@ const App: React.FC = () => {
             {/* ✅ Public Pages */}
             <Route path="/about" element={<About />} />
             <Route path="/pricing" element={<Pricing />} />
+            <Route path="/landing" element={<LandingPage />} />
           </Routes>
         </main>
 
