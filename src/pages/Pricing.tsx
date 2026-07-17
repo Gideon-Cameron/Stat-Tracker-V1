@@ -1,9 +1,14 @@
 // src/pages/Pricing.tsx
-import React from "react";
+import React, { useState } from "react";
 
 const Pricing: React.FC = () => {
+  const [showModal, setShowModal] = useState(false);
+
+  const handleOpenModal = () => setShowModal(true);
+  const handleCloseModal = () => setShowModal(false);
+
   return (
-    <div className="min-h-screen bg-[#0a192f] text-[#ccd6f6] py-16 px-6">
+    <div className="min-h-screen bg-[#0a192f] text-[#ccd6f6] py-16 px-6 relative">
       <div className="max-w-5xl mx-auto text-center mb-12">
         <h1 className="text-4xl font-bold text-[#64ffda] mb-4">Pricing</h1>
         <p className="text-lg text-[#8892b0]">
@@ -58,7 +63,10 @@ const Pricing: React.FC = () => {
             <li>✔ Ad-free experience (future update)</li>
           </ul>
 
-          <button className="mt-8 w-full py-3 rounded-lg bg-[#64ffda] text-[#0a192f] font-semibold hover:bg-[#52e0c4] transition">
+          <button
+            onClick={handleOpenModal}
+            className="mt-8 w-full py-3 rounded-lg bg-[#64ffda] text-[#0a192f] font-semibold hover:bg-[#52e0c4] transition"
+          >
             Get Premium
           </button>
 
@@ -84,7 +92,10 @@ const Pricing: React.FC = () => {
             <li>✔ Ad-free experience (future update)</li>
           </ul>
 
-          <button className="mt-8 w-full py-3 rounded-lg bg-[#64ffda] text-[#0a192f] font-semibold hover:bg-[#52e0c4] transition">
+          <button
+            onClick={handleOpenModal}
+            className="mt-8 w-full py-3 rounded-lg bg-[#64ffda] text-[#0a192f] font-semibold hover:bg-[#52e0c4] transition"
+          >
             Get Premium
           </button>
 
@@ -93,6 +104,37 @@ const Pricing: React.FC = () => {
           </p>
         </div>
       </div>
+
+      {/* Modal */}
+      {showModal && (
+        <div
+          className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-60 z-50"
+          onClick={handleCloseModal}
+        >
+          <div
+            className="bg-[#112240] border border-[#233554] rounded-lg p-8 max-w-md mx-auto text-center relative shadow-lg"
+            onClick={(e) => e.stopPropagation()} // prevent closing when clicking inside
+          >
+            {/* Close button */}
+            <button
+              onClick={handleCloseModal}
+              className="absolute top-3 right-3 text-[#8892b0] hover:text-[#64ffda] text-lg"
+            >
+              ✕
+            </button>
+
+            <h2 className="text-2xl font-bold text-[#64ffda] mb-4">
+              Premium Access
+            </h2>
+            <p className="text-[#ccd6f6]">
+              Pricing is still being set up. As an{" "}
+              <strong>early user</strong>, you have access to all premium
+              features for free.  
+              Once premium mode is ready, you’ll be able to purchase access here.
+            </p>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

@@ -9,7 +9,7 @@ interface PremiumButtonProps {
 // Define what we expect from our Netlify function
 interface CheckoutResponse {
   token?: string; // transaction ID returned from Paddle
-  raw?: unknown;  // raw Paddle API response (can be anything, so `unknown` is safer than `any`)
+  raw?: unknown;  
   error?: unknown;
 }
 
@@ -18,7 +18,7 @@ const PremiumButton: React.FC<PremiumButtonProps> = ({ firebaseUserId, email }) 
 
   const handleCheckout = async () => {
     const monthlyId = import.meta.env.VITE_PADDLE_PRICE_MONTHLY as string;
-    // const yearlyId = import.meta.env.VITE_PADDLE_PRICE_YEARLY as string;
+   
 
     try {
       console.log("📡 Calling Netlify function to create checkout...");
@@ -27,9 +27,9 @@ const PremiumButton: React.FC<PremiumButtonProps> = ({ firebaseUserId, email }) 
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          priceId: monthlyId, // start with monthly plan
+          priceId: monthlyId, 
           firebaseUserId,
-          email, // 👈 send logged-in user's email to backend
+          email, 
         }),
       });
 
@@ -54,7 +54,6 @@ const PremiumButton: React.FC<PremiumButtonProps> = ({ firebaseUserId, email }) 
         return;
       }
 
-      // Ensure Paddle SDK is loaded
       if (!window.Paddle) {
         console.error("❌ Paddle SDK not loaded yet.");
         return;
@@ -62,7 +61,6 @@ const PremiumButton: React.FC<PremiumButtonProps> = ({ firebaseUserId, email }) 
 
       console.log("✅ Paddle object loaded. Available methods:", Object.keys(window.Paddle));
 
-      // Use the transaction ID returned by Paddle
       console.log("➡️ About to open Paddle checkout with transactionId:", data.token);
 
       try {

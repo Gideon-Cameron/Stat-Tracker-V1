@@ -9,7 +9,6 @@ import RadarChart from '../components/RadarChart';
 import { calculateAverageRank } from '../utils/calculateAverageGeneric';
 import { GlobalSnapshot } from '../types/GlobalSnapshot';
 
-// ✅ Import the new tutorial
 import MainTutorial from '../tutorials/MainTutorial';
                           
 
@@ -135,7 +134,7 @@ const Home: React.FC = () => {
             </div>
           )}
 
-          {/* ✅ Add id for tutorial targeting */}
+          
           <div id="main-graph" className="mb-6">
             <RadarChart data={activeSnapshot.rankMap} />
           </div>
