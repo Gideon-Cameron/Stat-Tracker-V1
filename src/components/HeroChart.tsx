@@ -1,4 +1,5 @@
 import RadarChart from "../components/RadarChart";
+import favicon from "../assets/favicon.png";
 
 const demoRanks = {
   benchPress: "S",
@@ -57,9 +58,11 @@ export default function HeroChart() {
               shadow-[0_0_18px_rgba(44,234,200,.18)]
             "
           >
-            <span className="text-base text-[#64ffda]">
-              ⬢
-            </span>
+            <img
+              src={favicon}
+              alt="Rank Up Logo"
+              className="h-6 w-6 object-contain"
+            />
           </div>
 
         </div>
@@ -93,48 +96,49 @@ export default function HeroChart() {
         {/* Bottom */}
 
         <div
-  className="
-    grid
-    grid-cols-2
-    border-t
-    border-[#213a57]
-    bg-[#0B182C]
-  "
->
+          className="
+            grid
+            grid-cols-2
+            border-t
+            border-[#213a57]
+            bg-[#0B182C]
+          "
+        >
 
-  {/* Overall */}
+          {/* Overall */}
 
-  <div className="px-5 py-3">
+          <div className="px-5 py-3">
 
-    <p className="text-[9px] uppercase tracking-[0.24em] text-slate-500">
-      Overall Rank
-    </p>
+            <p className="text-[9px] uppercase tracking-[0.24em] text-slate-500">
+              Overall Rank
+            </p>
 
-    <h2 className="mt-1 text-3xl font-black leading-none text-[#5EF5DA]">
-      A
-    </h2>
+            <h2 className="mt-1 text-3xl font-black leading-none text-[#5EF5DA]">
+              A
+            </h2>
 
-  </div>
+          </div>
 
-  {/* Percentile */}
+          {/* Percentile */}
 
-  <div className="border-l border-[#213a57] px-5 py-3">
+          <div className="border-l border-[#213a57] px-5 py-3">
 
-    <p className="text-xs leading-tight text-slate-300">
-      You're stronger than
-    </p>
+            <p className="text-xs leading-tight text-slate-300">
+              You're stronger than
+            </p>
 
-    <p className="mt-0.5 text-3xl font-black leading-none text-[#5EF5DA]">
-      92%
-    </p>
+            <p className="mt-0.5 text-3xl font-black leading-none text-[#5EF5DA]">
+              92%
+            </p>
 
-    <p className="mt-0.5 text-[11px] leading-tight text-slate-400">
-      of lifters worldwide
-    </p>
+            <p className="mt-0.5 text-[11px] leading-tight text-slate-400">
+              of lifters worldwide
+            </p>
 
-  </div>
+          </div>
 
-</div>
+        </div>
+
         {/* Subtle inner border */}
 
         <div className="pointer-events-none absolute inset-0 rounded-3xl ring-1 ring-inset ring-white/5" />

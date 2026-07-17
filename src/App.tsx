@@ -19,6 +19,7 @@ import { useAuth } from './context/AuthContext';
 import Home from './pages/home';
 import LandingPage from './pages/LandingPage';
 import Footer from './components/Footer';
+import favicon from "./assets/favicon.png"
 
 import Success from './pages/Success';
 import Cancel from './pages/Cancel';
@@ -63,105 +64,120 @@ function AppContent() {
 
       <nav className="sticky top-0 z-50 border-b border-[#233554] bg-[#112240] px-6 py-4 text-[#ccd6f6] shadow-lg">
 
-        <div className="mx-auto flex max-w-6xl items-center justify-between">
+  <div className="mx-auto flex max-w-6xl items-center justify-between">
 
-          <h1 className="text-xl font-bold text-[#64ffda] transition-colors hover:text-[#52e0c4]">
-            <Link to="/">Stat Tracker</Link>
-          </h1>
+    {/* Logo */}
+    <Link
+      to="/"
+      className="flex items-center gap-3 transition-opacity hover:opacity-90"
+    >
+      <img
+        src={favicon}
+        alt="RankUp Logo"
+        className="h-10 w-10 object-contain"
+      />
 
-          <div className="flex items-center space-x-4">
+      <h1 className="text-2xl font-bold tracking-tight text-[#64ffda]">
+        Rank<span className="text-white">Up</span>
+      </h1>
+    </Link>
 
-            <Link to="/stats" className="transition-colors hover:text-[#64ffda]">
-              All Stats
-            </Link>
+    <div className="flex items-center space-x-4">
 
-            <Link
-              id="strength-link"
-              to="/stats/strength"
-              className="transition-colors hover:text-[#64ffda]"
-            >
-              Strength
-            </Link>
+      <Link
+        to="/stats"
+        className="transition-colors hover:text-[#64ffda]"
+      >
+        All Stats
+      </Link>
 
-            <Link
-              to="/stats/endurance"
-              className="transition-colors hover:text-[#64ffda]"
-            >
-              Endurance
-            </Link>
+      <Link
+        id="strength-link"
+        to="/stats/strength"
+        className="transition-colors hover:text-[#64ffda]"
+      >
+        Strength
+      </Link>
 
-            <Link
-              to="/stats/speed"
-              className="transition-colors hover:text-[#64ffda]"
-            >
-              Speed
-            </Link>
+      <Link
+        to="/stats/endurance"
+        className="transition-colors hover:text-[#64ffda]"
+      >
+        Endurance
+      </Link>
 
-            <Link
-              to="/stats/skill"
-              className="transition-colors hover:text-[#64ffda]"
-            >
-              Skill
-            </Link>
+      <Link
+        to="/stats/speed"
+        className="transition-colors hover:text-[#64ffda]"
+      >
+        Speed
+      </Link>
 
-            <Link
-              to="/stats/flexibility"
-              className="transition-colors hover:text-[#64ffda]"
-            >
-              Flexibility
-            </Link>
+      <Link
+        to="/stats/skill"
+        className="transition-colors hover:text-[#64ffda]"
+      >
+        Skill
+      </Link>
 
-            <Link
-              to="/about"
-              className="transition-colors hover:text-[#64ffda]"
-            >
-              About
-            </Link>
+      <Link
+        to="/stats/flexibility"
+        className="transition-colors hover:text-[#64ffda]"
+      >
+        Flexibility
+      </Link>
 
-            <Link
-              to="/landing"
-              className="transition-colors hover:text-[#64ffda]"
-            >
-              Landing
-            </Link>
+      <Link
+        to="/about"
+        className="transition-colors hover:text-[#64ffda]"
+      >
+        About
+      </Link>
 
-            <Link
-              to="/pricing"
-              className="transition-colors hover:text-[#64ffda]"
-            >
-              Pricing
-            </Link>
+      <Link
+        to="/landing"
+        className="transition-colors hover:text-[#64ffda]"
+      >
+        Landing
+      </Link>
 
-            {user ? (
-              <>
-                <Link
-                  to="/pricing"
-                  className="rounded bg-[#64ffda] px-3 py-1 font-semibold text-[#0a192f] transition-colors hover:bg-[#52e0c4]"
-                >
-                  Go Premium
-                </Link>
+      <Link
+        to="/pricing"
+        className="transition-colors hover:text-[#64ffda]"
+      >
+        Pricing
+      </Link>
 
-                <button
-                  onClick={logout}
-                  className="ml-2 text-sm text-red-400 transition-colors hover:text-red-300"
-                >
-                  Logout
-                </button>
-              </>
-            ) : (
-              <Link
-                to="/login"
-                className="transition-colors hover:text-[#64ffda]"
-              >
-                Login
-              </Link>
-            )}
+      {user ? (
+        <>
+          <Link
+            to="/pricing"
+            className="rounded bg-[#64ffda] px-3 py-1 font-semibold text-[#0a192f] transition-colors hover:bg-[#52e0c4]"
+          >
+            Go Premium
+          </Link>
 
-          </div>
+          <button
+            onClick={logout}
+            className="ml-2 text-sm text-red-400 transition-colors hover:text-red-300"
+          >
+            Logout
+          </button>
+        </>
+      ) : (
+        <Link
+          to="/login"
+          className="transition-colors hover:text-[#64ffda]"
+        >
+          Login
+        </Link>
+      )}
 
-        </div>
+    </div>
 
-      </nav>
+  </div>
+
+</nav>
 
       {/* Main Content */}
 
