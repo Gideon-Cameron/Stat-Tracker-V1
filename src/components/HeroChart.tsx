@@ -1,135 +1,143 @@
 import RadarChart from "../components/RadarChart";
-import SubRankDisplay from "../components/SubRankDisplay";
 
 const demoRanks = {
   benchPress: "S",
-  squat: "C",
-  deadlift: "A",
-  overheadPress: "A",
-  pullUps: "B",
-  pushUps: "A",
+  squat: "S",
+  deadlift: "S",
+  overheadPress: "S",
+  pullUps: "S",
+  pushUps: "S",
   plankHold: "S",
 } as const;
-
-const thresholds = [
-  { min: 50, rank: "E" },
-  { min: 60, rank: "D" },
-  { min: 70, rank: "C" },
-  { min: 80, rank: "B" },
-  { min: 90, rank: "A" },
-  { min: 99, rank: "S" },
-  { min: 99.9, rank: "SS" },
-  { min: 99.99, rank: "Mythic" },
-] as const;
-
-const stats = [
-  {
-    name: "Bench Press",
-    value: 99.2,
-  },
-  {
-    name: "Squat",
-    value: 73,
-  },
-  {
-    name: "Deadlift",
-    value: 92,
-  },
-  {
-    name: "Endurance",
-    value: 87,
-  },
-];
 
 export default function HeroChart() {
   return (
     <div className="relative flex items-center justify-center">
 
-      {/* Glow */}
+      {/* Ambient Glow */}
+      <div className="absolute h-[400px] w-[400px] rounded-full bg-[#2CEAC8]/10 blur-[130px]" />
 
-      <div className="absolute h-[450px] w-[450px] rounded-full bg-[#64ffda]/10 blur-[120px]" />
-
-      <div className="relative w-full max-w-xl rounded-2xl border border-[#233554] bg-[#112240]/90 backdrop-blur-md shadow-2xl">
+      <div
+        className="
+          relative
+          w-full
+          max-w-lg
+          overflow-hidden
+          rounded-3xl
+          border
+          border-[#213a57]
+          bg-gradient-to-b
+          from-[#122340]
+          via-[#10213B]
+          to-[#0D1B33]
+          shadow-[0_30px_80px_rgba(0,0,0,.55)]
+          backdrop-blur-xl
+        "
+      >
 
         {/* Header */}
 
-        <div className="border-b border-[#233554] px-8 py-6">
+        <div className="flex items-center justify-between border-b border-[#213a57] px-6 py-5">
 
-          <h2 className="text-2xl font-bold text-white">
+          <h2 className="text-xl font-bold text-white">
             Strength Overview
           </h2>
 
-          <p className="mt-1 text-slate-400">
-            Example athlete profile
-          </p>
+          <div
+            className="
+              flex
+              h-10
+              w-10
+              items-center
+              justify-center
+              rounded-lg
+              border
+              border-[#2CEAC8]/30
+              bg-[#132544]
+              shadow-[0_0_18px_rgba(44,234,200,.18)]
+            "
+          >
+            <span className="text-base text-[#64ffda]">
+              ⬢
+            </span>
+          </div>
 
         </div>
 
         {/* Radar */}
 
-        <div className="px-6 pt-4">
+        <div className="relative px-5 py-2">
 
-          <RadarChart data={demoRanks} />
+          <div
+            className="
+              pointer-events-none
+              absolute
+              left-1/2
+              top-1/2
+              h-64
+              w-64
+              -translate-x-1/2
+              -translate-y-1/2
+              rounded-full
+              bg-[#2CEAC8]/10
+              blur-3xl
+            "
+          />
+
+          <div className="relative">
+            <RadarChart data={demoRanks} />
+          </div>
 
         </div>
 
         {/* Bottom */}
 
-        <div className="grid gap-6 border-t border-[#233554] p-8 md:grid-cols-2">
+        <div
+  className="
+    grid
+    grid-cols-2
+    border-t
+    border-[#213a57]
+    bg-[#0B182C]
+  "
+>
 
-          {/* Overall */}
+  {/* Overall */}
 
-          <div>
+  <div className="px-5 py-3">
 
-            <p className="text-sm uppercase tracking-widest text-slate-400">
-              Overall Rank
-            </p>
+    <p className="text-[9px] uppercase tracking-[0.24em] text-slate-500">
+      Overall Rank
+    </p>
 
-            <h2 className="mt-3 text-6xl font-black text-[#64ffda]">
-              A+
-            </h2>
+    <h2 className="mt-1 text-3xl font-black leading-none text-[#5EF5DA]">
+      A
+    </h2>
 
-            <p className="mt-4 text-slate-300">
-              You're stronger than
-            </p>
+  </div>
 
-            <p className="text-4xl font-bold text-[#64ffda]">
-              82%
-            </p>
+  {/* Percentile */}
 
-            <p className="text-slate-400">
-              of lifters worldwide
-            </p>
+  <div className="border-l border-[#213a57] px-5 py-3">
 
-          </div>
+    <p className="text-xs leading-tight text-slate-300">
+      You're stronger than
+    </p>
 
-          {/* Breakdown */}
+    <p className="mt-0.5 text-3xl font-black leading-none text-[#5EF5DA]">
+      92%
+    </p>
 
-          <div className="space-y-4">
+    <p className="mt-0.5 text-[11px] leading-tight text-slate-400">
+      of lifters worldwide
+    </p>
 
-            {stats.map((stat) => (
+  </div>
 
-              <div
-                key={stat.name}
-                className="flex items-center justify-between rounded-lg border border-[#233554] bg-[#0A192F]/50 px-4 py-3"
-              >
+</div>
+        {/* Subtle inner border */}
 
-                <span className="text-slate-200">
-                  {stat.name}
-                </span>
-
-                <SubRankDisplay
-                  value={stat.value}
-                  thresholds={[...thresholds]}
-                />
-
-              </div>
-
-            ))}
-
-          </div>
-
-        </div>
+        <div className="pointer-events-none absolute inset-0 rounded-3xl ring-1 ring-inset ring-white/5" />
 
       </div>
 
