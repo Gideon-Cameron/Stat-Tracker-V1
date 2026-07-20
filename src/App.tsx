@@ -62,11 +62,12 @@ function AppContent() {
 
       {/* Navbar */}
 
-      <nav className="sticky top-0 z-50 border-b border-[#233554] bg-[#112240] px-6 py-4 text-[#ccd6f6] shadow-lg">
+      <nav className="sticky top-0 z-50 border-b border-[#203554] bg-[#0E1B33]/95 px-8 py-5 text-[#ccd6f6] backdrop-blur-lg shadow-[0_10px_30px_rgba(0,0,0,.25)]">
 
-  <div className="mx-auto flex max-w-6xl items-center justify-between">
+  <div className="mx-auto flex max-w-7xl items-center justify-between">
 
     {/* Logo */}
+
     <Link
       to="/"
       className="flex items-center gap-3 transition-opacity hover:opacity-90"
@@ -77,99 +78,136 @@ function AppContent() {
         className="h-10 w-10 object-contain"
       />
 
-      <h1 className="text-2xl font-bold tracking-tight text-[#64ffda]">
-        Rank<span className="text-white">Up</span>
+      <h1 className="text-2xl font-bold tracking-tight">
+        <span className="text-[#64ffda]">Rank</span>
+        <span className="text-white">Up</span>
       </h1>
     </Link>
 
-    <div className="flex items-center space-x-4">
+    {/* Navigation */}
 
-      <Link
-        to="/stats"
-        className="transition-colors hover:text-[#64ffda]"
-      >
+    <div className="flex items-center gap-7 text-[15px] font-medium">
+
+      <Link to="/stats" className="text-slate-300 transition hover:text-[#64ffda]">
         All Stats
       </Link>
 
       <Link
         id="strength-link"
         to="/stats/strength"
-        className="transition-colors hover:text-[#64ffda]"
+        className="text-slate-300 transition hover:text-[#64ffda]"
       >
         Strength
       </Link>
 
       <Link
         to="/stats/endurance"
-        className="transition-colors hover:text-[#64ffda]"
+        className="text-slate-300 transition hover:text-[#64ffda]"
       >
         Endurance
       </Link>
 
       <Link
         to="/stats/speed"
-        className="transition-colors hover:text-[#64ffda]"
+        className="text-slate-300 transition hover:text-[#64ffda]"
       >
         Speed
       </Link>
 
       <Link
         to="/stats/skill"
-        className="transition-colors hover:text-[#64ffda]"
+        className="text-slate-300 transition hover:text-[#64ffda]"
       >
         Skill
       </Link>
 
       <Link
         to="/stats/flexibility"
-        className="transition-colors hover:text-[#64ffda]"
+        className="text-slate-300 transition hover:text-[#64ffda]"
       >
         Flexibility
       </Link>
 
       <Link
         to="/about"
-        className="transition-colors hover:text-[#64ffda]"
+        className="text-slate-300 transition hover:text-[#64ffda]"
       >
         About
       </Link>
 
       <Link
         to="/landing"
-        className="transition-colors hover:text-[#64ffda]"
+        className="text-slate-300 transition hover:text-[#64ffda]"
       >
         Landing
       </Link>
 
       <Link
         to="/pricing"
-        className="transition-colors hover:text-[#64ffda]"
+        className="text-slate-300 transition hover:text-[#64ffda]"
       >
         Pricing
       </Link>
 
       {user ? (
-        <>
+        <div className="ml-3 flex items-center gap-3">
+
           <Link
             to="/pricing"
-            className="rounded bg-[#64ffda] px-3 py-1 font-semibold text-[#0a192f] transition-colors hover:bg-[#52e0c4]"
+            className="
+              rounded-xl
+              bg-[#64ffda]
+              px-5
+              py-2.5
+              font-semibold
+              text-[#0B1B33]
+              shadow-[0_0_20px_rgba(100,255,218,.25)]
+              transition-all
+              hover:scale-[1.03]
+              hover:bg-[#7AFFE2]
+            "
           >
             Go Premium
           </Link>
 
           <button
             onClick={logout}
-            className="ml-2 text-sm text-red-400 transition-colors hover:text-red-300"
+            className="
+              rounded-xl
+              border
+              border-[#29476A]
+              bg-[#132544]
+              px-4
+              py-2.5
+              text-sm
+              font-medium
+              text-slate-300
+              transition-all
+              hover:border-[#64ffda]/40
+              hover:text-white
+              hover:bg-[#173053]
+            "
           >
             Logout
           </button>
-        </>
+
+        </div>
       ) : (
         <Link
           to="/login"
-          className="transition-colors hover:text-[#64ffda]"
+          className="
+            rounded-xl
+            border
+            border-[#29476A]
+            px-5
+            py-2.5
+            text-slate-300
+            transition-all
+            hover:border-[#64ffda]
+            hover:text-white
+          "
         >
-          Login
+          Log In
         </Link>
       )}
 
