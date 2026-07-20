@@ -1,13 +1,6 @@
 import { motion } from "framer-motion";
 import { ChevronRight } from "lucide-react";
-
-interface Rank {
-  rank: string;
-  title: string;
-  percentile: string;
-  color: string;
-  description: string;
-}
+import type { Rank } from "./rankData";
 
 interface RankBadgeProps {
   rank: Rank;
@@ -22,6 +15,8 @@ const RankBadge = ({
   active,
   onHover,
 }: RankBadgeProps) => {
+  const isMythic = rank.rank === "MYTHIC";
+
   return (
     <motion.div
       initial={{
@@ -41,6 +36,7 @@ const RankBadge = ({
         y: -8,
         scale: 1.08,
       }}
+      tabIndex={0}
       onMouseEnter={onHover}
       onFocus={onHover}
       className="relative flex flex-col items-center cursor-pointer select-none"
@@ -64,15 +60,17 @@ const RankBadge = ({
           scale: active ? 1 : 0.7,
         }}
         transition={{
-          duration: .25,
+          duration: 0.25,
         }}
-        className="absolute h-24 w-24 rounded-full blur-3xl"
+        className={`absolute rounded-full blur-3xl ${
+          isMythic ? "h-28 w-36" : "h-24 w-24"
+        }`}
         style={{
           background: rank.color,
         }}
       />
 
-      {/* Hexagon */}
+      {/* Badge */}
 
       <motion.div
         animate={{
@@ -81,31 +79,28 @@ const RankBadge = ({
           borderColor: active
             ? rank.color
             : "rgba(255,255,255,.08)",
+          boxShadow: active
+            ? `0 0 35px ${rank.color}55`
+            : "0 12px 30px rgba(0,0,0,.25)",
         }}
         transition={{
           type: "spring",
           stiffness: 220,
           damping: 16,
         }}
-        className="
+        className={`
           relative
-          h-20
-          w-20
           flex
           items-center
           justify-center
-
-          backdrop-blur-xl
-
           border
-
-          shadow-xl
-
+          backdrop-blur-xl
           bg-slate-900/80
-
           transition-all
           duration-300
-        "
+
+          ${isMythic ? "h-20 w-32" : "h-20 w-20"}
+        `}
         style={{
           clipPath:
             "polygon(25% 6%,75% 6%,100% 50%,75% 94%,25% 94%,0% 50%)",
@@ -122,13 +117,17 @@ const RankBadge = ({
           }}
         />
 
-        {/* Rank Letter */}
+        {/* Rank */}
 
         <motion.span
           animate={{
             color: active ? rank.color : "#ffffff",
           }}
-          className="relative text-3xl font-black"
+          className={`relative font-black ${
+            isMythic
+              ? "text-lg tracking-[0.18em]"
+              : "text-3xl"
+          }`}
         >
           {rank.rank}
         </motion.span>
@@ -138,7 +137,7 @@ const RankBadge = ({
 
       <motion.h4
         animate={{
-          color: active ? "#fff" : "#CBD5E1",
+          color: active ? "#ffffff" : "#CBD5E1",
         }}
         className="mt-5 text-sm font-semibold text-center"
       >
