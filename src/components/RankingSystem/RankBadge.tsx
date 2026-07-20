@@ -1,6 +1,6 @@
 import { motion } from "framer-motion";
 import { ChevronRight } from "lucide-react";
-import type { Rank } from "./rankData";
+import type { Rank } from "./types";
 
 interface RankBadgeProps {
   rank: Rank;
