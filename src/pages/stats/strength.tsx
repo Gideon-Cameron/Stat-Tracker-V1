@@ -149,93 +149,244 @@ const StrengthStatPage: React.FC = () => {
   if (loading) return <p className="text-center mt-10 text-[#64ffda]">Loading saved data...</p>;
 
   return (
-    <div className="py-10 px-6 max-w-3xl mx-auto text-[#ccd6f6]">
-      <h1 className="text-3xl font-bold mb-6 text-center text-[#64ffda]">
-        Strength Stat Assessment
-      </h1>
-
-      {/* Tutorial step: input form */}
-      <div id="strength-input-section" className="scroll-mt-32 mb-16">
-        <StrengthInput onSubmit={handleSubmit} initialData={formData ?? undefined} />
-      </div>
-
+    <div className="mx-auto max-w-7xl px-6 py-6 text-slate-200">
+  
+      {/* ===========================================
+          RESULTS DASHBOARD
+      ============================================ */}
+  
       {result && (
         <div
           id="strength-results-section"
-          className="mt-10 bg-[#112240] p-6 rounded-lg shadow-lg border border-[#233554]"
+          className="mb-8 overflow-hidden rounded-3xl border border-cyan-400/10 bg-slate-900/70 shadow-2xl backdrop-blur-xl"
         >
-          <h2 className="text-xl font-semibold mb-4 text-[#64ffda]">Your Strength Ranks</h2>
+  
+          {/* Header */}
 
-          {history.length > 0 && (
-            <div className="flex justify-center items-center gap-4 mb-6">
-              <button
-                onClick={goToPreviousSnapshot}
-                disabled={history.length === 0 || (historyIndex !== null && historyIndex === 0)}
-                className="bg-[#233554] px-3 py-1 rounded text-sm hover:bg-[#2d3f66] disabled:opacity-50 transition"
-              >
-                ← Previous
-              </button>
-              <span className="text-sm text-gray-400">
-                {historyIndex === null
-                  ? 'Viewing: Current Stats'
-                  : `Viewing: Snapshot ${historyIndex + 1} of ${history.length}`}
-              </span>
-              <button
-                onClick={goToNextSnapshot}
-                disabled={history.length === 0}
-                className="bg-[#233554] px-3 py-1 rounded text-sm hover:bg-[#2d3f66] disabled:opacity-50 transition"
-              >
-                Next →
-              </button>
-            </div>
-          )}
+<div className="border-b border-slate-700 px-5 py-5">
 
-          {/* Tutorial step: graph */}
-          <div id="strength-graph" className="scroll-mt-32 mb-16">
-            <RadarChart data={result} />
+<div className="flex flex-col gap-5 lg:flex-row lg:items-center lg:justify-between">
+
+  {/* Title */}
+
+  <div className="min-w-0">
+
+    <h2 className="text-3xl font-black leading-tight text-white sm:text-4xl">
+      Strength Overview
+    </h2>
+
+    <p className="mt-2 max-w-xl text-sm text-slate-400 sm:text-base">
+      Your current performance across all major strength categories.
+    </p>
+
+  </div>
+
+  {/* Navigation */}
+
+  {history.length > 0 && (
+
+    <div className="flex flex-col items-center gap-3 sm:flex-row sm:justify-end">
+
+      <button
+        onClick={goToPreviousSnapshot}
+        disabled={
+          history.length === 0 ||
+          (historyIndex !== null && historyIndex === 0)
+        }
+        className="
+          w-full
+          rounded-xl
+          border
+          border-slate-700
+          bg-slate-800
+          px-5
+          py-3
+          text-sm
+          transition
+          hover:bg-slate-700
+          disabled:opacity-40
+          sm:w-auto
+        "
+      >
+        ← Previous
+      </button>
+
+      <span className="text-center text-xs text-slate-400 sm:min-w-[110px]">
+        {historyIndex === null
+          ? "Current Stats"
+          : `Snapshot ${historyIndex + 1} of ${history.length}`}
+      </span>
+
+      <button
+        onClick={goToNextSnapshot}
+        disabled={history.length === 0}
+        className="
+          w-full
+          rounded-xl
+          border
+          border-slate-700
+          bg-slate-800
+          px-5
+          py-3
+          text-sm
+          transition
+          hover:bg-slate-700
+          disabled:opacity-40
+          sm:w-auto
+        "
+      >
+        Next →
+      </button>
+
+    </div>
+
+  )}
+
+</div>
+
+</div>
+  
+          {/* Dashboard */}
+
+<div className="grid gap-5 p-5 lg:grid-cols-[1.7fr_1fr]">
+
+{/* Radar */}
+
+<div
+  id="strength-graph"
+  className="rounded-2xl border border-slate-700 bg-slate-900/60 p-4"
+>
+  <RadarChart data={result} />
+</div>
+
+{/* Category Grades */}
+
+<div className="rounded-2xl border border-slate-700 bg-slate-900/60 p-5">
+
+  <h3 className="mb-5 text-lg font-bold text-white">
+    Category Grades
+  </h3>
+
+  <div className="grid grid-cols-2 gap-x-5 gap-y-4">
+
+    {Object.entries(result).map(([test]) => {
+      const value =
+        formData?.[
+          test as keyof StrengthFormData
+        ];
+
+      return (
+        <div
+          key={test}
+          className="flex items-center justify-between rounded-lg border border-slate-700 bg-slate-800/30 px-3 py-2"
+        >
+          <div>
+
+            <p className="text-xs uppercase tracking-wide text-slate-500">
+              {test.replace(/([A-Z])/g, " $1")}
+            </p>
+
           </div>
 
-          <ul className="grid grid-cols-1 sm:grid-cols-2 gap-x-4 gap-y-3 mt-6">
-            {Object.entries(result).map(([test]) => {
-              const value = formData?.[test as keyof StrengthFormData];
+          {value !== undefined ? (
+            <SubRankDisplay
+              value={Number(value)}
+              thresholds={
+                strengthRankThresholds[
+                  test as StrengthTest
+                ]
+              }
+            />
+          ) : (
+            <span className="text-xs text-slate-500">
+              --
+            </span>
+          )}
 
-              return (
-                <li
-                  key={test}
-                  className="flex justify-between items-center border-b border-[#233554] py-2"
-                >
-                  <span className="capitalize whitespace-nowrap">
-                    {test.replace(/([A-Z])/g, ' $1')}
-                  </span>
-                  {value !== undefined ? (
-                    <SubRankDisplay
-                      value={Number(value)}
-                      thresholds={strengthRankThresholds[test as StrengthTest]}
-                    />
-                  ) : (
-                    <span className="text-gray-500">No data</span>
-                  )}
-                </li>
-              );
-            })}
-          </ul>
+        </div>
+      );
+    })}
 
+  </div>
+
+</div>
+
+</div>
+  
+          {/* Bottom Cards */}
+  
           {average && (
-            <div id="rank-display" className="mt-6 text-center scroll-mt-32 mb-16">
-              <p className="text-lg">
-                <span className="font-semibold text-[#64ffda]">Average Strength Score:</span>{' '}
-                {formatRankPercentage(average.averageScore)}
-              </p>
-              <p className="text-xl mt-1">
-                <span className="font-bold text-[#64ffda]">Global Rank:</span> {average.globalRank}
-              </p>
+            <div className="grid gap-4 border-t border-slate-700 p-5 md:grid-cols-2">
+  
+              <div className="rounded-2xl border border-slate-700 bg-slate-900/60 px-5 py-4">
+  
+                <p className="text-xs uppercase tracking-[0.2em] text-slate-500">
+                  Overall Rank
+                </p>
+  
+                <h2 className="mt-2 text-5xl font-black text-cyan-400">
+                  {average.globalRank}
+                </h2>
+  
+                <p className="mt-1 text-sm text-slate-400">
+                  Average Score{" "}
+                  <span className="font-semibold text-white">
+                    {formatRankPercentage(average.averageScore)}
+                  </span>
+                </p>
+  
+              </div>
+  
+              <div className="rounded-2xl border border-slate-700 bg-slate-900/60 px-5 py-4">
+  
+                <p className="text-xs uppercase tracking-[0.2em] text-slate-500">
+                  Stronger Than
+                </p>
+  
+                <h2 className="mt-2 text-4xl font-black text-cyan-400">
+                  {formatRankPercentage(average.averageScore)}
+                </h2>
+  
+                <p className="mt-1 text-sm text-slate-400">
+                  of lifters worldwide
+                </p>
+  
+              </div>
+  
             </div>
           )}
+  
         </div>
       )}
-
-      {/* Tutorial injected here */}
+  
+      {/* ===========================================
+          INPUT SECTION
+      ============================================ */}
+  
+      <div className="mb-8 text-center">
+  
+        <h1 className="text-5xl font-black text-white">
+          Strength Assessment
+        </h1>
+  
+        <p className="mt-3 text-slate-400">
+          Enter your lifts below to calculate your strength ranking.
+        </p>
+  
+      </div>
+  
+      <div
+        id="strength-input-section"
+        className="scroll-mt-32"
+      >
+        <StrengthInput
+          onSubmit={handleSubmit}
+          initialData={formData ?? undefined}
+        />
+      </div>
+  
       <StrengthTutorial hasResults={!!result} />
+  
     </div>
   );
 };
