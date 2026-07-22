@@ -1,6 +1,7 @@
 import Hero from "../components/Hero";
 import { RankingSystem } from "../components/RankingSystem";
 import { Features } from "../components/Features";
+import DashboardShowcase from "../components/DashboardShowcase"
 
 export default function LandingPage() {
   return (
@@ -8,6 +9,7 @@ export default function LandingPage() {
       <Hero />
       <RankingSystem />
       <Features />
+      <DashboardShowcase />
     </div>
   );
 }
