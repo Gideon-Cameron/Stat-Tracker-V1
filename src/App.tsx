@@ -58,7 +58,9 @@ function AppContent() {
   const [statsMenuOpen, setStatsMenuOpen] = useState(false);
 
   // Landing page should use the full browser width
-  const isLanding = location.pathname === "/landing";
+  const isLanding =
+  location.pathname === "/" ||
+  location.pathname === "/landing";
 
   return (
     <div className="min-h-screen flex flex-col bg-[#0a192f] text-[#ccd6f6]">
@@ -72,7 +74,7 @@ function AppContent() {
     {/* Logo */}
 
     <Link
-      to="/"
+      to="/dashboard"
       className="flex items-center gap-3 transition-opacity hover:opacity-90"
       onClick={() => setMobileMenuOpen(false)}
     >
@@ -153,18 +155,20 @@ function AppContent() {
 
       </div>
 
-      <Link
-        to="/about"
-        className="text-slate-300 transition hover:text-[#64ffda]"
-      >
-        About
-      </Link>
+      
 
       <Link
         to="/landing"
         className="text-slate-300 transition hover:text-[#64ffda]"
       >
-        Landing
+        Home
+      </Link>
+
+      <Link
+        to="/about"
+        className="text-slate-300 transition hover:text-[#64ffda]"
+      >
+        About
       </Link>
 
       <Link
@@ -368,11 +372,15 @@ function AppContent() {
 
             <Route
               path="/"
+              element={<LandingPage />}
+            />
+            <Route
+              path="/dashboard"
               element={
-                <ProtectedRoute>
-                  <Home />
-                </ProtectedRoute>
-              }
+            <ProtectedRoute>
+              <Home />
+            </ProtectedRoute>
+            }
             />
 
             <Route
