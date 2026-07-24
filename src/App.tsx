@@ -363,6 +363,7 @@ function AppContent() {
       {isLanding ? (
         <main className="flex-grow">
           <Routes>
+            <Route path="/" element={<LandingPage />} />
             <Route path="/landing" element={<LandingPage />} />
           </Routes>
         </main>
